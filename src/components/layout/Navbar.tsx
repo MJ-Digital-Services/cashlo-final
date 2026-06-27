@@ -45,7 +45,7 @@ export default function Navbar() {
           }`}
         >
           {navItems.map((item) => (
-            <NavDropdown key={item.label} item={item} />
+            <NavDropdown key={item.label} item={item} scrolled={scrolled} />
           ))}
         </div>
 

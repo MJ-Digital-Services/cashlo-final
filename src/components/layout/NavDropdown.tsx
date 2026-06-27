@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState, useRef } from "react";
 import type { NavItem } from "./navData";
 
-export default function NavDropdown({ item }: { item: NavItem }) {
+export default function NavDropdown({ item, scrolled }: { item: NavItem; scrolled: boolean }) {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
