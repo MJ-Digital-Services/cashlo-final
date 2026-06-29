@@ -1,7 +1,6 @@
 "use client";
 
 import Container from "@/components/ui/Container";
-import { useOrbit } from "@/hooks/useOrbit";
 
 const apps = [
   "Paytm", "Google Pay", "BHIM", "Navi", "WhatsApp Pay", "CRED",
@@ -14,11 +13,25 @@ const banks = [
   "IDFC FIRST", "YES BANK", "Federal Bank", "NSDL Payments Bank",
 ];
 
-export default function SupportedBy() {
-  const { scope, stageRef, innerRef, outerRef } = useOrbit();
-
+function Row({ items, reverse = false }: { items: string[]; reverse?: boolean }) {
+  // duplicate the list so the -50% translate loops seamlessly
+  const loop = [...items, ...items];
   return (
-    <section ref={scope} className="overflow-hidden bg-surface py-24">
+    <div className="marquee" data-reverse={reverse ? "" : undefined}>
+      <div className="marquee__track">
+        {loop.map((x, i) => (
+          <span key={`${x}-${i}`} className="marquee__pill" aria-hidden={i >= items.length}>
+            {x}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+export default function SupportedBy() {
+  return (
+    <section className="overflow-hidden bg-surface py-24">
       <Container className="text-center">
         <p
           data-reveal
@@ -38,70 +51,9 @@ export default function SupportedBy() {
         </p>
       </Container>
 
-      {/* DESKTOP: orbital constellation */}
-      <div
-        ref={stageRef}
-        className="orbit-stage mx-auto mt-12 hidden aspect-square w-full max-w-[680px] md:block"
-      >
-        {/* faint orbit tracks */}
-        <span className="orbit-track" style={{ "--d": "calc(var(--ri) * 2)" } as React.CSSProperties} />
-        <span className="orbit-track" style={{ "--d": "calc(var(--ro) * 2)" } as React.CSSProperties} />
-
-       {/* central hub — bare icon, no disc */}
-        <div className="orbit-hub">
-          <img
-            src="/cashlo-icon.svg"
-            alt="Cashlo"
-            className="h-20 w-20"
-            draggable={false}
-          />
-        </div>
-
-        {/* inner ring — apps */}
-        <div ref={innerRef} className="orbit-ring">
-          {apps.map((a, i) => (
-            <span
-              key={a}
-              className="orbit-slot"
-              style={{ "--a": `${(i * 360) / apps.length}deg`, "--r": "var(--ri)" } as React.CSSProperties}
-            >
-              <span data-pill className="orbit-pill">
-                {a}
-              </span>
-            </span>
-          ))}
-        </div>
-
-        {/* outer ring — banks */}
-        <div ref={outerRef} className="orbit-ring">
-          {banks.map((b, i) => (
-            <span
-              key={b}
-              className="orbit-slot"
-              style={{ "--a": `${(i * 360) / banks.length + 15}deg`, "--r": "var(--ro)" } as React.CSSProperties}
-            >
-              <span data-pill className="orbit-pill">
-                {b}
-              </span>
-            </span>
-          ))}
-        </div>
-      </div>
-
-      {/* MOBILE: tag cloud */}
-      <div
-        data-cloud
-        className="mx-auto mt-10 flex max-w-md flex-wrap justify-center gap-2.5 px-6 md:hidden"
-      >
-        {[...apps, ...banks].map((x) => (
-          <span
-            key={x}
-            data-cloud-item
-            className="whitespace-nowrap rounded-full border border-border bg-card px-4 py-2 text-xs font-medium text-ink/70 shadow-sm"
-          >
-            {x}
-          </span>
-        ))}
+      <div className="mt-14 flex flex-col gap-4">
+        <Row items={apps} />
+        <Row items={banks} reverse />
       </div>
     </section>
   );

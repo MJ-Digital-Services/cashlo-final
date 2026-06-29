@@ -146,69 +146,64 @@ body {
     transform: translateY(-3px);
   }
 }
-
-/* ---- Orbit constellation ---- */
-.orbit-stage {
-  position: relative;
-  --ri: 150px;
-  --ro: 270px;
-  --spread: 0;
+/* ---- Supported-by marquee ---- */
+.marquee {
+  display: flex;
+  overflow: hidden;
+  user-select: none;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 12%,
+    #000 88%,
+    transparent
+  );
 }
-.orbit-track {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: var(--d);
-  height: var(--d);
-  transform: translate(-50%, -50%);
-  border: 1px dashed var(--border);
-  border-radius: 9999px;
-  pointer-events: none;
+.marquee__track {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.75rem;
+  padding-right: 0.75rem; /* keeps gap consistent across the seam */
+  min-width: max-content;
+  animation: marquee-scroll 60s linear infinite;
 }
-.orbit-hub {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  display: grid;
-  place-items: center;
+.marquee[data-reverse] .marquee__track {
+  animation-direction: reverse;
 }
-.orbit-ring {
-  position: absolute;
-  inset: 0;
-  transform-origin: center center;
+.marquee:hover .marquee__track {
+  animation-play-state: paused;
 }
-.orbit-slot {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: rotate(var(--a)) translateX(calc(var(--r) * var(--spread)));
-}
-.orbit-pill {
-  position: absolute;
-  left: 0;
-  top: 0;
+.marquee__pill {
   white-space: nowrap;
   border-radius: 9999px;
   border: 1px solid var(--border);
   background: var(--card);
-  padding: 0.35rem 0.85rem;
-  font-size: 0.72rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.8rem;
   font-weight: 500;
   color: color-mix(in srgb, var(--ink) 70%, transparent);
-  box-shadow: 0 2px 6px rgb(0 0 0 / 0.04);
-  cursor: default;
-  transition:
-    background-color 0.25s ease,
-    color 0.25s ease,
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
 }
-.orbit-pill.is-hot {
-  background: var(--color-brand);
-  color: #fff;
-  border-color: var(--color-brand);
-  box-shadow: 0 10px 26px -6px var(--color-brand);
+
+@keyframes marquee-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee__track {
+    animation: none;
+  }
+  .marquee {
+    overflow-x: auto;
+  }
 }
 
 /* ---- View Transitions: circular theme reveal ---- */
