@@ -12,14 +12,13 @@ export const navItems: NavItem[] = [
     label: "UPI CashPoint",
     children: [
       { label: "UPI CashPoint", href: "/upi-cashpoint" },
-      { label: "Instant Loan", href: "/services/instant-loan" },
-      { label: "Recharge & Bill Payments", href: "/services/recharge-bills" },
     ],
   },
   {
     label: "Services",
     children: [
-      { label: "Recharge & Bills", href: "/services/recharge-bills" },
+      { label: "Instant Loan", href: "/services/instant-loan" },
+      { label: "Recharge & Bill Payments", href: "/services/recharge-bills" },
       { label: "Travel (FASTag, NCMC)", href: "/services/travel" },
       { label: "Finance & Insurance", href: "/services/finance" },
       { label: "Entertainment (DTH, OTT)", href: "/services/entertainment" },
