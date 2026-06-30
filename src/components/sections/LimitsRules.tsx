@@ -32,73 +32,77 @@ export default function LimitsRules() {
   const scope = useScrollReveal();
 
   return (
-    <section ref={scope} className="bg-bg py-24">
-      <Container>
-        <div className="grid gap-16 lg:grid-cols-2 lg:gap-12">
-          {/* Left: Limits */}
-          <div>
-            <p data-reveal className="text-sm font-semibold uppercase tracking-wider text-brand">
-              Withdrawal Limits
-            </p>
-            <h2
-              data-reveal
-              className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl"
-            >
-              Clear, Transparent Limits
-            </h2>
+    <>
+      {/* Section 1: Withdrawal Limits */}
+      <section ref={scope} className="bg-bg py-24">
+        <Container>
+          <p
+            data-reveal
+            className="text-sm font-semibold uppercase tracking-wider text-brand"
+          >
+            Withdrawal Limits
+          </p>
+          <h2
+            data-reveal
+            className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl"
+          >
+            Clear, Transparent Limits
+          </h2>
 
-            <div className="mt-8 grid grid-cols-2 gap-4">
-              {limits.map((l) => (
-                <div
-                  key={l.label}
-                  data-reveal
-                  className="rounded-2xl bg-brand p-6 text-white"
-                >
-                  <div className="text-3xl font-bold">{l.value}</div>
-                  <div className="mt-1 text-sm text-white/80">{l.label}</div>
-                </div>
-              ))}
-            </div>
-
-            <p data-reveal className="mt-5 text-xs leading-relaxed text-ink/50">
-              A 30-minute cooling period applies between transactions. Limits may
-              change based on applicable banking partner policies and regulatory
-              requirements.
-            </p>
+          <div className="mt-10 grid grid-cols-2 gap-5 lg:grid-cols-4">
+            {limits.map((l) => (
+              <div
+                key={l.label}
+                data-reveal
+                className="rounded-2xl bg-brand p-8 text-white"
+              >
+                <div className="text-4xl font-bold sm:text-5xl">{l.value}</div>
+                <div className="mt-2 text-sm text-white/80">{l.label}</div>
+              </div>
+            ))}
           </div>
 
-          {/* Right: Rules */}
-          <div>
-            <p data-reveal className="text-sm font-semibold uppercase tracking-wider text-brand">
-              Important Rules
-            </p>
-            <h2
-              data-reveal
-              className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl"
-            >
-              Three Rules Every Merchant Must Follow
-            </h2>
+          <p data-reveal className="mt-6 text-xs leading-relaxed text-ink/50">
+            A 30-minute cooling period applies between transactions. Limits may
+            change based on applicable banking partner policies and regulatory
+            requirements.
+          </p>
+        </Container>
+      </section>
 
-            <div className="mt-8 space-y-5">
-              {rules.map((r) => (
-                <div
-                  key={r.num}
-                  data-reveal
-                  className="flex gap-4 rounded-2xl border border-border p-5 transition-colors hover:border-brand/20"
-                >
-                  <div className="text-xl font-bold text-brand/40">{r.num}</div>
-                  <div>
-                    <h3 className="font-semibold text-ink">{r.title}</h3>
-                    <p className="mt-1 text-sm leading-relaxed text-ink/60">
-                      {r.desc}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
+      {/* Section 2: Important Rules */}
+      <section className="bg-bg pb-24">
+        <Container>
+          <p
+            data-reveal
+            className="text-sm font-semibold uppercase tracking-wider text-brand"
+          >
+            Important Rules
+          </p>
+          <h2
+            data-reveal
+            className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl"
+          >
+            Three Rules Every Merchant Must Follow
+          </h2>
+
+          <div className="mt-10 grid gap-5 lg:grid-cols-3">
+            {rules.map((r) => (
+              <div
+                key={r.num}
+                data-reveal
+                className="rounded-2xl border border-border p-6 transition-colors hover:border-brand/20"
+              >
+                <div className="text-xl font-bold text-brand/40">{r.num}</div>
+                <h3 className="mt-3 font-semibold text-ink">{r.title}</h3>
+                <p className="mt-1 text-sm leading-relaxed text-ink/60">
+                  {r.desc}
+                </p>
+              </div>
+            ))}
           </div>
-        </div>
-      </Container>
-    </section>
+        </Container>
+      </section>
+    </>
   );
 }
