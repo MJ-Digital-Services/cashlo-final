@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useRef } from "react";
 import type { NavItem } from "./navData";
 
@@ -69,13 +70,20 @@ export default function NavDropdown({
             : "pointer-events-none -translate-y-1 opacity-0"
         }`}
       >
-        <div className="min-w-[230px] rounded-2xl border border-border bg-card p-2 shadow-xl shadow-black/5">
+        <div className="min-w-[340px] rounded-2xl border border-border bg-card p-3 shadow-xl shadow-black/5">
           {item.children.map((child) => (
             <Link
               key={child.label}
               href={child.href}
-              className="block rounded-xl px-4 py-2.5 text-sm text-ink/70 transition-colors hover:bg-brand/5 hover:text-brand"
+              className="flex items-center gap-4 rounded-xl px-4 py-3.5 text-base text-ink/70 transition-colors hover:bg-brand/5 hover:text-brand"
             >
+              <Image
+                src={child.icon}
+                alt=""
+                width={48}
+                height={48}
+                className="h-12 w-12 shrink-0 object-contain"
+              />
               {child.label}
             </Link>
           ))}
