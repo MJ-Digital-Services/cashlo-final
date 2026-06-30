@@ -181,14 +181,19 @@ body {
   animation-play-state: paused;
 }
 .marquee__pill {
-  white-space: nowrap;
+  display: grid;
+  place-items: center;
+  height: 56px;
+  padding: 0 1.25rem;
   border-radius: 9999px;
   border: 1px solid var(--border);
   background: var(--card);
-  padding: 0.5rem 1rem;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: color-mix(in srgb, var(--ink) 70%, transparent);
+}
+.marquee__logo {
+  height: 24px;
+  width: auto;
+  max-width: 120px;
+  object-fit: contain;
 }
 
 @keyframes marquee-scroll {
