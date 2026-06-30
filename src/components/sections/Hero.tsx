@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useFadeUp } from "@/hooks/useFadeUp";
 
 export default function Hero() {
@@ -59,18 +60,30 @@ export default function Hero() {
           earnings for merchants.
         </p>
 
-        <div data-fade className="mt-8 flex flex-wrap gap-4">
+        <div data-fade className="mt-8 flex flex-wrap items-stretch gap-4">
           <Link
             href="/become-merchant"
-            className="rounded-full bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-brand-dark"
+            className="flex h-16 items-center rounded-full bg-brand px-7 text-base font-semibold text-white shadow-lg transition-colors hover:bg-brand-dark"
           >
             Become Merchant
           </Link>
+
           <Link
-            href="/find-cashpoint"
-            className="rounded-full border border-white/30 bg-white/10 px-7 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+            href="https://play.google.com/store/apps/details?id=com.cashlo.app"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-16 items-center gap-3 rounded-full border border-white/30 bg-white/10 px-6 text-white backdrop-blur-sm transition-colors hover:bg-white/20"
           >
-            Find CashPoint
+            <Image
+              src="/icons/playstore.svg"
+              alt="Google Play"
+              width={22}
+              height={22}
+            />
+            <span className="flex flex-col items-start leading-tight">
+              <span className="text-[11px] text-white/70">Get it on</span>
+              <span className="text-sm font-semibold">Google Play</span>
+            </span>
           </Link>
         </div>
       </div>
