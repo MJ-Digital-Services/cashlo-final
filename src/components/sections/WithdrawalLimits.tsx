@@ -32,13 +32,16 @@ export default function WithdrawalLimits() {
           </h2>
 
           <div className="mt-10 flex justify-center">
-            <div ref={stackRef} className="relative h-[34rem] w-[calc(2*32rem+2rem)] sm:h-[38rem]">
+            <div
+              ref={stackRef}
+              className="flex w-full flex-col gap-4 md:relative md:block md:h-[38rem] md:w-[calc(2*32rem+2rem)]"
+            >
               {limits.map((l, i) => (
                 <div
                   key={l.label}
                   data-card
                   data-index={i}
-                  className="absolute left-1/2 top-1/2 h-56 w-[26rem] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-2xl sm:h-64 sm:w-[32rem]"
+                  className="relative h-56 w-full overflow-hidden rounded-2xl md:absolute md:left-1/2 md:top-1/2 md:h-64 md:w-[32rem] md:-translate-x-1/2 md:-translate-y-1/2"
                 >
                   <Image
                     src={l.img}

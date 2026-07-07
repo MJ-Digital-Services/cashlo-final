@@ -126,7 +126,7 @@ export function useLimitsStack() {
       mm.add("(max-width: 767px)", () => {
         // cards go back to normal stacking/flow visually — just reset
         // any transform so they don't look stuck mid-stack on touch
-        gsap.set(cards, { rotation: 0, x: 0, y: 0, zIndex: "auto" });
+        gsap.set(cards, { clearProps: "transform,zIndex" });
 
         const reduce = window.matchMedia(
           "(prefers-reduced-motion: reduce)"
