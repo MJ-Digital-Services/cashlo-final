@@ -41,21 +41,16 @@ export default function Trust() {
         <Container>
           <div
             ref={headingScope}
-            className="mx-auto max-w-2xl pt-28 pb-12 text-center md:pt-32 md:pb-0"
+            className="mx-auto max-w-2xl pt-28 pb-10 text-center md:pt-24 md:pb-0"
           >
             <h2
               data-scrub
-              className="text-4xl font-bold tracking-tight text-ink sm:text-5xl"
+              className="text-3xl font-bold tracking-tight text-ink sm:text-4xl"
             >
               Trusted by Dukandaars Everywhere
             </h2>
-            <p data-scrub className="mt-3 text-lg font-medium text-brand">
+            <p data-scrub className="mt-2 text-base font-medium text-brand">
               Aapka Vishwas, Hamari Zimmedari
-            </p>
-            <p data-scrub className="mt-4 text-base text-ink/60">
-              Every transaction on Cashlo is protected using secure banking
-              infrastructure and trusted UPI payment systems — a safe,
-              transparent experience for merchants and customers alike.
             </p>
           </div>
         </Container>
@@ -70,7 +65,7 @@ export default function Trust() {
               <article
                 key={p.title}
                 data-card
-                className="group relative h-[440px] w-full overflow-hidden rounded-2xl shadow-sm md:w-[360px] md:shrink-0"
+                className="group relative h-[480px] w-full overflow-hidden rounded-2xl shadow-sm md:h-[min(60vh,600px)] md:w-[420px] md:shrink-0"
               >
                 {/* Image */}
                 <img
@@ -83,11 +78,9 @@ export default function Trust() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
 
                 {/* Text pinned to the bottom, on top of the shade */}
-                <div className="absolute inset-x-0 bottom-0 p-6">
-                  <h3 className="text-xl font-semibold text-white">
-                    {p.title}
-                  </h3>
-                  <p className="mt-2 text-sm leading-relaxed text-white/80">
+                <div className="absolute inset-x-0 bottom-0 p-7">
+                  <h3 className="text-2xl font-semibold text-white">{p.title}</h3>
+                  <p className="mt-2 text-[15px] leading-relaxed text-white/85">
                     {p.desc}
                   </p>
                 </div>
