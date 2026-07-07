@@ -244,3 +244,24 @@ body {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
+
+/* ---- Blinds slideshow (How It Works) ---- */
+.blind-slide {
+  display: flex;
+  perspective: 900px;
+}
+.blind-slat {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  transform-origin: top center;
+  backface-visibility: hidden;
+  will-change: transform;
+}
+.blind-slat__img {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+}

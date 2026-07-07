@@ -20,6 +20,7 @@ const CARD_W = 400;      // must match the card width class below
  */
 export function useRingCarousel(count: number) {
   const scope = useRef<HTMLElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
   const stageRef = useRef<HTMLDivElement>(null); // perspective wrapper
   const ringRef = useRef<HTMLDivElement>(null);  // rotating ring
 
@@ -77,10 +78,11 @@ export function useRingCarousel(count: number) {
 
         // Pin the full-viewport section briefly, spin only while visible
         const st = ScrollTrigger.create({
-          trigger: scope.current,
+          trigger: pinRef.current,
           start: "top top",
-          end: "+=400", // the "few pixels" hold — tune to taste
-          pin: true,
+          end: () => "+=" + window.innerHeight * 1.7,
+          pin: pinRef.current,
+          pinSpacing: false,
           anticipatePin: 1,
           onToggle: (self) => {
             if (self.isActive) gsap.ticker.add(tick);
@@ -133,5 +135,5 @@ export function useRingCarousel(count: number) {
     { scope }
   );
 
-  return { scope, stageRef, ringRef };
+  return { scope, pinRef, stageRef, ringRef };
 }

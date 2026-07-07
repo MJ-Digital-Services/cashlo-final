@@ -1,7 +1,6 @@
 "use client";
 
-import Container from "@/components/ui/Container";
-import { useStepTimeline } from "@/hooks/useStepTimeline";
+import { useBlindsSlideshow } from "@/hooks/useBlindsSlideshow";
 
 const steps = [
   {
@@ -30,97 +29,90 @@ const steps = [
   },
 ];
 
+const SLATS = 12;
+
 export default function HowItWorks() {
-  const { scope, trackRef } = useStepTimeline();
+  const { scope, stageRef } = useBlindsSlideshow(steps.length);
 
   return (
-    <section ref={scope} className="bg-surface py-24">
-      <Container>
-        {/* Heading */}
-        <div className="mx-auto max-w-2xl text-center">
-          <p
-            data-reveal
-            className="text-sm font-semibold uppercase tracking-wider text-brand"
-          >
+    // z-10 + opaque content => this section slides OVER the pinned ring section
+    <section ref={scope} className="relative z-10 bg-bg">
+      {/* ---------- Desktop: pinned blinds slideshow ---------- */}
+      <div ref={stageRef} className="relative hidden h-screen overflow-hidden md:block">
+        {/* Slides (stacked; first on top) */}
+        {steps.map((s) => (
+          <div key={s.num} data-slide className="blind-slide absolute inset-0">
+            {Array.from({ length: SLATS }).map((_, j) => (
+              <div key={j} className="blind-slat">
+                <div
+                  className="blind-slat__img"
+                  style={{
+                    backgroundImage: `url(${s.img})`,
+                    width: `${SLATS * 100}%`,
+                    left: `-${j * 100}%`,
+                  }}
+                />
+                {/* darkening lives inside the slat so it rotates with it */}
+                <div className="absolute inset-0 bg-black/35" />
+              </div>
+            ))}
+          </div>
+        ))}
+
+        {/* shared bottom gradient for text legibility */}
+        <div className="pointer-events-none absolute inset-0 z-10 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+
+        {/* section label */}
+        <div className="pointer-events-none absolute inset-x-0 top-24 z-20 text-center">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-white/80">
             How It Works
           </p>
-          <h2
-            data-reveal
-            className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl"
-          >
-            Cash Withdrawal in 4 Simple Steps
-          </h2>
-          <p data-reveal className="mt-4 text-lg text-ink/60">
-            A simple, secure process designed for everyday use at your
-            neighbourhood shop.
-          </p>
         </div>
 
-        {/* Timeline */}
-        <div className="relative mt-20">
-          {/* Axis: left on mobile, centered on desktop */}
+        {/* per-step text (crossfaded by the hook) */}
+        {steps.map((s) => (
           <div
-            ref={trackRef}
-            className="absolute inset-y-0 left-6 w-0.5 -translate-x-1/2 lg:left-1/2"
+            key={s.num}
+            data-slide-text
+            className="pointer-events-none absolute inset-x-0 bottom-0 z-20"
           >
-            <div className="absolute inset-0 bg-brand/15" />
-            <div data-fill className="absolute inset-0 w-full bg-brand" />
+            <div className="mx-auto max-w-7xl px-6 pb-16 lg:pb-20">
+              <span className="text-6xl font-bold text-white/25">{s.num}</span>
+              <h3 className="mt-2 max-w-2xl text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                {s.title}
+              </h3>
+              <p className="mt-4 max-w-lg text-lg leading-relaxed text-white/85">
+                {s.desc}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* ---------- Mobile: simple full-width stacked steps ---------- */}
+      <div className="space-y-6 px-6 py-20 md:hidden">
+        <p className="text-center text-sm font-semibold uppercase tracking-wider text-brand">
+          How It Works
+        </p>
+        {steps.map((s) => (
+          <article
+            key={s.num}
+            data-mstep
+            className="relative h-[70vh] overflow-hidden rounded-2xl"
+          >
             <div
-              data-pulse
-              className="absolute left-1/2 top-0 -ml-[7px] h-3.5 w-3.5 rounded-full bg-brand shadow-[0_0_18px_4px_var(--color-brand)]"
+              className="absolute inset-0 bg-cover bg-center"
+              style={{ backgroundImage: `url(${s.img})` }}
             />
-          </div>
-
-          {/* Rows */}
-          <div className="space-y-16 lg:space-y-0">
-            {steps.map((s, i) => {
-              const textLeft = i % 2 === 0; // even: text left / image right
-              return (
-                <div
-                  key={s.num}
-                  data-row
-                  className="timeline-row relative pl-16 lg:grid lg:min-h-[18rem] lg:grid-cols-2 lg:items-center lg:gap-x-24 lg:pl-0"
-                >
-                  {/* Node on the axis */}
-                  <div className="absolute left-6 top-1 -translate-x-1/2 lg:left-1/2 lg:top-1/2 lg:-translate-y-1/2">
-                    <div className="tl-dot flex h-14 w-14 items-center justify-center rounded-full border-2 border-brand/25 bg-card text-xl font-bold text-brand">
-                      {s.num}
-                    </div>
-                  </div>
-
-                  {/* Image — DOM-first so mobile shows image then text */}
-                  <div
-                    data-content
-                    className={`mb-5 lg:mb-0 ${
-                      textLeft ? "lg:order-2" : "lg:order-1"
-                    }`}
-                  >
-                    <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl shadow-sm">
-                      <img
-                        data-parallax-img
-                        src={s.img}
-                        alt={s.title}
-                        className="absolute inset-x-0 -top-[15%] h-[135%] w-full object-cover"
-                      />
-                    </div>
-                  </div>
-
-                  {/* Text — aligned toward the axis on desktop */}
-                  <div
-                    data-content
-                    className={`${textLeft ? "lg:order-1 lg:text-right" : "lg:order-2 lg:text-left"}`}
-                  >
-                    <h3 className="text-2xl font-semibold text-ink">{s.title}</h3>
-                    <p className="mt-3 text-base leading-relaxed text-ink/60">
-                      {s.desc}
-                    </p>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </Container>
+            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent" />
+            <div className="absolute inset-x-0 bottom-0 p-6">
+              <span className="text-4xl font-bold text-white/25">{s.num}</span>
+              <h3 className="mt-1 text-2xl font-semibold text-white">{s.title}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/80">{s.desc}</p>
+            </div>
+          </article>
+        ))}
+      </div>
     </section>
   );
 }
