@@ -110,7 +110,14 @@ export default function MobileMenu() {
         </nav>
 
         {/* CTA pinned at bottom */}
-        <div className="border-t border-border p-4">
+        <div className="space-y-2 border-t border-border p-4">
+          <Link
+            href="/become-distributor"
+            onClick={close}
+            className="block rounded-full border border-border px-5 py-3.5 text-center text-base font-semibold text-ink transition-colors hover:bg-surface"
+          >
+            Become Distributor
+          </Link>
           <Link
             href="/become-merchant"
             onClick={close}

@@ -65,6 +65,16 @@ export default function Navbar() {
         <div className="flex items-center gap-3">
           <ThemeToggle onHero={!scrolled} />
           <Link
+            href="/become-distributor"
+            className={`hidden rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors lg:block ${
+              scrolled
+                ? "border-border text-ink hover:bg-surface"
+                : "border-white/30 text-white hover:bg-white/10"
+            }`}
+          >
+            Become Distributor
+          </Link>
+          <Link
             href="/become-merchant"
             className="hidden rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark lg:block"
           >
