@@ -1,31 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { navItems } from "./navData";
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   const close = () => {
     setOpen(false);
     setExpanded(null);
   };
 
-  return (
-    <div className="lg:hidden">
-      {/* Hamburger button */}
-      <button
-        onClick={() => setOpen(true)}
-        aria-label="Open menu"
-        className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/80 text-ink backdrop-blur-md"
-      >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-      </button>
-
+  const drawer = (
+    <>
       {/* Backdrop */}
       <div
         onClick={close}
@@ -127,6 +120,23 @@ export default function MobileMenu() {
           </Link>
         </div>
       </div>
+    </>
+  );
+
+  return (
+    <div className="lg:hidden">
+      {/* Hamburger button */}
+      <button
+        onClick={() => setOpen(true)}
+        aria-label="Open menu"
+        className="flex h-10 w-10 items-center justify-center rounded-full border border-border bg-card/80 text-ink backdrop-blur-md"
+      >
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+        </svg>
+      </button>
+
+      {mounted && createPortal(drawer, document.body)}
     </div>
   );
 }
