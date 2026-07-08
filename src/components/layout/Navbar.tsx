@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { navItems } from "./navData";
@@ -10,15 +11,23 @@ import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolledPast, setScrolledPast] = useState(false);
   const { theme } = useTheme();
+  const pathname = usePathname();
+
+  // only the homepage gets the transparent-over-hero -> solid-on-scroll behavior
+  const isHomepage = pathname === "/";
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
+    if (!isHomepage) return;
+    const onScroll = () => setScrolledPast(window.scrollY > 24);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [isHomepage]);
+
+  // every other page: always render the "scrolled" (solid/ink) navbar state
+  const scrolled = !isHomepage || scrolledPast;
 
   // color logo only when the bar is solid-white (scrolled + light); else white logo
   const useColorLogo = scrolled && theme === "light";
@@ -76,7 +85,7 @@ export default function Navbar() {
           </Link>
           <Link
             href="/become-merchant"
-            className="hidden rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark lg:block"
+            className="hidden rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors lg:block"
           >
             Become Merchant
           </Link>

@@ -48,6 +48,11 @@ export const navItems: NavItem[] = [
         href: "/services/entertainment",
         icon: "/icons/nav/entertainment.png",
       },
+      {
+        label: "QuickKhata",
+        href: "/quickkhata",
+        icon: "/icons/nav/quickkhata.png",
+      }
     ],
   },
   {
