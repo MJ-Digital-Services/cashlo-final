@@ -15,7 +15,7 @@ export default function AboutPage() {
       <AboutJourney />
       <AboutStats />
       <AboutCTA />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

@@ -11,7 +11,7 @@ export default function QuickKhataPage() {
       <QuickKhataFeatures />
       <QuickKhataHowItWorks />
       <QuickKhataCTA />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }

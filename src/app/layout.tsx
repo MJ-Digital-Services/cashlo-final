@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -13,7 +14,6 @@ export const metadata: Metadata = {
   description: "Turn your shop into a UPI CashPoint and earn every day.",
 };
 
-// runs before paint so a dark refresh doesn't flash light
 const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`;
 
 export default function RootLayout({
@@ -31,7 +31,10 @@ export default function RootLayout({
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
           <Navbar />
-          <SmoothScroll>{children}</SmoothScroll>
+          <SmoothScroll>
+            <main className="flex-1">{children}</main>
+          </SmoothScroll>
+          <Footer />
         </ThemeProvider>
       </body>
     </html>

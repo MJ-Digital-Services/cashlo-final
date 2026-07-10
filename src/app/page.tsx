@@ -23,7 +23,7 @@ export default function Home() {
       <SupportedBy />
       <ImportantRules />
       <DownloadCTA />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }

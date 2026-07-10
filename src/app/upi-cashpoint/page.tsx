@@ -13,7 +13,7 @@ export default function UpiCashPointPage() {
       <UpiLimitsRules />
       <SupportedBy />
       <UpiCTA />
-      <Footer />
+      {/* <Footer /> */}
     </main>
   );
 }
