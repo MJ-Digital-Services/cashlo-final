@@ -92,7 +92,6 @@ export default function BecomeDistributorSection() {
     name: "",
     mobile: "",
     email: "",
-    asmCode: "",
     referralCode: "",
   });
   const [consents, setConsents] = useState<Consents>({
@@ -636,21 +635,17 @@ export default function BecomeDistributorSection() {
                     placeholder="you@example.com"
                   />
                 </div>
-                <div>
-                  <label className="text-sm font-medium text-ink">ASM Code (Optional)</label>
-                  <input
-                    value={form.asmCode}
-                    onChange={(e) => setForm((f) => ({ ...f, asmCode: e.target.value }))}
-                    className={inputClass}
-                  />
-                </div>
-                <div>
+                <div className="sm:col-span-2">
                   <label className="text-sm font-medium text-ink">Referral Code (Optional)</label>
                   <input
                     value={form.referralCode}
                     onChange={(e) => setForm((f) => ({ ...f, referralCode: e.target.value }))}
                     className={inputClass}
+                    placeholder="Enter referral code if you have one"
                   />
+                  <p className="mt-1.5 text-xs text-ink/40">
+                    Note: Referral Code refers to your Employee RT, DT, or MD Code.
+                  </p>
                 </div>
               </div>
 
