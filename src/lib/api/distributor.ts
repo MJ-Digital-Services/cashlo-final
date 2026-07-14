@@ -38,6 +38,12 @@ export type CreateOrderResult = {
   gst: { baseAmount: number; gstAmount: number; totalAmount: number };
 };
 
+export type NearbyPincodeSuggestion = {
+  pincode: string;
+  district: string;
+  state: string;
+};
+
 class ApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
@@ -65,6 +71,9 @@ async function post<T>(path: string, body: unknown): Promise<T> {
 export const distributorApi = {
   checkPincode: (pincode: string) =>
     post<PincodeCheckResult>("/distributor/check-pincode", { pincode }),
+
+  getNearbyPincodes: (pincode: string) =>
+    post<NearbyPincodeSuggestion[]>("/distributor/nearby-pincodes", { pincode }),
 
   sendOtp: (input: DistributorFormInput) =>
     post<{ bookingId: string }>("/distributor/send-otp", input),

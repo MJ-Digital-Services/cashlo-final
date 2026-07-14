@@ -10,6 +10,7 @@ import {
   type PincodeCheckResult,
   type Consents,
   type CreateOrderResult,
+  type NearbyPincodeSuggestion,
 } from "@/lib/api/distributor";
 import { PaymentSuccessAnimation } from "./PaymentSuccessAnimation";
 import { SubmitButton } from "@/components/ui/SubmitButton";
@@ -104,6 +105,10 @@ export default function BecomeDistributorSection() {
   const [otpError, setOtpError] = useState("");
   const [resendCooldown, setResendCooldown] = useState(0);
 
+  // --- Nearby Pincode ---
+  const [nearbySuggestions, setNearbySuggestions] = useState<NearbyPincodeSuggestion[]>([]);
+  const [nearbyLoading, setNearbyLoading] = useState(false);
+
   // --- Payment step ---
   const [paymentError, setPaymentError] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<"preparing" | "waiting" | "dismissed" | "verifying" | "success">(
@@ -116,23 +121,48 @@ export default function BecomeDistributorSection() {
     return () => clearTimeout(t);
   }, [resendCooldown]);
 
-  async function handleCheckPincode(e: FormEvent) {
-    e.preventDefault();
-    if (!/^\d{6}$/.test(pincodeInput)) {
+  async function runPincodeCheck(value: string) {
+    if (!/^\d{6}$/.test(value)) {
       setPincodeError("Please enter a valid 6-digit pincode.");
       return;
     }
     setPincodeLoading(true);
     setPincodeError("");
+    setNearbySuggestions([]);
     try {
-      const result = await distributorApi.checkPincode(pincodeInput);
+      const result = await distributorApi.checkPincode(value);
       setPincodeResult(result);
+      if (result.reason === "already_allotted") {
+        fetchNearbySuggestions(value);
+      }
     } catch (err) {
       setPincodeError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
       setPincodeResult(null);
     } finally {
       setPincodeLoading(false);
     }
+  }
+
+  async function handleCheckPincode(e: FormEvent) {
+    e.preventDefault();
+    await runPincodeCheck(pincodeInput);
+  }
+
+  async function fetchNearbySuggestions(pincode: string) {
+    setNearbyLoading(true);
+    try {
+      const suggestions = await distributorApi.getNearbyPincodes(pincode);
+      setNearbySuggestions(suggestions);
+    } catch {
+      setNearbySuggestions([]);
+    } finally {
+      setNearbyLoading(false);
+    }
+  }
+
+  async function selectSuggestedPincode(pincode: string) {
+    setPincodeInput(pincode);
+    await runPincodeCheck(pincode);
   }
 
   function resetToPincodeStep() {
@@ -365,9 +395,41 @@ export default function BecomeDistributorSection() {
                     😔 Oops! This PIN Code has already been assigned to another Cashlo Distributor.
                   </p>
                   <p className="mt-2 text-sm text-ink/60">
-                    Please try another nearby PIN Code to continue.
+                    Please try another nearby PIN Code to continue. We&apos;d love to help you find an
+                    available territory.
                   </p>
-                  <button onClick={resetToPincodeStep} className="mt-4 w-full rounded-full border border-border px-7 py-3 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand">
+
+                  {nearbyLoading && <p className="mt-3 text-xs text-ink/50">Finding nearby pincodes...</p>}
+
+                  {!nearbyLoading && nearbySuggestions.length > 0 && (
+                    <div className="mt-4">
+                      <p className="text-xs font-medium uppercase tracking-wider text-ink/40">
+                        Available Nearby
+                      </p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {nearbySuggestions.map((s) => (
+                          <button
+                            key={s.pincode}
+                            onClick={() => selectSuggestedPincode(s.pincode)}
+                            className="rounded-full border border-border bg-bg px-4 py-1.5 text-xs font-medium text-ink transition-colors hover:border-brand hover:text-brand"
+                          >
+                            {s.pincode}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {!nearbyLoading && nearbySuggestions.length === 0 && (
+                    <p className="mt-3 text-xs text-ink/40">
+                      No nearby PIN codes available right now — try a different area.
+                    </p>
+                  )}
+
+                  <button
+                    onClick={resetToPincodeStep}
+                    className="mt-4 w-full rounded-full border border-border px-7 py-3 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
+                  >
                     Try Another PIN Code
                   </button>
                 </div>
