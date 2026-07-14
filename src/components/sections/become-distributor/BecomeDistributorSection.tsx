@@ -1,7 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback, type FormEvent } from "react";
+import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import Script from "next/script";
+import { useGSAP } from "@gsap/react";
+import { gsap } from "gsap";
+import { MapPin, Lock } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
@@ -79,6 +82,10 @@ export default function BecomeDistributorSection() {
   const [pincodeLoading, setPincodeLoading] = useState(false);
   const [pincodeError, setPincodeError] = useState("");
   const [pincodeResult, setPincodeResult] = useState<PincodeCheckResult | null>(null);
+  const pincodeInputRef = useRef<HTMLInputElement>(null);
+  const pincodeConfettiRef = useRef<HTMLDivElement>(null);
+  const pinIconRef = useRef<SVGSVGElement>(null);
+  const lockIconRef = useRef<SVGSVGElement>(null);
 
   // --- Form step ---
   const [form, setForm] = useState({
@@ -120,6 +127,112 @@ export default function BecomeDistributorSection() {
     const t = setTimeout(() => setResendCooldown((s) => s - 1), 1000);
     return () => clearTimeout(t);
   }, [resendCooldown]);
+
+  useGSAP(
+    () => {
+      const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const input = pincodeInputRef.current;
+
+      if (pincodeLoading) {
+        if (prefersReducedMotion) return;
+        if (pinIconRef.current) {
+          gsap.to(pinIconRef.current, {
+            y: -6,
+            duration: 0.5,
+            repeat: -1,
+            yoyo: true,
+            ease: "power1.inOut",
+          });
+        }
+        gsap.to(".loading-dot", {
+          y: -4,
+          opacity: 0.4,
+          duration: 0.4,
+          repeat: -1,
+          yoyo: true,
+          stagger: 0.15,
+          ease: "power1.inOut",
+        });
+        return;
+      }
+
+      if (!input) return;
+
+      if (!pincodeResult) {
+        gsap.set(input, { clearProps: "borderColor,boxShadow,x" });
+        return;
+      }
+
+      if (pincodeResult.available) {
+        gsap.to(input, {
+          borderColor: "#22c55e",
+          boxShadow: "0 0 0 4px rgba(34,197,94,0.18)",
+          duration: 0.45,
+          ease: "power2.out",
+        });
+        if (!prefersReducedMotion) fireLightConfetti();
+      } else if (pincodeResult.reason === "already_allotted") {
+        gsap.to(input, {
+          borderColor: "#ef4444",
+          boxShadow: "0 0 0 4px rgba(239,68,68,0.18)",
+          duration: 0.3,
+        });
+        if (!prefersReducedMotion) {
+          gsap.fromTo(
+            input,
+            { x: 0 },
+            { x: 10, duration: 0.07, repeat: 5, yoyo: true, ease: "power1.inOut", clearProps: "x" }
+          );
+          if (lockIconRef.current) {
+            gsap.fromTo(
+              lockIconRef.current,
+              { scale: 0, rotate: -15 },
+              { scale: 1, rotate: 0, duration: 0.4, ease: "back.out(3)" }
+            );
+          }
+        }
+      } else if (pincodeResult.reason === "temporarily_reserved") {
+        gsap.to(input, {
+          borderColor: "#f59e0b",
+          boxShadow: "0 0 0 4px rgba(245,158,11,0.18)",
+          duration: 0.3,
+        });
+      }
+
+      function fireLightConfetti() {
+        const container = pincodeConfettiRef.current;
+        if (!container) return;
+        const colors = ["#445df0", "#22c55e", "#ffb020", "#8b9cf7"];
+        for (let i = 0; i < 14; i++) {
+          const particle = document.createElement("div");
+          const size = gsap.utils.random(4, 7);
+          particle.style.position = "absolute";
+          particle.style.left = `${gsap.utils.random(10, 90)}%`;
+          particle.style.top = "-6px";
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.borderRadius = i % 2 === 0 ? "9999px" : "1px";
+          particle.style.backgroundColor = colors[i % colors.length];
+          container.appendChild(particle);
+
+          gsap.fromTo(
+            particle,
+            { y: -10, opacity: 1, rotation: 0 },
+            {
+              y: gsap.utils.random(70, 130),
+              x: gsap.utils.random(-25, 25),
+              rotation: gsap.utils.random(-180, 180),
+              opacity: 0,
+              duration: gsap.utils.random(0.8, 1.2),
+              ease: "power1.in",
+              onComplete: () => particle.remove(),
+            }
+          );
+        }
+      }
+    },
+    { dependencies: [pincodeResult, pincodeLoading], scope }
+  );
 
   async function runPincodeCheck(value: string) {
     if (!/^\d{6}$/.test(value)) {
@@ -339,23 +452,44 @@ export default function BecomeDistributorSection() {
           {step === "pincode" && (
             <div>
               <form onSubmit={handleCheckPincode} className="flex gap-3">
-                <input
-                  value={pincodeInput}
-                  onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="Enter your area PIN code"
-                  inputMode="numeric"
-                  className={inputClass + " mt-0"}
-                />
+                <div className="relative flex-1">
+                  <div
+                    ref={pincodeConfettiRef}
+                    className="pointer-events-none absolute inset-x-0 -top-2 h-0 overflow-visible"
+                    aria-hidden="true"
+                  />
+                  <input
+                    ref={pincodeInputRef}
+                    value={pincodeInput}
+                    onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                    placeholder="Enter your area PIN code"
+                    inputMode="numeric"
+                    className={inputClass + " mt-0"}
+                  />
+                </div>
                 <button
                   type="submit"
                   disabled={pincodeLoading}
                   className="shrink-0 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
                 >
-                  {pincodeLoading ? "Checking..." : "Find"}
+                  Find
                 </button>
               </form>
 
               {pincodeError && <p className="mt-3 text-sm text-red-600">{pincodeError}</p>}
+
+              {pincodeLoading && (
+                <div className="mt-5 flex flex-col items-center gap-2 py-4">
+                  <MapPin ref={pinIconRef} className="h-6 w-6 text-brand" />
+                  <p className="text-sm font-medium text-ink">🔍 Checking PIN Code Availability...</p>
+                  <p className="text-xs text-ink/50">Finding your exclusive territory...</p>
+                  <div className="mt-1 flex gap-1">
+                    <span className="loading-dot h-1.5 w-1.5 rounded-full bg-brand" />
+                    <span className="loading-dot h-1.5 w-1.5 rounded-full bg-brand" />
+                    <span className="loading-dot h-1.5 w-1.5 rounded-full bg-brand" />
+                  </div>
+                </div>
+              )}
 
               {pincodeResult?.available && (
                 <div className="mt-5 rounded-xl border border-green-200 bg-green-50 p-5">
@@ -380,9 +514,12 @@ export default function BecomeDistributorSection() {
 
               {pincodeResult && !pincodeResult.available && pincodeResult.reason === "already_allotted" && (
                 <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-5">
-                  <p className="font-semibold text-red-700">
-                    😔 Oops! This PIN Code has already been assigned to another Cashlo Distributor.
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <Lock ref={lockIconRef} className="h-5 w-5 shrink-0 text-red-600" />
+                    <p className="font-semibold text-red-700">
+                      😔 Oops! This PIN Code has already been assigned to another Cashlo Distributor.
+                    </p>
+                  </div>
                   <p className="mt-2 text-sm text-ink/60">
                     Please try another nearby PIN Code to continue. We&apos;d love to help you find an
                     available territory.
