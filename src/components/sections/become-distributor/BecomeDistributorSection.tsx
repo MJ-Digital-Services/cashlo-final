@@ -229,11 +229,16 @@ export default function BecomeDistributorSection() {
                 "cashlo_booking_receipt",
                 JSON.stringify({
                   name: form.name,
+                  mobile: form.mobile,
+                  email: form.email,
                   pincode: pincodeResult?.pincode,
                   district: pincodeResult?.district,
                   state: pincodeResult?.state,
-                  amount: order.amount,
+                  baseAmount: order.gst.baseAmount,
+                  gstAmount: order.gst.gstAmount,
+                  totalAmount: order.gst.totalAmount,
                   paymentId: response.razorpay_payment_id,
+                  orderId: order.orderId,
                   bookingId: order.bookingId,
                   date: new Date().toISOString(),
                 })

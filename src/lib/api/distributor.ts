@@ -34,6 +34,7 @@ export type CreateOrderResult = {
   currency: string;
   keyId: string;
   bookingId: string;
+  gst: { baseAmount: number; gstAmount: number; totalAmount: number };
 };
 
 class ApiError extends Error {
