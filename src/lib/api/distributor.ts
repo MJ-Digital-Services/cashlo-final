@@ -16,6 +16,7 @@ export type Consents = {
   terms: boolean;
   kyc: boolean;
   genuineMerchants: boolean;
+  policyViolation: boolean;
 };
 
 export type DistributorFormInput = {

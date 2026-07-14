@@ -58,7 +58,8 @@ export default function BecomeDistributorThanksPage() {
           <p className="text-2xl">🎉</p>
           <h1 className="mt-3 text-2xl font-bold text-ink">Congratulations!</h1>
           <p className="mt-2 text-sm text-ink/60">
-            Your PIN Code has been successfully reserved. Our team will contact you shortly for
+            Your PIN Code has been successfully reserved. This territory is now exclusively assigned to
+            you — no other distributor can reserve this PIN Code. Our team will contact you shortly for
             onboarding.
           </p>
         </div>

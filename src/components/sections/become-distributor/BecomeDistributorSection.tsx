@@ -61,6 +61,10 @@ const CONSENT_ITEMS: { key: keyof Consents; label: string }[] = [
     key: "terms",
     label: "I agree to follow Cashlo's distributor policies and guidelines.",
   },
+  {
+    key: "policyViolation",
+    label: "I understand that policy violations may result in suspension or termination.",
+  },
 ];
 
 export default function BecomeDistributorSection() {
@@ -88,6 +92,7 @@ export default function BecomeDistributorSection() {
     terms: false,
     kyc: false,
     genuineMerchants: false,
+    policyViolation: false,
   });
   const [formLoading, setFormLoading] = useState(false);
   const [formError, setFormError] = useState("");
