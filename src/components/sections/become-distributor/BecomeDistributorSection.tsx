@@ -327,24 +327,13 @@ export default function BecomeDistributorSection() {
   }, [step, razorpayLoaded]);
 
   return (
-    <section ref={scope} className="bg-surface py-20 sm:py-24">
+    <section id="reserve" ref={scope} className="scroll-mt-24 bg-surface py-20 sm:py-24">
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="lazyOnload"
         onLoad={() => setRazorpayLoaded(true)}
       />
       <Container className="mx-auto max-w-xl">
-        <div data-reveal className="mb-10 text-center">
-          <p className="text-sm font-semibold uppercase tracking-wider text-brand">
-            Reserve Your Territory
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-            Become a Cashlo Distributor
-          </h2>
-          <p className="mt-4 text-ink/60">
-            Only one distributor is allowed per PIN Code. Reserve yours before someone else does.
-          </p>
-        </div>
 
         <div data-reveal className="rounded-2xl border border-border bg-card p-6 sm:p-8">
           {step === "pincode" && (
