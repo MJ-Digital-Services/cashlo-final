@@ -65,6 +65,7 @@ export default function Footer() {
             <h4 className="text-sm font-semibold text-ink">Contact</h4>
             <ul className="mt-4 space-y-2.5 text-sm text-ink/60">
               <li>support@cashlo.in</li>
+              <li>sales@cashlo.in</li>
               <li>+91-XXXXXXXXXX</li>
             </ul>
             <div className="mt-5 flex flex-wrap gap-3">
