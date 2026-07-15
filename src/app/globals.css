@@ -294,3 +294,242 @@ body {
   box-shadow: 0 20px 50px -20px rgb(0 0 0 / 0.25);
   will-change: transform;
 }
+
+/* ================================================================
+   Cashlo hero — ported 1:1 from the reference HTML.
+   Everything is scoped under .cx-hero so it can't collide with the
+   rest of the site. Keyframes are prefixed with cx for the same
+   reason. Append this to app/globals.css (and remove the previous
+   .phone / .cash-note / .qr-* hero blocks if you added them).
+   ================================================================ */
+
+.cx-hero {
+  /* the reference page's design tokens, scoped to the hero only */
+  --blue: #3d5afe;
+  --blue-deep: #2136d4;
+  --blue-soft: #e9edff;
+  --ink: #070b1e;
+  --ink-2: #101632;
+  --body: #3a415c;
+  --muted: #6b7394;
+  --paper: #ffffff;
+  --mist: #f4f6fe;
+  --mint: #12c286;
+  --mint-soft: #e4fbf2;
+  --red: #ff4d5e;
+  --gold: #f5b301;
+  --grad: linear-gradient(120deg, #3d5afe 0%, #5e7bff 45%, #00c2ff 100%);
+  --grad-txt: linear-gradient(100deg, #3d5afe, #00a6ff 60%, #7b61ff);
+  --shadow-s: 0 2px 10px rgba(13, 25, 80, 0.06);
+  --shadow-m: 0 14px 40px -12px rgba(13, 25, 80, 0.16);
+  --shadow-l: 0 40px 90px -20px rgba(20, 35, 110, 0.28);
+  --glow: 0 8px 34px -6px rgba(61, 90, 254, 0.5);
+  --font-d: var(--cx-font, "Poppins", sans-serif);
+  --font-b: var(--cx-font, "Poppins", sans-serif);
+  --font-m: var(--cx-font, "Poppins", sans-serif);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --nav-h: 76px;
+
+  font-family: var(--font-b);
+  color: var(--body);
+  font-size: 16.5px;
+  line-height: 1.65;
+}
+.cx-hero h1 {
+  font-family: var(--font-d);
+  color: var(--ink);
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  font-weight: 700;
+  margin: 0;
+}
+.cx-hero a { color: inherit; text-decoration: none; }
+.cx-hero ::selection { background: var(--blue); color: #fff; }
+
+.cx-hero .wrap { max-width: 1200px; margin: 0 auto; padding: 0 28px; }
+
+/* ---- eyebrow ---- */
+.cx-hero .eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-m);font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--blue);padding:9px 18px;position:relative;background:rgba(61,90,254,.06);border-radius:12px}
+.cx-hero .eyebrow::before,.cx-hero .eyebrow::after{content:"";position:absolute;width:14px;height:14px;border:2.5px solid var(--blue);opacity:.85}
+.cx-hero .eyebrow::before{top:-4px;left:-4px;border-right:none;border-bottom:none;border-radius:6px 0 0 0}
+.cx-hero .eyebrow::after{bottom:-4px;right:-4px;border-left:none;border-top:none;border-radius:0 0 6px 0}
+.cx-hero .eyebrow .dot{width:7px;height:7px;border-radius:50%;background:var(--mint);animation:cxPulseDot 1.6s infinite}
+@keyframes cxPulseDot{0%,100%{box-shadow:0 0 0 0 rgba(18,194,134,.5)}55%{box-shadow:0 0 0 7px rgba(18,194,134,0)}}
+
+/* ---- type ---- */
+.cx-hero .h-hero{font-size:clamp(46px,7.6vw,102px);font-weight:800;letter-spacing:-.04em;line-height:.98}
+.cx-hero .grad-txt{background:var(--grad-txt);-webkit-background-clip:text;background-clip:text;color:transparent}
+.cx-hero .lede{font-size:clamp(17px,1.6vw,20px);color:var(--muted);line-height:1.7;max-width:640px;margin:0}
+
+/* ---- buttons ---- */
+.cx-hero .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:600;font-size:16px;padding:16px 30px;border-radius:100px;transition:transform .45s var(--ease),box-shadow .45s var(--ease),background .3s;position:relative;overflow:hidden;will-change:transform;white-space:nowrap}
+.cx-hero .btn-primary{background:linear-gradient(100deg,#3D5AFE,#7B61FF,#00C2FF,#3D5AFE);background-size:280% 100%;color:#fff;box-shadow:var(--glow);animation:cxGradShift 7s linear infinite}
+@keyframes cxGradShift{0%{background-position:0% 50%}100%{background-position:280% 50%}}
+.cx-hero .btn-primary::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.35) 50%,transparent 80%);transform:translateX(-120%);transition:transform .8s var(--ease)}
+.cx-hero .btn-primary:hover::before{transform:translateX(120%)}
+.cx-hero .btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 44px -8px rgba(61,90,254,.65)}
+.cx-hero .btn-ghost{background:rgba(61,90,254,.07);color:var(--blue);border:1.5px solid rgba(61,90,254,.22);backdrop-filter:blur(8px)}
+.cx-hero .btn-ghost:hover{background:rgba(61,90,254,.13);transform:translateY(-3px)}
+.cx-hero .btn-lg{padding:19px 38px;font-size:17px}
+.cx-hero .btn .arr{transition:transform .35s var(--ease)}
+.cx-hero .btn:hover .arr{transform:translateX(4px)}
+.cx-hero .btn:active{transform:scale(.97)}
+.cx-hero .btn:focus-visible,.cx-hero a:focus-visible{outline:3px solid rgba(61,90,254,.55);outline-offset:3px}
+
+/* ---- reveal system ---- */
+.cx-hero .rv{opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.cx-hero .rv.in{opacity:1;transform:none}
+
+/* ---- hero shell ---- */
+.cx-hero.hero{position:relative;padding:calc(var(--nav-h) + 70px) 0 60px;min-height:92vh;display:flex;align-items:center;overflow:hidden}
+.cx-hero .mesh{position:absolute;inset:0;z-index:0;background:
+  radial-gradient(52% 44% at 12% 8%,rgba(61,90,254,.14),transparent 60%),
+  radial-gradient(44% 38% at 88% 14%,rgba(0,194,255,.13),transparent 60%),
+  radial-gradient(50% 44% at 50% 100%,rgba(123,97,255,.1),transparent 60%),#fff}
+.cx-hero .orb{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5;z-index:1;animation:cxOrbFloat 14s ease-in-out infinite}
+.cx-hero .orb.o1{width:420px;height:420px;background:rgba(61,90,254,.35);top:-120px;left:-100px}
+.cx-hero .orb.o2{width:360px;height:360px;background:rgba(0,194,255,.3);bottom:-80px;right:-60px;animation-delay:-7s}
+@keyframes cxOrbFloat{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(40px,-30px) scale(1.08)}}
+.cx-hero .wrap{position:relative;z-index:2}
+
+.cx-hero .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:56px;align-items:center}
+.cx-hero .hero-copy{display:flex;flex-direction:column;gap:26px;align-items:flex-start}
+.cx-hero .hero-ctas{display:flex;gap:14px;flex-wrap:wrap;margin-top:6px}
+.cx-hero .hero-pills{display:flex;gap:14px;flex-wrap:wrap}
+.cx-hero .pill{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.75);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.9);box-shadow:var(--shadow-s);border-radius:100px;padding:9px 18px;font-size:14px;font-weight:600;color:var(--ink)}
+.cx-hero .pill b{font-family:var(--font-m);color:var(--blue)}
+.cx-hero .pill .pdot{width:8px;height:8px;border-radius:50%;background:var(--mint);animation:cxPulseDot 1.6s infinite}
+
+/* ---- social proof ---- */
+.cx-hero .proof{display:flex;align-items:center;gap:15px;flex-wrap:wrap}
+.cx-hero .avs{display:flex}
+.cx-hero .avs span{width:38px;height:38px;border-radius:50%;border:2.5px solid #fff;box-shadow:var(--shadow-s);display:grid;place-items:center;font-size:12.5px;font-weight:700;color:#fff;margin-left:-11px}
+.cx-hero .avs span:first-child{margin-left:0}
+.cx-hero .stars{color:#FFB800;font-size:15px;letter-spacing:2.5px;display:block}
+.cx-hero .proof small{display:block;font-size:12.5px;color:var(--muted);font-weight:500;margin-top:2px}
+.cx-hero .proof b{color:var(--ink)}
+
+/* ---- floating coins + halo ---- */
+.cx-hero .h-coin{position:absolute;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#5B3D00;background:radial-gradient(120% 120% at 30% 25%,#FFE9A8,#F7C948 55%,#D99A1F);box-shadow:inset 0 -6px 14px rgba(120,70,0,.45),inset 0 4px 10px rgba(255,255,255,.7),0 24px 50px -18px rgba(214,158,31,.55);animation:cxCoinFloat 9s ease-in-out infinite;z-index:1}
+@keyframes cxCoinFloat{0%,100%{transform:translateY(0) rotate(-8deg)}50%{transform:translateY(-26px) rotate(7deg)}}
+.cx-hero .phone-halo{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:560px;height:560px;border-radius:50%;background:radial-gradient(closest-side,rgba(61,90,254,.16),rgba(61,90,254,.05) 58%,transparent 72%);filter:blur(4px);z-index:0;pointer-events:none}
+
+/* ---- phone ---- */
+.cx-hero .phone-stage{position:relative;display:flex;justify-content:center;perspective:1400px}
+.cx-hero .phone{width:min(330px,80vw);border-radius:48px;background:linear-gradient(160deg,#1A2140,#070B1E);padding:12px;box-shadow:var(--shadow-l),inset 0 0 0 2px rgba(255,255,255,.08);transform:rotateY(-9deg) rotateX(4deg);transition:transform 1s var(--ease);animation:cxPhoneFloat 7s ease-in-out infinite;position:relative;z-index:2}
+.cx-hero .phone:hover{transform:rotateY(0) rotateX(0) scale(1.02)}
+@keyframes cxPhoneFloat{0%,100%{translate:0 0}50%{translate:0 -16px}}
+.cx-hero .phone-scr{border-radius:38px;background:linear-gradient(175deg,#F7F9FF,#EDF1FF);overflow:hidden;position:relative;height:600px;display:flex;flex-direction:column}
+.cx-hero .notch{position:absolute;top:10px;left:50%;transform:translateX(-50%);width:104px;height:26px;background:#070B1E;border-radius:100px;z-index:5}
+.cx-hero .p-brand{display:flex;align-items:center;gap:8px;font-family:var(--font-d);font-weight:800;color:var(--ink);font-size:17px}
+
+/* ---- floating chips ---- */
+.cx-hero .f-chip{position:absolute;background:rgba(255,255,255,.85);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.95);border-radius:18px;box-shadow:var(--shadow-m);padding:12px 16px;display:flex;gap:11px;align-items:center;z-index:3;animation:cxChipFloat 6s ease-in-out infinite}
+.cx-hero .f-chip .ci{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;font-size:18px;flex:none}
+.cx-hero .f-chip b{display:block;font-size:14px;color:var(--ink);font-family:var(--font-d)}
+.cx-hero .f-chip span{font-size:11.5px;color:var(--muted);font-family:var(--font-m)}
+.cx-hero .f-chip.c1{top:9%;left:-6%;animation-delay:-1s}
+.cx-hero .f-chip.c2{bottom:22%;right:-9%;animation-delay:-3s}
+.cx-hero .f-chip.c3{bottom:2%;left:-2%;animation-delay:-5s}
+@keyframes cxChipFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-13px)}}
+
+/* ---- app dashboard mock ---- */
+.cx-hero .ap-bar{padding:48px 18px 10px;display:flex;align-items:center;gap:9px}
+.cx-hero .ap-bar .p-brand{margin-right:auto}
+.cx-hero .ap-ic{width:37px;height:37px;border-radius:13px;background:#fff;display:grid;place-items:center;font-size:15px;box-shadow:var(--shadow-s);position:relative}
+.cx-hero .ap-ic .dot{position:absolute;top:7px;right:8px;width:7px;height:7px;border-radius:50%;background:#FF4D5E;border:1.5px solid #fff}
+.cx-hero .ap-body{flex:1;padding:2px 15px 76px;display:flex;flex-direction:column;gap:11px;overflow:hidden}
+.cx-hero .bal-card{background:linear-gradient(150deg,#4C68FF,#2A3FE0);border-radius:24px;padding:15px;display:flex;gap:11px;color:#fff;box-shadow:0 18px 40px -14px rgba(42,63,224,.55)}
+.cx-hero .bal-l{flex:1;display:flex;flex-direction:column;gap:8px}
+.cx-hero .bal-lbl{font-size:11.5px;opacity:.85;font-weight:500}
+.cx-hero .bal-amt{font-size:26px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:8px;line-height:1}
+.cx-hero .bal-amt .eye{width:25px;height:25px;flex:none;border-radius:50%;background:rgba(255,255,255,.18);display:grid;place-items:center;font-size:11px}
+.cx-hero .bal-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.24);padding:6px 12px;border-radius:100px;font-size:11px;font-weight:600;width:max-content}
+.cx-hero .scan-tile{width:116px;flex:none;border-radius:20px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 6px}
+.cx-hero .scan-tile b{font-size:12.5px;font-weight:700}
+.cx-hero .qr-grid{display:grid;grid-template-columns:repeat(17,1fr);gap:2px;width:172px;height:172px;position:relative}
+.cx-hero .qr-grid i{background:var(--ink);border-radius:2px;opacity:0;transform:scale(.3);transition:opacity .3s,transform .3s}
+.cx-hero .qr-grid i.on{opacity:1;transform:scale(1)}
+.cx-hero .qr-grid i.eye{background:var(--blue)}
+.cx-hero .qr-sm{width:86px;height:86px;gap:1px}
+.cx-hero .qr-sm i,.cx-hero .qr-sm i.eye{background:#fff;border-radius:1px}
+.cx-hero .scanline{position:absolute;left:6%;width:88%;height:3px;border-radius:3px;background:linear-gradient(90deg,transparent,var(--blue),transparent);box-shadow:0 0 18px 3px rgba(61,90,254,.6);top:16px;opacity:0}
+.cx-hero .ap-status{font-size:7.5px;letter-spacing:.08em;font-weight:600;opacity:.9;min-height:9px;text-align:center;color:#fff}
+.cx-hero .qa-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.cx-hero .qa{background:#fff;border-radius:17px;padding:11px 4px 9px;display:flex;flex-direction:column;align-items:center;gap:6px;box-shadow:var(--shadow-s)}
+.cx-hero .qa .qi{width:37px;height:37px;border-radius:13px;display:grid;place-items:center;font-size:16px;color:#fff}
+.cx-hero .qa span:last-child{font-size:9.5px;font-weight:600;color:var(--ink);text-align:center;line-height:1.2}
+.cx-hero .ap-banner{background:linear-gradient(120deg,#0E1330,#22348F);border-radius:17px;padding:11px 15px;display:flex;align-items:center;gap:11px;color:#fff}
+.cx-hero .ap-banner b{font-size:12px;font-weight:700;letter-spacing:.02em;display:block}
+.cx-hero .ap-banner small{display:block;font-size:9.5px;opacity:.75;font-weight:500;margin-top:2px}
+.cx-hero .earn-row{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.cx-hero .e-card{background:#fff;border-radius:17px;padding:11px 12px;box-shadow:var(--shadow-s);display:flex;flex-direction:column;gap:3px}
+.cx-hero .e-top{display:flex;align-items:center;gap:7px;font-size:10px;font-weight:600;color:var(--muted)}
+.cx-hero .e-top .ei{width:25px;height:25px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:12px}
+.cx-hero .e-card b{font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.02em}
+.cx-hero .e-sub{font-size:9.5px;font-weight:600}
+.cx-hero .ap-nav{position:absolute;left:11px;right:11px;bottom:11px;background:#0B1026;border-radius:23px;display:flex;align-items:flex-end;justify-content:space-around;padding:9px 6px 8px;z-index:3;box-shadow:0 -8px 30px -12px rgba(7,11,30,.4)}
+.cx-hero .ap-nav>span{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:8.5px;font-weight:600;color:#8B96C2}
+.cx-hero .ap-nav>span.on{color:#fff}
+.cx-hero .ap-nav .ni{font-size:14px;line-height:1}
+.cx-hero .ap-qr{width:47px;height:47px;border-radius:50%;background:linear-gradient(150deg,#4F6BFF,#2A46E8);display:grid;place-items:center;margin-top:-28px;border:4px solid #EDF1FF;box-shadow:0 10px 22px -6px rgba(42,70,232,.7)}
+
+/* ---- payment success overlay ---- */
+.cx-hero .p-success{position:absolute;inset:0;background:rgba(247,250,255,.96);backdrop-filter:blur(4px);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;opacity:0;pointer-events:none;transition:.5s;z-index:4}
+.cx-hero .p-success.show{opacity:1}
+.cx-hero .tick{width:86px;height:86px;border-radius:50%;background:var(--mint);display:grid;place-items:center;position:relative}
+.cx-hero .tick svg{width:44px;height:44px}
+.cx-hero .tick svg path{stroke:#fff;stroke-width:6;fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:60;stroke-dashoffset:60}
+.cx-hero .p-success.show .tick svg path{animation:cxDraw .6s .25s var(--ease) forwards}
+@keyframes cxDraw{to{stroke-dashoffset:0}}
+.cx-hero .ripple{position:absolute;inset:0;border-radius:50%;border:3px solid var(--mint);animation:cxRip 1.4s infinite}
+@keyframes cxRip{to{transform:scale(2.1);opacity:0}}
+.cx-hero .p-success b{font-family:var(--font-d);font-size:21px;color:var(--ink)}
+.cx-hero .p-success span{font-family:var(--font-m);font-size:13px;color:var(--muted)}
+
+/* ---- flying notes on success ---- */
+.cx-hero .note{position:absolute;font-size:22px;opacity:0;z-index:1}
+@keyframes cxNoteFly{0%{opacity:0;transform:translateY(10px) rotate(0) scale(.7)}15%{opacity:1}100%{opacity:0;transform:translateY(-130px) rotate(28deg) scale(1.15)}}
+
+/* ---- responsive (same breakpoints as the reference) ---- */
+@media (max-width: 1020px) {
+  .cx-hero .hero-grid { grid-template-columns: 1fr; }
+  .cx-hero .h-coin, .cx-hero .phone-halo { display: none; }
+  .cx-hero .phone-stage { margin-top: 20px; }
+  .cx-hero .f-chip.c2 { right: 0; }
+  .cx-hero .f-chip.c1 { left: 0; }
+}
+@media (max-width: 640px) {
+  .cx-hero.hero { padding-top: calc(var(--nav-h) + 40px); }
+  .cx-hero .hero-ctas .btn { width: 100%; }
+}
+
+/* ---- reduced motion (scoped port of the reference's global rule) ---- */
+@media (prefers-reduced-motion: reduce) {
+  .cx-hero *, .cx-hero *::before, .cx-hero *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+  .cx-hero .rv { opacity: 1; transform: none; }
+}
+
+/* ---- static fallback for the trust handoff (unchanged) ---- */
+.motion-off .ht-trust {
+  position: relative !important;
+  opacity: 1 !important;
+  padding-bottom: 6rem;
+}
+
+/* ---- tagline ("Scan. Pay. Collect Cash.") ---- */
+.cx-hero .tagline {
+  font-family: var(--font-m);
+  font-size: clamp(16px, 1.5vw, 19px);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: var(--grad-txt);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  margin: -10px 0 0; /* sits tighter under the H1 than the copy gap */
+}

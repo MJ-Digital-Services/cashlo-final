@@ -7,10 +7,10 @@ import type { NavItem } from "./navData";
 
 export default function NavDropdown({
   item,
-  scrolled,
+  onHero,
 }: {
   item: NavItem;
-  scrolled: boolean;
+  onHero: boolean;
 }) {
   const [open, setOpen] = useState(false);
   const timeout = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -23,9 +23,9 @@ export default function NavDropdown({
     timeout.current = setTimeout(() => setOpen(false), 120);
   };
 
-  const label = scrolled
-    ? "text-ink/80 hover:text-ink"
-    : "text-white/80 hover:text-white";
+  const label = onHero
+    ? "text-[#070b1e]/75 hover:text-[#070b1e]"
+    : "text-ink/80 hover:text-ink";
 
   if (!item.children) {
     return (

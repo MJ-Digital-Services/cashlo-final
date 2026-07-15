@@ -29,6 +29,8 @@ export default function Navbar() {
   // every other page: always render the "scrolled" (solid/ink) navbar state
   const scrolled = !isHomepage || scrolledPast;
 
+  const onHero = isHomepage && !scrolledPast;
+
   // color logo only when the bar is solid-white (scrolled + light); else white logo
   const useColorLogo = scrolled && theme === "light";
 
@@ -45,9 +47,7 @@ export default function Navbar() {
         <Link href="/" className="flex items-center">
           <Image
             src={
-              useColorLogo
-                ? "/logo/cashlo-logo.png"
-                : "/logo/cashlo-logo-white.png"
+              "/logo/cashlo-logo.png"
             }
             alt="Cashlo"
             width={140}
@@ -62,11 +62,11 @@ export default function Navbar() {
           className={`hidden items-center gap-1 rounded-full border px-2 py-1.5 shadow-sm backdrop-blur-md transition-colors lg:flex ${
             scrolled
               ? "border-border bg-bg/70"
-              : "border-white/20 bg-white/10"
+              : "border-black/10 bg-black/[0.03]"
           }`}
         >
           {navItems.map((item) => (
-            <NavDropdown key={item.label} item={item} scrolled={scrolled} />
+            <NavDropdown key={item.label} item={item} onHero={onHero} />
           ))}
         </div>
 
@@ -78,7 +78,7 @@ export default function Navbar() {
             className={`hidden rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors lg:block ${
               scrolled
                 ? "border-border text-ink hover:bg-surface"
-                : "border-white/30 text-white hover:bg-white/10"
+                : "border-[#070b1e]/15 text-[#070b1e] hover:bg-black/5"
             }`}
           >
             Become Distributor
