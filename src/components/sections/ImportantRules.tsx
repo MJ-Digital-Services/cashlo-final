@@ -5,18 +5,18 @@ import { useMorphRules } from "@/hooks/useMorphRules";
 const rules = [
   {
     num: "01",
-    title: "Never Accept QR Screenshots",
-    desc: "Always generate a fresh Dynamic QR for every transaction. Never use photos or shared QR codes.",
+    title: "Accept Any Payment",
+    desc: "UPI, dynamic QR, and cash point withdrawals — all handled from one app.",
   },
   {
     num: "02",
-    title: "Maintain a Withdrawal Register",
-    desc: "Record customer name, mobile, amount, signature, and transaction reference (RRN) for every withdrawal.",
+    title: "Unlock New Income",
+    desc: "Earn commission on recharges, bill payments, loans, and every service you offer.",
   },
   {
     num: "03",
-    title: "Never Accept QR via WhatsApp",
-    desc: "Customers must be physically present. Don't process withdrawals from QR images shared on messaging apps.",
+    title: "Manage Your Business",
+    desc: "Khata, GST, staff tracking, and reports — all in one place.",
   },
 ];
 
@@ -33,10 +33,10 @@ export default function ImportantRules() {
           className="absolute top-20 z-10 px-6 text-center"
         >
           <p className="text-sm font-semibold uppercase tracking-wider text-brand">
-            Important Rules
+            Your Complete Business Companion
           </p>
           <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-            Three Rules Every Merchant Must Follow
+            Not Just Payments. A Complete Shop OS.
           </h2>
         </div>
 
@@ -63,24 +63,24 @@ export default function ImportantRules() {
           className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-0"
         >
           <div className="max-w-3xl px-6 text-center text-white">
-            <h3 className="text-5xl font-bold sm:text-6xl lg:text-7xl">
-              Follow the rules. Keep earning.
-            </h3>
-            <p className="mt-5 whitespace-nowrap text-lg text-white/80 sm:text-xl">
-              Safe transactions protect you, your customers, and your commission.
-            </p>
+          <h3 className="text-5xl font-bold sm:text-6xl lg:text-7xl">
+            Payment bhi. Kamai bhi.
+          </h3>
+          <p className="mt-5 whitespace-nowrap text-lg text-white/80 sm:text-xl">
+            One app. Every way to grow your shop.
+          </p>
           </div>
         </div>
       </div>
 
       {/* ---------- Mobile: simple cards ---------- */}
       <div className="px-6 py-20 md:hidden">
-        <p className="text-sm font-semibold uppercase tracking-wider text-brand">
-          Important Rules
-        </p>
-        <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink">
-          Three Rules Every Merchant Must Follow
-        </h2>
+      <p className="text-sm font-semibold uppercase tracking-wider text-brand">
+        Your Complete Business Companion
+      </p>
+      <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink">
+        Not Just Payments. A Complete Shop OS.
+      </h2>
         <div className="mt-8 space-y-4">
           {rules.map((r) => (
             <div

@@ -4,9 +4,9 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { useColorInvert } from "@/hooks/useColorInvert";
 
-const HEADLINE = "Start Earning with Cashlo Today";
+const HEADLINE = "Har Payment Banega Kamai Ka Mauka";
 const SUBLINE =
-  "Join thousands of dukandaars providing UPI CashPoint services across India. Register in minutes and earn on every eligible transaction.";
+  "Join thousands of smart shopkeepers who are growing their business with Cashlo. Start your digital business journey today.";
 
 export default function DownloadCTA() {
   const { scope, stageRef } = useColorInvert();

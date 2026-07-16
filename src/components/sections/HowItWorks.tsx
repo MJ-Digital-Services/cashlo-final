@@ -5,26 +5,26 @@ import { useBlindsSlideshow } from "@/hooks/useBlindsSlideshow";
 const steps = [
   {
     num: "01",
-    title: "Enter Withdrawal Amount",
-    desc: "The merchant enters the amount the customer wants to withdraw in the Cashlo app.",
+    title: "Download the Cashlo App",
+    desc: "Get started in minutes — download the app and create your merchant account.",
     img: "/howitworks/step-01.jpg",
   },
   {
     num: "02",
-    title: "Generate Dynamic QR",
-    desc: "A unique, one-time Dynamic QR is generated — valid for that single transaction only.",
+    title: "Complete KYC Verification",
+    desc: "Verify your shop and identity with a simple, fast KYC process.",
     img: "/howitworks/step-02.jpg",
   },
   {
     num: "03",
-    title: "Customer Pays via UPI",
-    desc: "The customer scans the QR with any supported UPI app and completes a secure payment.",
+    title: "Activate Your Services",
+    desc: "Turn on the services you want to offer — payments, cash point, recharge, loans, and more.",
     img: "/howitworks/step-03.jpg",
   },
   {
     num: "04",
-    title: "Hand Over Cash & Earn",
-    desc: "Once payment is confirmed, the merchant hands over cash and earns commission.",
+    title: "Start Accepting Payments & Earning Commission",
+    desc: "Go live and start earning commission on every transaction, from day one.",
     img: "/howitworks/step-04.jpg",
   },
 ];

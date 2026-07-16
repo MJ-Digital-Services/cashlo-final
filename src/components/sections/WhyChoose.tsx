@@ -4,33 +4,33 @@ import { useRingCarousel } from "@/hooks/useRingCarousel";
 
 const benefits = [
   {
-    title: "Increase Daily Income",
-    desc: "Earn commission on every successful UPI CashPoint transaction.",
+    title: "Digital Payments",
+    desc: "Accept payments from any UPI app with a dynamic QR and instant settlement.",
     img: "/cards/why-income.jpg",
   },
   {
-    title: "Increase Footfall",
-    desc: "Customers visiting for cash often buy more from your store.",
+    title: "UPI Cash Point",
+    desc: "Let customers withdraw cash and earn commission on every eligible transaction.",
     img: "/cards/why-footfall.jpg",
   },
   {
-    title: "Instant Settlement",
-    desc: "Receive payments directly into your registered bank account.",
+    title: "Recharge & Bill Payments",
+    desc: "Offer mobile, DTH, FASTag, and utility bill payments — earn on every transaction.",
     img: "/cards/why-settlement.jpg",
   },
   {
-    title: "No Investment",
-    desc: "Start earning without purchasing expensive hardware.",
+    title: "Loan Services",
+    desc: "Help customers access personal and business loans while earning commission.",
     img: "/cards/why-investment.jpg",
   },
   {
-    title: "Fast Onboarding",
-    desc: "Simple registration with quick verification.",
+    title: "Quick Khata",
+    desc: "Track customer and supplier credit digitally — no more paper registers.",
     img: "/cards/why-onboarding.jpg",
   },
   {
-    title: "Easy to Use",
-    desc: "Generate QR, receive payment, hand over cash, and earn.",
+    title: "GST & Accounting",
+    desc: "Manage GST registration, filing, and ITR without the hassle.",
     img: "/cards/why-easy.jpg",
   },
 ];
@@ -65,12 +65,15 @@ export default function WhyChoose() {
       >
         {/* Heading */}
         <div className="mx-auto max-w-2xl px-6 pt-24 pb-8 text-center md:pt-24">
-          <p className="text-sm font-semibold uppercase tracking-wider text-brand">
-            Why Choose Cashlo
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-            More Than Just Cash Withdrawal
-          </h2>
+        <p className="text-sm font-semibold uppercase tracking-wider text-brand">
+          Har Dukaan Ki Extra Income
+        </p>
+        <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          More Than Just a Payment App
+        </h2>
+        <p className="mt-4 text-base text-ink/60">
+          Most payment apps only help you accept money. Cashlo helps you earn money.
+        </p>
         </div>
 
         {/* Desktop: 3D ring */}

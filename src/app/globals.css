@@ -533,3 +533,335 @@ body {
   color: transparent;
   margin: -10px 0 0; /* sits tighter under the H1 than the copy gap */
 }
+
+/* ---- Document folder reveal (GST & Accounting) ---- */
+.doc-folder-scene { perspective: 900px; }
+.doc-folder-back {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 60%;
+  border-radius: 14px 18px 18px 18px;
+  background: linear-gradient(180deg, var(--color-brand), var(--color-brand-dark));
+}
+.doc-folder-tab {
+  position: absolute;
+  top: -14px;
+  left: 0;
+  width: 42%;
+  height: 22px;
+  background: var(--color-brand);
+  border-radius: 10px 12px 0 0;
+}
+.doc-folder-front {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 38%;
+  border-radius: 14px 14px 18px 18px;
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-brand) 78%, white), var(--color-brand));
+  box-shadow: 0 12px 26px -8px rgb(0 0 0 / 0.25);
+  transform-origin: 50% 100%;
+  will-change: transform;
+}
+.doc-folder-front::before {
+  content: "";
+  position: absolute;
+  top: 16%; left: 12%; right: 12%;
+  height: 3px; border-radius: 3px;
+  background: rgba(255,255,255,.5);
+}
+
+/* ---- Hanging documents (GST & Accounting) ----
+   Cards hang on strings pinned to the top edge of the section (the seam
+   with the previous section). The swing wrapper is rotated by GSAP, the
+   string is scaleY'd on stretch, the card is translated down. Append to
+   app/globals.css and remove the old .doc-folder-* block if unused. */
+
+   .hang-stage {
+    /* small negative margin lets the pins sit exactly on the section seam */
+    margin-top: -1px;
+  }
+  
+  .hang-item {
+    position: absolute;
+    top: 0;
+    width: 0; /* pivot = top center; children overflow visibly */
+  }
+  
+  .hang-swing {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: 50% 0; /* rotate around the pin */
+    will-change: transform;
+  }
+  
+  /* the string */
+  .hang-string {
+    width: 2px;
+    margin: 0 auto;
+    background: linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ink) 45%, transparent),
+      color-mix(in srgb, var(--ink) 20%, transparent)
+    );
+    transform-origin: 50% 0; /* stretches downward */
+    will-change: transform;
+  }
+  
+  /* the pin/nail at the seam */
+  .hang-pin {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    width: 9px;
+    height: 9px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: var(--color-brand);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 18%, transparent);
+  }
+  
+  /* the document card, hanging from the string's end */
+  .hang-card {
+    position: absolute;
+    top: 100%; /* directly below the string */
+    left: 50%;
+    width: 11.5rem; /* w-46 */
+    height: 14rem; /* h-56 */
+    margin-left: -5.75rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    box-shadow: 0 16px 36px -14px rgb(0 0 0 / 0.28);
+    cursor: grab;
+    user-select: none;
+    touch-action: none; /* required so pointer-drag works on touch */
+    will-change: transform;
+  }
+  .hang-card.is-grabbed {
+    cursor: grabbing;
+    box-shadow: 0 26px 48px -16px rgb(0 0 0 / 0.35);
+  }
+  
+  /* tiny hole where the string attaches, like a tag */
+  .hang-card::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    translate: -50% 0;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid color-mix(in srgb, var(--ink) 30%, transparent);
+  }
+  
+  /* stagger cards on small screens: hide a couple so they don't collide */
+  @media (max-width: 640px) {
+    .hang-item:nth-child(3),
+    .hang-item:nth-child(5) {
+      display: none;
+    }
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .hang-swing,
+    .hang-string,
+    .hang-card {
+      will-change: auto;
+    }
+  }
+
+/* ---- Shutter street (Who Can Use Cashlo) ----
+   Mini storefronts with rolling metal shutters. The shutter is a single div
+   with a repeating-gradient slat texture; GSAP rolls it up (yPercent) into
+   the housing bar at the top of the doorway. Uses the site's theme tokens,
+   so it flips correctly in dark mode. Append to app/globals.css. */
+
+   .shop {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border-radius: 1rem;
+    border: 1px solid var(--border);
+    background: var(--card);
+    overflow: hidden;
+    cursor: pointer;
+    outline: none;
+    transition:
+      transform 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .shop:hover,
+  .shop.is-open {
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px -18px rgb(0 0 0 / 0.25);
+  }
+  .shop:focus-visible {
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-brand) 50%, transparent);
+  }
+  
+  /* ---- signboard ---- */
+  .shop__sign {
+    display: grid;
+    place-items: center;
+    padding: 0.65rem 0.5rem;
+    background: color-mix(in srgb, var(--ink) 88%, var(--color-brand));
+    color: var(--bg);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.2;
+  }
+  .shop__sign--brand {
+    background: var(--color-brand);
+    color: #fff; /* text on brand fill — stays white */
+  }
+  
+  /* ---- awning (striped) ---- */
+  .shop__awning {
+    height: 12px;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--color-brand) 0 14px,
+      color-mix(in srgb, var(--color-brand) 25%, var(--card)) 14px 28px
+    );
+    border-bottom: 1px solid var(--border);
+  }
+  
+  /* ---- doorway ---- */
+  .shop__doorway {
+    position: relative;
+    height: 132px;
+    overflow: hidden;
+    background:
+      radial-gradient(
+        120% 90% at 50% 100%,
+        color-mix(in srgb, var(--color-brand) 14%, var(--surface)),
+        var(--surface) 70%
+      );
+  }
+  /* shutter housing bar the shutter rolls into */
+  .shop__doorway::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 10px;
+    background: color-mix(in srgb, var(--ink) 80%, transparent);
+    border-radius: 0 0 4px 4px;
+    z-index: 3;
+  }
+  
+  /* ---- interior (revealed) ---- */
+  .shop__interior {
+    position: absolute;
+    inset: 10px 0 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    z-index: 1;
+    will-change: transform, opacity;
+  }
+  .shop__interior--visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  .shop__icon {
+    display: grid;
+    place-items: center;
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--color-brand) 12%, transparent);
+    color: var(--color-brand);
+  }
+  .shop__sticker {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+    background: var(--card);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--ink);
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-brand) 10%, transparent);
+  }
+  /* tiny QR glyph made of gradients */
+  .shop__qr {
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    background:
+      linear-gradient(var(--color-brand), var(--color-brand)) 0 0 / 5px 5px,
+      linear-gradient(var(--color-brand), var(--color-brand)) 100% 0 / 5px 5px,
+      linear-gradient(var(--color-brand), var(--color-brand)) 0 100% / 5px 5px,
+      linear-gradient(var(--color-brand), var(--color-brand)) 100% 100% / 3px 3px;
+    background-repeat: no-repeat;
+  }
+  .shop__tagline {
+    margin: 0;
+    padding: 0 1.25rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: color-mix(in srgb, var(--ink) 60%, transparent);
+    text-align: center;
+  }
+  
+  /* ---- the shutter ---- */
+  .shop__shutter {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    will-change: transform;
+    /* slat texture */
+    background: repeating-linear-gradient(
+      180deg,
+      color-mix(in srgb, var(--ink) 16%, var(--card)) 0 3px,
+      color-mix(in srgb, var(--ink) 6%, var(--card)) 3px 11px,
+      color-mix(in srgb, var(--ink) 26%, var(--card)) 11px 12px
+    );
+    box-shadow: inset 0 -10px 18px -10px rgb(0 0 0 / 0.35);
+  }
+  .shop__handle {
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    width: 34px;
+    height: 5px;
+    translate: -50% 0;
+    border-radius: 100px;
+    background: color-mix(in srgb, var(--ink) 45%, transparent);
+  }
+  
+  /* always-open variant (the 13th shop) */
+  .shop--open {
+    cursor: default;
+  }
+  .shop--open:hover {
+    transform: none;
+  }
+  
+  @media (prefers-reduced-motion: reduce) {
+    .shop,
+    .shop__shutter,
+    .shop__interior {
+      transition: none;
+      will-change: auto;
+    }
+  }

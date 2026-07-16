@@ -13,22 +13,22 @@ const poppins = Poppins({
 
 const pillars = [
   {
-    title: "100% Secure",
+    title: "Real-Time Settlement",
     desc: "Every transaction is protected through secure UPI payment infrastructure with encrypted processing.",
     img: "/cards/secure.jpg",
   },
   {
-    title: "RBI Compliant Process",
+    title: "Secure & Reliable Platform",
     desc: "Cashlo follows applicable banking partner processes and operational guidelines.",
     img: "/cards/guidelines.jpg",
   },
   {
-    title: "Bank-grade Security",
+    title: "Multiple Income Opportunities",
     desc: "Every payment travels through trusted UPI rails ensuring reliable, fast fund transfers.",
     img: "/cards/money-transfer.jpg",
   },
   {
-    title: "Data Protection",
+    title: "One App for Complete Business Management",
     desc: "Merchant and customer information is handled with strict privacy and security standards.",
     img: "/cards/data-protection.jpg",
   },
@@ -261,7 +261,7 @@ export default function HeroTrust() {
         >
           <div data-thead className="mx-auto mb-10 max-w-2xl text-center md:mb-12">
             <h2 className="text-3xl font-bold tracking-tight text-ink sm:text-4xl">
-              Trusted by Dukandaars Everywhere
+              Trusted by Growing Businesses Across India
             </h2>
             <p className="mt-2 text-base font-medium text-brand">
               Aapka Vishwas, Hamari Zimmedari
