@@ -55,30 +55,32 @@ export default function HeroTrust() {
             <div className="hero-grid">
               {/* ---- Copy ---- */}
               <div className="hero-copy" data-hero-copy>
-                <span className="eyebrow">
-                  <span className="dot" />
-                  India&rsquo;s Trusted UPI CashPoint Network
-                </span>
+              <span className="eyebrow">
+                <span className="dot" />
+                India&rsquo;s First Shop Income Platform
+              </span>
 
-                <h1 className="h-hero rv">
-                  Turn Every Shop
-                  <br />
-                  into a <span className="grad-txt">UPI CashPoint</span>
-                </h1>
+              <h1 className="h-hero rv">
+                Grow Your Shop. Increase Your Income.
+                <br />
+                Manage <span className="grad-txt">Everything</span> from One App.
+              </h1>
 
-                <p className="tagline">Scan. Pay. Collect Cash.</p>
+              <p className="tagline">Payment bhi. Kamai bhi.</p>
 
-                <p className="lede">
-                  Cashlo is building India&apos;s next generation cash access
-                  network, enabling people to withdraw cash through UPI at
-                  trusted neighborhood merchants. More convenience for
-                  customers, more earnings for merchants.
-                </p>
+              <p className="lede">
+                Cashlo is India&apos;s complete business app designed for
+                shopkeepers. Accept digital payments, offer UPI Cash Point
+                services, earn commissions, manage customer credit, provide
+                financial services, handle GST &amp; ITR, and monitor your
+                entire business—all from a single platform with real-time
+                settlement.
+              </p>
 
                 <div className="hero-ctas">
                   {/* adjust these two hrefs to your routes */}
                   <Link href="/how-it-works" className="btn btn-primary btn-lg magnetic">
-                    Watch How It Works <span className="arr">→</span>
+                    Get Started <span className="arr">→</span>
                   </Link>
                   <Link
                     href="https://play.google.com/store/apps/details?id=com.cashlo.app"
@@ -92,7 +94,7 @@ export default function HeroTrust() {
                       <path d="M17 16.6 13.2 13 2 24.2c.4.4 1.1.5 1.9.1L17 16.6z" fill="#FF5252" />
                       <path d="M17 9.4 3.9 1.9C3.1 1.5 2.4 1.5 2 2L13.2 13 17 9.4z" fill="#00E676" />
                     </svg>
-                    Download the App
+                    Download App
                   </Link>
                 </div>
 
