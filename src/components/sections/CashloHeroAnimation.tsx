@@ -17,7 +17,7 @@
  */
 
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, type Transition } from "framer-motion";
 
 /* ------------------------------------------------------------------ */
 /* Tokens                                                              */
@@ -138,8 +138,7 @@ export default function CashloHeroAnimation({
   const entering = scene === "enter";
 
   /* Snap (no travel) while the loop resets */
-  const settle = <T extends object>(t: T): T | { duration: 0 } =>
-    entering ? { duration: 0 } : t;
+    const settle = (t: Transition): Transition => (entering ? { duration: 0 } : t);
 
   const screen = useMemo(() => {
     if (from("cash")) return "amount";
