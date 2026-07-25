@@ -4,6 +4,7 @@ import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { CheckCircle2 } from "lucide-react";
+import GoldHeroAnimation from "./GoldHeroAnimation";
 
 const checklist = [
   "Attractive Interest Rates",
@@ -49,7 +50,7 @@ export default function GoldLoanHero() {
           </div>
 
           <div data-reveal className="hidden lg:block">
-            <div className="aspect-[4/3] w-full rounded-3xl bg-gradient-to-br from-brand/10 to-brand/5 border border-border" />
+            <GoldHeroAnimation />
           </div>
         </div>
       </Container>
