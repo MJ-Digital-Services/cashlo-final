@@ -13,19 +13,19 @@ const steps = [
     num: "02",
     title: "Complete KYC Verification",
     desc: "Verify your shop and identity with a simple, fast KYC process.",
-    img: "/howitworks/step-02-new.jpg",
+    img: "/howitworks/step-02.png",
   },
   {
     num: "03",
     title: "Activate Your Services",
     desc: "Turn on the services you want to offer — payments, cash point, recharge, loans, and more.",
-    img: "/howitworks/step-03.jpg",
+    img: "/howitworks/step-03.png",
   },
   {
     num: "04",
     title: "Start Accepting Payments & Earning Commission",
     desc: "Go live and start earning commission on every transaction, from day one.",
-    img: "/howitworks/step-04.jpg",
+    img: "/howitworks/step-04.png",
   },
 ];
 
