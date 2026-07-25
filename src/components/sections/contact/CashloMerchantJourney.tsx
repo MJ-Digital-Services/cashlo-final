@@ -23,7 +23,7 @@ import {
   type CSSProperties,
   type RefObject,
 } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, type Transition } from "framer-motion";
 
 /* ------------------------------------------------------------------ tokens */
 
@@ -207,18 +207,21 @@ function Person({
   const p = PEOPLE[kind] ?? PEOPLE.student;
   const swing = moving && !still;
 
-  const limb = (a: number, b: number) => ({
-    animate: { rotate: swing ? [a, b, a] : 0 },
-    transition: swing
+  const limb = (a: number, b: number) => {
+    const transition: Transition = swing
       ? {
           duration: 0.66,
           repeat: Infinity,
           ease: "easeInOut",
           delay: offset,
         }
-      : { duration: 0.3 },
-    style: { ...fillBox, transformOrigin: "50% 0%" },
-  });
+      : { duration: 0.3 };
+    return {
+      animate: { rotate: swing ? [a, b, a] : 0 },
+      transition,
+      style: { ...fillBox, transformOrigin: "50% 0%" },
+    };
+  };
 
   return (
     <motion.g
