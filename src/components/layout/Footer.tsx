@@ -6,7 +6,7 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about" },
   { label: "UPI CashPoint", href: "/upi-cashpoint" },
-  { label: "Services", href: "/services" },
+  // { label: "Services", href: "/services" },
   { label: "Become Merchant", href: "/become-merchant" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },
