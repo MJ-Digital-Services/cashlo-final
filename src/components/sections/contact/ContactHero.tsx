@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import CashloMerchantJourney from "./CashloMerchantJourney";
 
 export default function ContactHero() {
   const scope = useScrollReveal();
@@ -28,14 +28,7 @@ export default function ContactHero() {
           </p>
         </div>
         <div data-reveal className="relative mx-auto w-full max-w-md">
-          <Image
-            src="/illustrations/contact/contact-hero.svg"
-            alt="Contact us illustration"
-            width={560}
-            height={480}
-            className="h-auto w-full"
-            priority
-          />
+          <CashloMerchantJourney />
         </div>
       </div>
     </section>
