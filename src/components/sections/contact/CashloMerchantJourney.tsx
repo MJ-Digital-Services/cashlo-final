@@ -65,8 +65,8 @@ const CUE = {
 const CUES = Object.values(CUE);
 const LOOP = 14.8;
 
-const EASE = [0.22, 0.61, 0.36, 1];
-const EASE_SOFT = [0.4, 0, 0.2, 1];
+const EASE: [number, number, number, number] = [0.22, 0.61, 0.36, 1];
+const EASE_SOFT: [number, number, number, number] = [0.4, 0, 0.2, 1];
 
 /* --------------------------------------------------------------- utilities */
 
