@@ -7,13 +7,13 @@ const steps = [
     num: "01",
     title: "Download the Cashlo App",
     desc: "Get started in minutes — download the app and create your merchant account.",
-    img: "/howitworks/step-01.jpg",
+    img: "/howitworks/step-01.png",
   },
   {
     num: "02",
     title: "Complete KYC Verification",
     desc: "Verify your shop and identity with a simple, fast KYC process.",
-    img: "/howitworks/step-02.jpg",
+    img: "/howitworks/step-02-new.jpg",
   },
   {
     num: "03",
