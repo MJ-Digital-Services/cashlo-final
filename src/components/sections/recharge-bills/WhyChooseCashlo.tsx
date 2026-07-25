@@ -27,7 +27,7 @@ export default function WhyChooseCashlo() {
 
         {/* Tight Staggered Bento Grid */}
         <div className="mt-12 grid grid-cols-1 gap-5 md:grid-cols-3">
-          
+
           {/* Card 1: Secure & Trusted (Top Left - Spans 2 Columns) */}
           <div
             data-reveal
@@ -62,7 +62,7 @@ export default function WhyChooseCashlo() {
               <div className="relative min-h-[220px] w-full overflow-hidden rounded-2xl border border-border/80 bg-surface/60 p-1.5 shadow-inner md:col-span-5 md:min-h-[240px]">
                 <div className="relative h-full min-h-[210px] w-full overflow-hidden rounded-xl bg-card">
                   <Image
-                    src="/illustrations/recharge-bills/secure-trusted-v2.jpg"
+                    src="/illustrations/recharge-bills/secure-trusted.jpg"
                     alt="Secure & Trusted BBPS Transactions"
                     fill
                     sizes="(max-width: 768px) 100vw, 35vw"
@@ -104,7 +104,7 @@ export default function WhyChooseCashlo() {
             <div className="mt-4 relative h-52 w-full overflow-hidden rounded-2xl border border-border/80 bg-surface/60 p-1.5 shadow-inner md:h-56">
               <div className="relative h-full w-full overflow-hidden rounded-xl bg-card">
                 <Image
-                  src="/illustrations/recharge-bills/availability-247-v3.jpg"
+                  src="/illustrations/recharge-bills/availability-247.jpg"
                   alt="24x7 High Availability Clock"
                   fill
                   sizes="(max-width: 768px) 100vw, 30vw"
@@ -142,7 +142,7 @@ export default function WhyChooseCashlo() {
             <div className="mt-4 relative h-52 w-full overflow-hidden rounded-2xl border border-border/80 bg-surface/60 p-1.5 shadow-inner md:h-56">
               <div className="relative h-full w-full overflow-hidden rounded-xl bg-card">
                 <Image
-                  src="/illustrations/recharge-bills/attractive-commission-v2.jpg"
+                  src="/illustrations/recharge-bills/attractive-commission.jpg"
                   alt="Attractive Merchant Commission"
                   fill
                   sizes="(max-width: 768px) 100vw, 30vw"
