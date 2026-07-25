@@ -33,34 +33,42 @@ export default function RechargeFAQs() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section ref={scope} className="bg-bg py-24">
+    <section ref={scope} aria-labelledby="faqs-heading" className="bg-bg py-24">
       <Container>
         <div className="mx-auto max-w-2xl text-center">
           <p data-reveal className="text-sm font-semibold uppercase tracking-wider text-brand">
             FAQs
           </p>
-          <h2 data-reveal className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+          <h2 id="faqs-heading" data-reveal className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl">
             Common Questions
           </h2>
         </div>
 
-        <div className="mx-auto mt-12 max-w-2xl divide-y divide-border rounded-2xl border border-border bg-card">
+        <div className="mx-auto mt-12 max-w-5xl divide-y divide-border rounded-2xl border border-border bg-card">
           {faqs.map((f, i) => {
             const isOpen = open === i;
             return (
               <div key={f.q} data-reveal>
                 <button
                   type="button"
+                  id={`faq-button-${i}`}
+                  aria-expanded={isOpen}
+                  aria-controls={`faq-answer-${i}`}
                   onClick={() => setOpen(isOpen ? null : i)}
-                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left"
+                  className="flex w-full items-center justify-between gap-4 px-6 py-5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand rounded-xl"
                 >
                   <span className="text-sm font-semibold text-ink">{f.q}</span>
-                  <span className="shrink-0 text-brand">
+                  <span className="shrink-0 text-brand" aria-hidden="true">
                     {isOpen ? <Minus className="h-4 w-4" /> : <Plus className="h-4 w-4" />}
                   </span>
                 </button>
                 {isOpen && (
-                  <div className="px-6 pb-5 text-sm leading-relaxed text-ink/60">
+                  <div
+                    id={`faq-answer-${i}`}
+                    role="region"
+                    aria-labelledby={`faq-button-${i}`}
+                    className="px-6 pb-5 text-sm leading-relaxed text-ink/60"
+                  >
                     {f.a}
                   </div>
                 )}

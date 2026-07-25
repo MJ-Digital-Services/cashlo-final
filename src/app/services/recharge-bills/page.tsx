@@ -8,7 +8,7 @@ import RechargeCTA from "@/components/sections/recharge-bills/RechargeCTA";
 
 export default function RechargeBillsPage() {
   return (
-    <main>
+    <main id="main-content" aria-label="Recharge and Bill Payment Services">
       <RechargeHero />
       <OperatorGrid />
       <WhyChooseCashlo />

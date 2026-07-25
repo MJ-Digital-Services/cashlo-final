@@ -176,7 +176,7 @@ export default function SupportedBy() {
   }, []);
 
   return (
-    <section className="overflow-hidden bg-surface py-24">
+    <section aria-labelledby="supported-apps-heading" className="overflow-hidden bg-surface py-24">
       <Container className="text-center">
         <p
           data-reveal
@@ -185,6 +185,7 @@ export default function SupportedBy() {
           Works Everywhere
         </p>
         <h2
+          id="supported-apps-heading"
           data-reveal
           className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl"
         >
@@ -200,15 +201,19 @@ export default function SupportedBy() {
       </Container>
 
       <Container className="mt-16">
-        <div
+        <ul
+          role="list"
+          aria-label="Supported payment apps and partner banks"
           className="grid grid-cols-2 gap-x-6 gap-y-4 sm:grid-cols-3 md:grid-cols-4 xl:grid-cols-6"
           onMouseEnter={() => (paused.current = true)}
           onMouseLeave={() => (paused.current = false)}
         >
           {slots.map((s, i) => (
-            <LogoSlot key={i} slot={s} />
+            <li key={i}>
+              <LogoSlot slot={s} />
+            </li>
           ))}
-        </div>
+        </ul>
       </Container>
     </section>
   );
