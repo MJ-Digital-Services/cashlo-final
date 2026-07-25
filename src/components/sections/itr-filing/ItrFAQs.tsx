@@ -44,7 +44,7 @@ export default function ItrFAQs() {
           </h2>
         </div>
 
-        <div className="mx-auto mt-12 max-w-2xl divide-y divide-border rounded-2xl border border-border bg-card">
+        <div className="mx-auto mt-12 max-w-5xl divide-y divide-border rounded-2xl border border-border bg-card">
           {faqs.map((f, i) => {
             const isOpen = open === i;
             return (
