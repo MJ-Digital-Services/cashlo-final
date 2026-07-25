@@ -37,12 +37,15 @@ export default function HeroTrust() {
               </span>
 
               <h1 className="h-hero rv">
-                Grow Your Shop. Increase Your Income.
+                Grow Your Shop.
                 <br />
-                Manage <span className="grad-txt">Everything</span> from One App.
+                Earn <span className="grad-txt">More</span> Every Day.
               </h1>
 
-              <p className="tagline">Payment bhi. Kamai bhi.</p>
+              <p className="tagline">
+                <span className="tagline-dot" />
+                Payment Bhi. Kamai Bhi.
+              </p>
 
               <p className="lede">
                 Cashlo is India&apos;s complete business app designed for
