@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { Poppins } from "next/font/google";
 import { useHeroTrust } from "@/hooks/useHeroTrust";
+import CashloHeroAnimation from "@/components/sections/CashloHeroAnimation";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -37,9 +38,7 @@ export default function HeroTrust() {
               </span>
 
               <h1 className="h-hero rv">
-                Grow Your Shop.
-                <br />
-                Earn <span className="grad-txt">More</span> Every Day.
+                Grow Your Shop. Earn <span className="grad-txt">More</span> Every Day.
               </h1>
 
               <p className="tagline">
@@ -108,123 +107,9 @@ export default function HeroTrust() {
             </div>
 
             {/* ---- Phone stage ---- */}
+            {/* ---- Hero animation (replaces the phone dashboard mockup) ---- */}
             <div className="phone-stage" data-phone-stage>
-              <div className="phone-halo" />
-
-              <span className="h-coin" style={{ width: 74, height: 74, fontSize: 27, top: "4%", left: "-3%" }}>₹</span>
-              <span className="h-coin" style={{ width: 46, height: 46, fontSize: 17, bottom: "11%", left: "5%", animationDelay: "-3s" }}>₹</span>
-              <span className="h-coin" style={{ width: 32, height: 32, fontSize: 12, top: "15%", right: "1%", animationDelay: "-6s", filter: "blur(1px)" }}>₹</span>
-
-              <div className="f-chip c1">
-                <span className="ci" style={{ background: "var(--mint-soft)" }}>💵</span>
-                <span><b>₹2,000 cash given</b><span>Customer served · just now</span></span>
-              </div>
-              <div className="f-chip c2">
-                <span className="ci" style={{ background: "var(--blue-soft)" }}>📈</span>
-                <span><b>+₹14 commission</b><span>Credited instantly</span></span>
-              </div>
-              <div className="f-chip c3">
-                <span className="ci" style={{ background: "#FFF6DE" }}>🏪</span>
-                <span><b>Gupta Kirana Store</b><span>CashPoint · Kanpur</span></span>
-              </div>
-
-              <div className="phone" data-phone>
-                <div className="notch" />
-                <div className="phone-scr">
-                  <div className="ap-bar">
-                    <span className="p-brand">
-                      {/* swap this mark for your logo asset if you have one */}
-                      <svg width="22" height="22" viewBox="0 0 76 76" fill="none" aria-hidden>
-                        <rect width="76" height="76" rx="20" fill="#3D5AFE" />
-                        <path d="M22 6H12C8.7 6 6 8.7 6 12v10M54 6h10c3.3 0 6 2.7 6 6v10M22 70H12c-3.3 0-6-2.7-6-6V54M54 70h10c3.3 0 6-2.7 6-6V54" stroke="#fff" strokeWidth="8" strokeLinecap="round" />
-                        <rect x="24" y="24" width="12" height="12" rx="3" fill="#fff" />
-                        <rect x="40" y="40" width="12" height="12" rx="3" fill="#fff" />
-                        <rect x="40" y="24" width="12" height="12" rx="3" fill="#fff" opacity=".6" />
-                        <rect x="24" y="40" width="12" height="12" rx="3" fill="#fff" opacity=".6" />
-                      </svg>
-                      Cashlo
-                    </span>
-                    <span className="ap-ic">🔔<span className="dot" /></span>
-                    <span className="ap-ic">👤</span>
-                  </div>
-
-                  <div className="ap-body">
-                    <div className="bal-card">
-                      <div className="bal-l">
-                        <span className="bal-lbl">Cashlo Balance</span>
-                        <span className="bal-amt">₹20,000<span className="eye">👁</span></span>
-                        <span className="bal-pill">₹ &nbsp;Add Money</span>
-                        <span className="bal-pill">🏛️ Settlement</span>
-                      </div>
-                      <div className="scan-tile">
-                        <div className="qr-grid qr-sm" data-qr-grid>
-                          <div className="scanline" data-scanline />
-                        </div>
-                        <b>Scan Pay</b>
-                        <span className="ap-status" data-qr-status>GENERATING QR…</span>
-                      </div>
-                    </div>
-
-                    <div className="qa-row">
-                      <div className="qa"><span className="qi" style={{ background: "linear-gradient(150deg,#9D6BFF,#6C3DF4)" }}>📱</span><span>Recharge</span></div>
-                      <div className="qa"><span className="qi" style={{ background: "linear-gradient(150deg,#FFB24D,#F58A1F)" }}>⚡</span><span>Electricity</span></div>
-                      <div className="qa"><span className="qi" style={{ background: "linear-gradient(150deg,#5BC9F2,#2AA5E0)" }}>🚗</span><span>FASTag</span></div>
-                      <div className="qa"><span className="qi" style={{ background: "linear-gradient(150deg,#FF7BA3,#F04E7E)" }}>🧾</span><span>Bill Payment</span></div>
-                    </div>
-
-                    <div className="ap-banner">
-                      <span style={{ fontSize: 22 }}>🪙</span>
-                      <span>
-                        <b>APPLY LOAN &amp; EARN COMMISSION</b>
-                        <small>Easy application · More approvals · High commission</small>
-                      </span>
-                    </div>
-
-                    <div className="earn-row">
-                      <div className="e-card">
-                        <span className="e-top"><span className="ei" style={{ background: "#E4F8EE" }}>📈</span>Earnings today</span>
-                        <b>₹22</b>
-                        <span className="e-sub" style={{ color: "var(--mint)" }}>+<span data-ph-comm>₹0.00</span> · 4 transactions</span>
-                      </div>
-                      <div className="e-card">
-                        <span className="e-top"><span className="ei" style={{ background: "#E8EDFF" }}>🐷</span>All time earnings</span>
-                        <b data-ph-earn>₹1,240</b>
-                        <span className="e-sub" style={{ color: "var(--blue)" }}>This week: ₹212</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="ap-nav">
-                    <span className="on"><span className="ni">🏠</span>Home</span>
-                    <span><span className="ni">👛</span>Wallet</span>
-                    <span className="ap-qr">
-                      <svg width="22" height="22" viewBox="0 0 76 76" fill="none" aria-hidden>
-                        <path d="M22 6H12C8.7 6 6 8.7 6 12v10M54 6h10c3.3 0 6 2.7 6 6v10M22 70H12c-3.3 0-6-2.7-6-6V54M54 70h10c3.3 0 6-2.7 6-6V54" stroke="#fff" strokeWidth="8" strokeLinecap="round" />
-                        <rect x="24" y="24" width="12" height="12" rx="3" fill="#fff" />
-                        <rect x="40" y="40" width="12" height="12" rx="3" fill="#fff" />
-                        <rect x="40" y="24" width="12" height="12" rx="3" fill="#fff" opacity=".6" />
-                        <rect x="24" y="40" width="12" height="12" rx="3" fill="#fff" opacity=".6" />
-                      </svg>
-                    </span>
-                    <span><span className="ni">📒</span>Khata</span>
-                    <span><span className="ni">💰</span>Loan</span>
-                  </div>
-
-                  <div className="p-success" data-ph-success>
-                    <div className="tick">
-                      <div className="ripple" />
-                      <svg viewBox="0 0 52 52" aria-hidden>
-                        <path d="M14 27l8 8 16-18" />
-                      </svg>
-                    </div>
-                    <b>Payment received</b>
-                    <span data-succ-amt>₹2,000 · via Google Pay</span>
-                    <span style={{ fontFamily: "var(--font-m)", fontSize: 12, color: "var(--mint)", fontWeight: 700 }}>
-                      HAND OVER CASH ✓
-                    </span>
-                  </div>
-                </div>
-              </div>
+              <CashloHeroAnimation />
             </div>
           </div>
         </div>
