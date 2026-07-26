@@ -201,7 +201,7 @@ function useAnimatedNumber(target: number, duration = 650) {
 }
 
 /** True once the element has been seen; falls back to true where IntersectionObserver is missing. */
-function useSeen(ref: React.RefObject<Element>, margin = '-60px') {
+function useSeen(ref: React.RefObject<Element | null>, margin = '-60px') {
   const [seen, setSeen] = React.useState(false);
   React.useEffect(() => {
     const el = ref.current;
