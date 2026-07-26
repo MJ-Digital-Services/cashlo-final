@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { navItems } from "./navData";
 import NavDropdown from "./NavDropdown";
+import ServicesDropdown from "./ServicesDropdown";
 import MobileMenu from "./MobileMenu";
 import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useTheme } from "@/components/theme/ThemeProvider";
@@ -65,9 +66,13 @@ export default function Navbar() {
               : "border-black/10 bg-black/[0.03]"
           }`}
         >
-          {navItems.map((item) => (
-            <NavDropdown key={item.label} item={item} onHero={onHero} />
-          ))}
+          {navItems.map((item) =>
+            item.label === "Services" ? (
+              <ServicesDropdown key={item.label} onHero={onHero} />
+            ) : (
+              <NavDropdown key={item.label} item={item} onHero={onHero} />
+            )
+          )}
         </div>
 
         {/* Right side */}
