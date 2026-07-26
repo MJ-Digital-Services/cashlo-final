@@ -2,7 +2,7 @@
 
 import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import RechargeForm from "./RechargeForm";
+import RechargeHeroAnimation from "./RechargeHeroAnimation";
 import { Sparkles, Smartphone, Tv, Zap, Droplets, Car, Flame, Wifi } from "lucide-react";
 
 const quickCategories = [
@@ -115,7 +115,8 @@ export default function RechargeHero() {
 
           {/* Right Column: Form Component */}
           <div className="w-full flex justify-center lg:justify-end">
-            <RechargeForm />
+            {/* Form */}
+            <RechargeHeroAnimation />
           </div>
 
 

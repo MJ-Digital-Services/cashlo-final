@@ -1,7 +1,7 @@
 "use client";
 
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import PhoneFrame from "./PhoneFrame";
+import QuickKhataPhoneDemo from "./QuickKhataPhoneDemo";
 
 export default function QuickKhataHero() {
   const scope = useScrollReveal();
@@ -38,10 +38,7 @@ export default function QuickKhataHero() {
         </div>
 
         <div data-reveal className="order-1 lg:order-2">
-          <PhoneFrame
-            src="/screenshots/quickkhata-app.png"
-            alt="QuickKhata ledger showing customer balances"
-          />
+          <QuickKhataPhoneDemo />
         </div>
       </div>
     </section>
