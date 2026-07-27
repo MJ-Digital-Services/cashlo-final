@@ -1449,6 +1449,13 @@ body {
   100%      { transform: scaleX(0.08); }
 }
 
+@keyframes ripple {
+  to {
+    transform: scale(14);
+    opacity: 0;
+  }
+}
+
 /* Make the track more premium */
 .tg-track {
   fill: var(--border);

@@ -5,10 +5,12 @@ import DistributorHowItWorks from "@/components/sections/become-distributor/Dist
 import DistributorWhyReserveEarly from "@/components/sections/become-distributor/DistributorWhyReserveEarly";
 import DistributorWhoCanApply from "@/components/sections/become-distributor/DistributorWhoCanApply";
 import BecomeDistributorSection from "@/components/sections/become-distributor/BecomeDistributorSection";
+import CashloDistributorStory from "@/components/sections/become-distributor/CashloDistributorStory";
 
 export default function BecomeDistributorPage() {
   return (
     <main>
+      <CashloDistributorStory className="w-full" />
       <DistributorHero />
       <DistributorTrustHighlights />
       <DistributorAbout />
