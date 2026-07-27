@@ -46,16 +46,15 @@ export default function Navbar() {
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-          <Image
-            src={
-              "/logo/cashlo-logo.png"
-            }
-            alt="Cashlo"
-            width={140}
-            height={40}
-            priority
-            className="h-9 w-auto object-contain"
-          />
+        <Image
+          // src={theme === "dark" ? "/logo/cashlo-logo-white1.png" : "/logo/cashlo-logo.png"}
+          src={scrolled ? theme == "dark" ? "/logo/cashlo-logo-white1.png" : "/logo/cashlo-logo.png" : "/logo/cashlo-logo.png"}
+          alt="Cashlo"
+          width={140}
+          height={40}
+          priority
+          className="h-9 w-auto object-contain"
+        />
         </Link>
 
         {/* Center nav */}
