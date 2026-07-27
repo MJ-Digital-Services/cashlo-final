@@ -57,7 +57,7 @@ const secondaryBtnClass =
 const CONSENT_ITEMS: { key: keyof Consents; label: string }[] = [
   {
     key: "nonRefundable",
-    label: "I understand that the \u20b91,100 PIN Reservation Fee is non-refundable.",
+    label: "I understand that the \u20b91,180 Booking Fee is non-refundable.",
   },
   { key: "kyc", label: "I agree to complete KYC whenever required." },
   { key: "genuineMerchants", label: "I agree to onboard only genuine merchants/business owners." },
@@ -372,7 +372,7 @@ export default function BecomeDistributorSection() {
         amount: order.amount,
         currency: order.currency,
         name: "Cashlo",
-        description: "Distributor Pincode Reservation",
+        description: "Distributor Booking Fee",
         order_id: order.orderId,
         prefill: { name: form.name, email: form.email, contact: form.mobile },
         theme: { color: "#445df0" },
@@ -537,6 +537,10 @@ export default function BecomeDistributorSection() {
                     You&apos;re one step closer to owning this exclusive territory. Reserve it now before
                     someone else books it.
                   </p>
+                  <p className="mt-2 text-xs text-ink/50">
+                    A ₹1,180 Booking Fee reserves your territory. A separate Registration Fee
+                    applies later, during onboarding.
+                  </p>
                   <button
                     onClick={() => setStep("form")}
                     className="mt-4 w-full rounded-full bg-brand px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
@@ -663,6 +667,14 @@ export default function BecomeDistributorSection() {
                     Note: Referral Code refers to your Employee RT, DT, or MD Code.
                   </p>
                 </div>
+              </div>
+
+              <div className="mt-5 rounded-xl border border-brand/20 bg-brand/5 px-4 py-3 text-xs leading-relaxed text-ink/70">
+                <span className="font-semibold text-ink">Two-step payment:</span> The{" "}
+                <span className="font-semibold text-brand">₹1,180 Booking Fee</span> below
+                reserves this PIN code exclusively for you. A separate{" "}
+                <span className="font-semibold text-ink">Registration Fee</span> applies
+                after your booking is confirmed, payable during onboarding.
               </div>
 
               <div className="mt-6 space-y-3">

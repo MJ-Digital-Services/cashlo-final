@@ -114,10 +114,10 @@ export default function BecomeDistributorThanksPage() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-border/60">
-                  <tr>
-                    <td className="py-3 text-ink/80">PIN Code Reservation Fee</td>
-                    <td className="py-3 text-right text-ink/80">{formatMoney(receipt.baseAmount)}</td>
-                  </tr>
+                <tr>
+                  <td className="py-3 text-ink/80">PIN Code Booking Fee</td>
+                  <td className="py-3 text-right text-ink/80">{formatMoney(receipt.baseAmount)}</td>
+                </tr>
                   <tr>
                     <td className="py-3 text-ink/80">GST (18%)</td>
                     <td className="py-3 text-right text-ink/80">{formatMoney(receipt.gstAmount)}</td>
@@ -144,7 +144,11 @@ export default function BecomeDistributorThanksPage() {
               </p>
             </div>
 
-            <p className="mt-6 border-t border-border pt-6 text-center text-xs text-ink/40">
+            <p className="mt-6 border-t border-border pt-6 text-center text-xs text-ink/50">
+              A separate Registration Fee applies during onboarding — our team will share
+              the details when they contact you.
+            </p>
+            <p className="mt-3 text-center text-xs text-ink/40">
               This is a computer-generated receipt and does not require a signature. For any queries,
               contact support@cashlo.in.
             </p>

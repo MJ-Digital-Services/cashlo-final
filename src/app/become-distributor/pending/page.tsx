@@ -46,10 +46,13 @@ export default function BecomeDistributorPendingPage() {
         </div>
 
         <div className="mt-8 rounded-2xl border border-border bg-card p-6 sm:p-8">
-          <p className="text-sm text-ink/70">
-            Our sales team will call you shortly to complete the ₹1,100 reservation payment and confirm your
-            territory. Please keep your phone reachable.
-          </p>
+        <p className="text-sm text-ink/70">
+          Our sales team will call you shortly to complete the ₹1,180 Booking Fee payment and confirm your
+          territory. Please keep your phone reachable.
+        </p>
+        <p className="mt-3 text-xs text-ink/50">
+          A separate Registration Fee applies later, during onboarding.
+        </p>
           {booking && (
             <p className="mt-4 text-xs text-ink/40">
               Reference ID: <span className="font-medium text-ink/60">{booking.bookingId}</span>
