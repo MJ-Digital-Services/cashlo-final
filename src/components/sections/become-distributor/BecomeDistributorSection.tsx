@@ -45,7 +45,7 @@ interface RazorpayOptions {
   modal?: { ondismiss?: () => void };
 }
 
-type Step = "pincode" | "form" | "otp" | "payment" | "success";
+type Step = "pincode" | "form" | "otp" | "payment" | "qr" | "success";
 
 const inputClass =
   "mt-1.5 w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-ink outline-none transition-colors focus:border-brand";
@@ -120,6 +120,11 @@ export default function BecomeDistributorSection() {
   const [paymentStatus, setPaymentStatus] = useState<"preparing" | "waiting" | "dismissed" | "verifying" | "success">(
     "preparing"
   );
+
+  // --- QR self-payment step ---
+  const [utrInput, setUtrInput] = useState("");
+  const [utrLoading, setUtrLoading] = useState(false);
+  const [utrError, setUtrError] = useState("");
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -333,9 +338,9 @@ export default function BecomeDistributorSection() {
     setOtpLoading(true);
     setOtpError("");
     try {
-      const { manualPayment } = await distributorApi.verifyOtp(bookingId, otpInput);
+      const { paymentMode } = await distributorApi.verifyOtp(bookingId, otpInput);
 
-      if (manualPayment) {
+      if (paymentMode === "manual") {
         sessionStorage.setItem(
           "cashlo_pending_booking",
           JSON.stringify({
@@ -344,9 +349,15 @@ export default function BecomeDistributorSection() {
             district: pincodeResult?.district,
             state: pincodeResult?.state,
             bookingId,
+            paymentMode: "manual",
           })
         );
         router.push("/become-distributor/pending");
+        return;
+      }
+
+      if (paymentMode === "qr_self") {
+        setStep("qr");
         return;
       }
 
@@ -434,6 +445,32 @@ export default function BecomeDistributorSection() {
     },
     [form.name, form.email, form.mobile]
   );
+
+  async function handleSubmitUtr(e: FormEvent) {
+    e.preventDefault();
+    setUtrLoading(true);
+    setUtrError("");
+    try {
+      await distributorApi.submitUtr(bookingId, utrInput);
+
+      sessionStorage.setItem(
+        "cashlo_pending_booking",
+        JSON.stringify({
+          name: form.name,
+          pincode: pincodeResult?.pincode,
+          district: pincodeResult?.district,
+          state: pincodeResult?.state,
+          bookingId,
+          paymentMode: "qr_self",
+        })
+      );
+      router.push("/become-distributor/pending");
+    } catch (err) {
+      setUtrError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
+    } finally {
+      setUtrLoading(false);
+    }
+  }
 
   const initiateOrder = useCallback(async () => {
     setPaymentError("");
@@ -729,6 +766,52 @@ export default function BecomeDistributorSection() {
               >
                 {resendCooldown > 0 ? `Resend OTP in ${resendCooldown}s` : "Resend OTP"}
               </button>
+            </form>
+          )}
+
+{step === "qr" && (
+            <form onSubmit={handleSubmitUtr}>
+              <div className="text-center">
+                <p className="text-sm font-medium text-ink">Scan & Pay ₹1,180 Booking Fee</p>
+                <p className="mt-1 text-xs text-ink/50">
+                  Scan the QR code below using any UPI app to complete your booking payment.
+                </p>
+
+                <div className="mx-auto mt-5 w-56 overflow-hidden rounded-xl border border-border">
+                  <img
+                    src="/payment/distributor-booking-qr.png"
+                    alt="Scan to pay the ₹1,180 Cashlo distributor booking fee"
+                    className="h-auto w-full"
+                  />
+                </div>
+
+                <p className="mt-4 text-xs text-ink/50">
+                  After paying, your UPI app will show a transaction reference number
+                  (also called a UTR or Ref No.) — enter it below to confirm your payment.
+                </p>
+              </div>
+
+              <label className="mt-5 block text-sm font-medium text-ink">
+                UTR / Transaction Reference Number
+              </label>
+              <input
+                required
+                value={utrInput}
+                onChange={(e) => setUtrInput(e.target.value.trim())}
+                className={inputClass}
+                placeholder="e.g. 302518293746"
+              />
+
+              {utrError && <p className="mt-3 text-sm text-red-600">{utrError}</p>}
+
+              <SubmitButton type="submit" loading={utrLoading} loadingText="Submitting..." className="mt-6">
+                Submit Payment Reference
+              </SubmitButton>
+
+              <p className="mt-3 text-center text-xs text-ink/40">
+                Our team will verify your payment and confirm your PIN Code reservation
+                shortly. Please keep your payment screenshot handy in case we need it.
+              </p>
             </form>
           )}
 

@@ -68,6 +68,8 @@ async function post<T>(path: string, body: unknown): Promise<T> {
   return json.data as T;
 }
 
+export type PaymentMode = "razorpay" | "manual" | "qr_self";
+
 export const distributorApi = {
   checkPincode: (pincode: string) =>
     post<PincodeCheckResult>("/distributor/check-pincode", { pincode }),
@@ -79,7 +81,13 @@ export const distributorApi = {
     post<{ bookingId: string }>("/distributor/send-otp", input),
 
   verifyOtp: (bookingId: string, otp: string) =>
-    post<{ bookingId: string; manualPayment: boolean }>("/distributor/verify-otp", { bookingId, otp }),
+    post<{ bookingId: string; manualPayment: boolean; paymentMode: PaymentMode }>(
+      "/distributor/verify-otp",
+      { bookingId, otp }
+    ),
+
+  submitUtr: (bookingId: string, utr: string) =>
+    post<{ bookingId: string; status: string }>("/distributor/submit-utr", { bookingId, utr }),
 
   createOrder: (bookingId: string) =>
     post<CreateOrderResult>("/distributor/create-order", { bookingId }),
