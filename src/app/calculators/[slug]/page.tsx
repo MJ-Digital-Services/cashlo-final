@@ -5,8 +5,17 @@ import CalculatorSidebar from "@/components/sections/calculators/CalculatorSideb
 import CalculatorFaq from "@/components/sections/calculators/CalculatorFaq";
 
 export async function generateStaticParams() {
-  const slugs = await getAllCalculatorSlugs();
-  return slugs.map((slug) => ({ slug }));
+  try {
+    const slugs = await getAllCalculatorSlugs();
+    return slugs.map((slug) => ({ slug }));
+  } catch (err) {
+    // If the backend is unreachable/slow at build time, don't fail the
+    // whole deployment — just skip static pre-rendering for calculators.
+    // Pages still work; they'll render on-demand at request time instead
+    // (App Router defaults to dynamicParams: true).
+    console.error("[calculators] Failed to fetch slugs for generateStaticParams:", err);
+    return [];
+  }
 }
 
 export async function generateMetadata({
@@ -15,11 +24,17 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const { calculator } = await getCalculatorBySlug(slug);
-  return {
-    title: calculator.metaTitle || calculator.title,
-    description: calculator.metaDescription,
-  };
+  try {
+    const { calculator } = await getCalculatorBySlug(slug);
+    return {
+      title: calculator.metaTitle || calculator.title,
+      description: calculator.metaDescription,
+    };
+  } catch {
+    return {
+      title: "EMI Calculator | Cashlo",
+    };
+  }
 }
 
 export default async function CalculatorPage({

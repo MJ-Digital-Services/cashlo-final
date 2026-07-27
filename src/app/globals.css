@@ -362,7 +362,7 @@ body {
 .cx-hero .lede{font-size:clamp(15px,1.3vw,16px);color:var(--muted);line-height:1.6;max-width:480px;margin:0;font-weight:450}
 
 /* ---- buttons ---- */
-.cx-hero .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;font-weight:600;font-size:16px;padding:16px 30px;border-radius:100px;transition:transform .45s var(--ease),box-shadow .45s var(--ease),background .3s;position:relative;overflow:hidden;will-change:transform;white-space:nowrap}
+.cx-hero .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;font-weight:600;font-size:14px;padding:12px 22px;border-radius:100px;transition:transform .45s var(--ease),box-shadow .45s var(--ease),background .3s;position:relative;overflow:hidden;will-change:transform;white-space:nowrap}
 .cx-hero .btn-primary{background:linear-gradient(100deg,#3D5AFE,#7B61FF,#00C2FF,#3D5AFE);background-size:280% 100%;color:#fff;box-shadow:var(--glow);animation:cxGradShift 7s linear infinite}
 @keyframes cxGradShift{0%{background-position:0% 50%}100%{background-position:280% 50%}}
 .cx-hero .btn-primary::before{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent 20%,rgba(255,255,255,.35) 50%,transparent 80%);transform:translateX(-120%);transition:transform .8s var(--ease)}
@@ -370,7 +370,7 @@ body {
 .cx-hero .btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 16px 44px -8px rgba(61,90,254,.65)}
 .cx-hero .btn-ghost{background:rgba(61,90,254,.07);color:var(--blue);border:1.5px solid rgba(61,90,254,.22);backdrop-filter:blur(8px)}
 .cx-hero .btn-ghost:hover{background:rgba(61,90,254,.13);transform:translateY(-3px)}
-.cx-hero .btn-lg{padding:19px 38px;font-size:17px}
+.cx-hero .btn-lg{padding:14px 28px;font-size:15px}
 .cx-hero .btn .arr{transition:transform .35s var(--ease)}
 .cx-hero .btn:hover .arr{transform:translateX(4px)}
 .cx-hero .btn:active{transform:scale(.97)}
