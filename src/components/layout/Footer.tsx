@@ -12,7 +12,12 @@ const quickLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
-const social = ["Facebook", "Instagram", "LinkedIn", "YouTube"];
+const social = [
+  { label: "Facebook", href: null },
+  { label: "Instagram", href: "https://www.instagram.com/cashlo.app/" },
+  { label: "LinkedIn", href: "https://www.linkedin.com/company/cashlo/about/" },
+  { label: "YouTube", href: null },
+];
 
 export default function Footer() {
   return (
@@ -69,15 +74,27 @@ export default function Footer() {
               <li>+91-XXXXXXXXXX</li>
             </ul>
             <div className="mt-5 flex flex-wrap gap-3">
-              {social.map((s) => (
-                <Link
-                  key={s}
-                  href="#"
-                  className="text-sm text-ink/60 transition-colors hover:text-brand"
-                >
-                  {s}
-                </Link>
-              ))}
+              {social.map((s) =>
+                s.href ? (
+                  <Link
+                    key={s.label}
+                    href={s.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-ink/60 transition-colors hover:text-brand"
+                  >
+                    {s.label}
+                  </Link>
+                ) : (
+                  <span
+                    key={s.label}
+                    aria-disabled="true"
+                    className="cursor-not-allowed text-sm text-ink/30"
+                  >
+                    {s.label}
+                  </span>
+                )
+              )}
             </div>
           </div>
         </div>
