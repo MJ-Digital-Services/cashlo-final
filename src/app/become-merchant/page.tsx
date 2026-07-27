@@ -32,7 +32,9 @@ export default function BecomeMerchantPage() {
   return (
     <ToastProvider>
       <main className="relative bg-white pb-24 lg:pb-0 dark:bg-[#0B1020]">
-        <CashloMerchantHeroAnimation className="w-full" />
+        <div className="pt-24 sm:pt-28">
+          <CashloMerchantHeroAnimation className="w-full" />
+        </div>
         <Hero onBecomeMerchant={scrollToRegister} />
         <QuickActions onContactSales={openSales} onContactDistributor={openDistributor} />
         <LeadSection />
