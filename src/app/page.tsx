@@ -1,6 +1,6 @@
 import HeroTrust from "@/components/sections/HeroTrust";
 import Stats from "@/components/sections/Stats";
-import WhyChoose from "@/components/sections/WhyChoose";
+import PaymentAppFeatures from "@/components/sections/PaymentAppFeatures";
 import HowItWorks from "@/components/sections/HowItWorks";
 import ImportantRules from "@/components/sections/ImportantRules";
 import SupportedBy from "@/components/sections/SupportedBy";
@@ -21,7 +21,7 @@ export default function Home() {
       <TrustGrid />
       <Stats />
       <SupportedBy />
-      <WhyChoose />
+      <PaymentAppFeatures />
       <HowItWorks />
       <ServiceStack />
       <GstAccounting />
