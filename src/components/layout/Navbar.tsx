@@ -57,8 +57,9 @@ export default function Navbar() {
         />
         </Link>
 
-        {/* Center nav */}
+        {/* Center nav — keyed to pathname so any open dropdown resets on navigation */}
         <div
+          key={pathname}
           className={`hidden items-center gap-1 rounded-full border px-2 py-1.5 shadow-sm backdrop-blur-md transition-colors lg:flex ${
             scrolled
               ? "border-border bg-bg/70"
@@ -93,7 +94,7 @@ export default function Navbar() {
           >
             Become Merchant
           </Link>
-          <MobileMenu />
+          <MobileMenu key={pathname}/>
         </div>
       </nav>
     </header>
