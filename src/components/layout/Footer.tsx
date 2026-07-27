@@ -13,7 +13,7 @@ const quickLinks = [
 ];
 
 const social = [
-  { label: "Facebook", href: null },
+  { label: "Facebook", href: "https://www.facebook.com/share/1SopJkAMwQ/?mibextid=wwXIfr" },
   { label: "Instagram", href: "https://www.instagram.com/cashlo.app/" },
   { label: "LinkedIn", href: "https://www.linkedin.com/company/cashlo/about/" },
   { label: "YouTube", href: null },
