@@ -4,12 +4,14 @@ import DocumentsChecklist from "@/components/sections/itr-filing/DocumentsCheckl
 import WhyFileITR from "@/components/sections/itr-filing/WhyFileITR";
 import ItrDeadlines from "@/components/sections/itr-filing/ItrDeadlines";
 import ItrFAQs from "@/components/sections/itr-filing/ItrFAQs";
+import GstAccounting from "@/components/sections/GstAccounting";
 
 export default function ItrFilingPage() {
   return (
     <main>
       <ItrHero />
       <ItrTypes />
+      <GstAccounting />
       <DocumentsChecklist />
       <WhyFileITR />
       <ItrDeadlines />

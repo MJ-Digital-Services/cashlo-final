@@ -9,7 +9,7 @@ import ServiceTeasers from "@/components/sections/ServiceTeasers";
 // import RechargeBillPayments from "@/components/sections/RechargeBillPayments";
 // import LoanServices from "@/components/sections/LoanServices";
 import ServiceStack from "@/components/sections/ServiceStack";
-import GstAccounting from "@/components/sections/GstAccounting";
+// import GstAccounting from "@/components/sections/GstAccounting";
 import WhoCanUse from "@/components/sections/WhoCanUse";
 // import Footer from "@/components/layout/Footer";
 import TrustGrid from "@/components/sections/TrustGrid";
@@ -24,7 +24,7 @@ export default function Home() {
       <PaymentAppFeatures />
       <HowItWorks />
       <ServiceStack />
-      <GstAccounting />
+      {/* <GstAccounting /> */}
       <WhoCanUse />
       {/* <RechargeBillPayments /> */}
       {/* <LoanServices /> */}
