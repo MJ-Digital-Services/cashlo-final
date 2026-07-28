@@ -16,19 +16,19 @@ const rules = [
     num: "01",
     title: "Never Accept QR Screenshots",
     desc: "The Dynamic QR is for one-time use only. Never allow a screenshot or photo of it to be reused.",
-    img: "/illustrations/upi-cashpoint/rules/rule-01.svg",
+    img: "/illustrations/upi-cashpoint/rules/step-01.png",
   },
   {
     num: "02",
     title: "Maintain a Withdrawal Register",
     desc: "Record customer name, mobile number, amount, signature, and transaction reference (RRN) for every withdrawal.",
-    img: "/illustrations/upi-cashpoint/rules/rule-02.svg",
+    img: "/illustrations/upi-cashpoint/rules/step-02.png",
   },
   {
     num: "03",
     title: "Never Accept QR via WhatsApp",
     desc: "Customers must be physically present. Don't process withdrawals from QR images shared over messaging apps.",
-    img: "/illustrations/upi-cashpoint/rules/rule-03.svg",
+    img: "/illustrations/upi-cashpoint/rules/step-03.png",
   },
 ];
 
