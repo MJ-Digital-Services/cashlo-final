@@ -24,7 +24,7 @@ const chapters = [
     eyebrow: "Har Service Par Commission",
     title: "Earn More with Every Service",
     desc: "Offer digital services to your customers and generate additional income. Every successful transaction helps you earn more.",
-    image: "/services/recharge-bills.jpg",
+    image: "/services/recharge-bills.png",
     imagePosition: "center 20%",
     items: [
       { icon: Smartphone, label: "Mobile Recharge" },
@@ -43,7 +43,7 @@ const chapters = [
     eyebrow: "Loan Dilao. Commission Kamao.",
     title: "Help Customers. Earn More.",
     desc: "Offer instant loan services to yourself and your customers. Cashlo enables eligible merchants to assist customers with loan applications while earning attractive commissions.",
-    image: "/services/loan-services.jpg",
+    image: "/services/loan-services.png",
     imagePosition: "center",
     items: [
       { icon: User, label: "Personal Loan" },
