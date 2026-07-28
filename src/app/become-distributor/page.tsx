@@ -10,7 +10,9 @@ import CashloDistributorStory from "@/components/sections/become-distributor/Cas
 export default function BecomeDistributorPage() {
   return (
     <main>
-      <CashloDistributorStory className="w-full" />
+      <div className="pt-24 sm:pt-28">
+        <CashloDistributorStory className="w-full" />
+      </div>
       <DistributorHero />
       <DistributorTrustHighlights />
       <DistributorAbout />

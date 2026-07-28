@@ -1311,7 +1311,7 @@ function Caption({ t, item }: { t: MotionValue<number>; item: CaptionItem }) {
   const y = useNum(t, item.a, item.a + 380, 14, 0, easeOut);
   return (
     <motion.g style={{ opacity: o, y }}>
-      <text x={800} y={840} textAnchor="middle" fontSize={30} fontWeight={650} fill={C.ink}>
+      <text x={800} y={760} textAnchor="middle" fontSize={30} fontWeight={650} fill={C.ink}>
         {item.text}
       </text>
     </motion.g>
@@ -1321,7 +1321,7 @@ function Caption({ t, item }: { t: MotionValue<number>; item: CaptionItem }) {
 function Progress({ t }: { t: MotionValue<number> }) {
   const sx = useTransform(t, (v) => v / DURATION);
   return (
-    <g transform="translate(600,872)">
+    <g transform="translate(600,792)">
       <rect x={0} y={-3} width={400} height={6} rx={3} fill={C.line} />
       <motion.g style={{ scaleX: sx, transformOrigin: "0px 0px" } as Record<string, unknown>}>
         <rect x={0} y={-3} width={400} height={6} rx={3} fill={C.blue} />
@@ -1335,9 +1335,13 @@ function Progress({ t }: { t: MotionValue<number> }) {
 export default function CashloDistributorStory({
   className = "",
   showCaptions = true,
+  height = "clamp(260px, 26vw, 380px)",
+  verticalOffset = 85, // shifts the whole scene up inside the viewBox
 }: {
   className?: string;
   showCaptions?: boolean;
+  height?: string;
+  verticalOffset?: number;
 }): ReactNode {
   const t = useMotionValue(0);
   const hostRef = useRef<HTMLDivElement>(null);
@@ -1386,7 +1390,11 @@ export default function CashloDistributorStory({
   });
 
   return (
-    <div ref={hostRef} className={className} style={{ width: "100%", background: "#FFFFFF" }}>
+    <div
+      ref={hostRef}
+      className={className}
+      style={{ width: "100%", height, background: "#FFFFFF", overflow: "hidden" }}
+    >
       <svg
         viewBox="0 0 1600 900"
         role="img"
@@ -1394,10 +1402,11 @@ export default function CashloDistributorStory({
         style={{
           display: "block",
           width: "100%",
-          height: "auto",
+          height: "100%",
           background: "#FFFFFF",
           fontFamily: "inherit",
         }}
+        preserveAspectRatio="xMidYMid meet"
       >
         <defs>
           <radialGradient id="cashloSun" cx="50%" cy="50%" r="50%">
@@ -1414,22 +1423,25 @@ export default function CashloDistributorStory({
 
         <rect x={0} y={0} width={1600} height={900} fill="#FFFFFF" />
 
-        <SceneMorning t={t} />
-        <SceneJourney t={t} />
-        <SceneFirstMerchant t={t} />
-        <SceneNetwork t={t} />
-        <SceneDashboard t={t} />
-        <SceneEvening t={t} />
-        <LogoSignOff t={t} />
+        {/* Everything shifts up together so the visible band matches the shorter container */}
+        <g transform={`translate(0, ${-verticalOffset})`}>
+          <SceneMorning t={t} />
+          <SceneJourney t={t} />
+          <SceneFirstMerchant t={t} />
+          <SceneNetwork t={t} />
+          <SceneDashboard t={t} />
+          <SceneEvening t={t} />
+          <LogoSignOff t={t} />
 
-        {showCaptions && (
-          <g>
-            {CAPTIONS.map((c) => (
-              <Caption key={c.text} t={t} item={c} />
-            ))}
-            <Progress t={t} />
-          </g>
-        )}
+          {showCaptions && (
+            <g>
+              {CAPTIONS.map((c) => (
+                <Caption key={c.text} t={t} item={c} />
+              ))}
+              <Progress t={t} />
+            </g>
+          )}
+        </g>
       </svg>
     </div>
   );

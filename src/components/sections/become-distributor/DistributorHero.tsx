@@ -2,7 +2,7 @@ import Container from "@/components/ui/Container";
 
 export default function DistributorHero() {
   return (
-    <section className="bg-bg pt-32 pb-16 sm:pt-40 sm:pb-20">
+    <section className="bg-bg pt-32 pb-16 sm:pt-40 sm:pb-20 mt-[-100]">
       <Container className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-brand">
           Exclusive Opportunity
