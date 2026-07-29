@@ -3,13 +3,31 @@
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, Coins, Sparkles, Wallet } from "lucide-react";
 import GoldHeroAnimation from "./GoldHeroAnimation";
 
 const checklist = [
   "Attractive Interest Rates",
   "No Foreclosure Charges on Small Loans",
   "Quick Disbursal, Minimal Paperwork",
+];
+
+const trustBadges = [
+  {
+    icon: Coins,
+    title: "Instant Gold Loan",
+    desc: "Quick approval with minimal paperwork.",
+  },
+  {
+    icon: Sparkles,
+    title: "Invest in 24K Digital Gold",
+    desc: "Start investing anytime with small amounts.",
+  },
+  {
+    icon: Wallet,
+    title: "Earn Commission on Every Transaction",
+    desc: "Generate additional income from every successful service.",
+  },
 ];
 
 export default function GoldLoanHero() {
@@ -24,11 +42,12 @@ export default function GoldLoanHero() {
               Gold Loan &amp; Digital Gold
             </p>
             <h1 data-reveal className="mt-3 max-w-xl text-4xl font-bold tracking-tight text-ink sm:text-5xl">
-              Sona Rakho, Paisa Pao — Instantly
+              Unlock the Power of Gold.
             </h1>
             <p data-reveal className="mt-5 max-w-md text-lg text-ink/60">
-              Help your customers unlock quick funds against their gold, or
-              start investing in digital gold — all from your shop.
+              Offer your customers instant gold loans with minimal documentation
+               or help them start investing in 24K Digital Gold from as little as ₹10. 
+               Earn attractive commissions on every successful transaction while expanding your shop's income.
             </p>
 
             <ul className="mt-8 space-y-3">
@@ -47,6 +66,23 @@ export default function GoldLoanHero() {
             >
               Become Merchant
             </Link>
+
+            {/* Trust badges */}
+            <div data-reveal className="mt-10 grid gap-5 sm:grid-cols-3">
+              {trustBadges.map(({ icon: Icon, title, desc }) => (
+                <div key={title} className="flex items-start gap-3">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10">
+                    <Icon size={18} strokeWidth={2.25} className="text-brand" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-ink">{title}</p>
+                    <p className="mt-0.5 text-xs leading-relaxed text-ink/60">
+                      {desc}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div data-reveal className="hidden lg:block">
