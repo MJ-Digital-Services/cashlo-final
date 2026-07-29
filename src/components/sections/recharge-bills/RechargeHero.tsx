@@ -58,35 +58,35 @@ export default function RechargeHero() {
             {/* Aceternity Style Eyebrow Badge */}
             <div
               data-reveal
-              className="group relative inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 px-3.5 py-1 text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-ink shadow-sm backdrop-blur-xl transition-all hover:border-brand/40"
+              className="group relative inline-flex items-center gap-2 rounded-full border border-border/80 bg-card/60 px-4 py-1.5 text-xs sm:text-sm font-semibold uppercase tracking-wider text-ink shadow-sm backdrop-blur-xl transition-all hover:border-brand/40"
             >
               <span className="flex h-1.5 w-1.5 rounded-full bg-brand animate-pulse" aria-hidden="true" />
-              <Sparkles className="h-3 w-3 text-brand" aria-hidden="true" />
+              <Sparkles className="h-3.5 w-3.5 text-brand" aria-hidden="true" />
               <span>Recharge &amp; Bill Payments • BBPS Powered</span>
               <span className="absolute -bottom-px left-4 right-4 h-px bg-gradient-to-r from-transparent via-brand/60 to-transparent" aria-hidden="true" />
             </div>
 
-            {/* Compact Display Headline */}
+            {/* Display Headline */}
             <h1
               id="hero-heading"
               data-reveal
-              className="mt-4 text-balance max-w-xl text-2xl font-bold tracking-tight text-ink sm:text-3xl lg:text-5xl"
+              className="mt-5 text-balance max-w-2xl text-4xl font-bold tracking-tight text-ink sm:text-5xl lg:text-6xl"
             >
               One Counter for Every Recharge &amp; Bill
             </h1>
 
-            {/* Compact Sub-Tagline */}
+            {/* Sub-Tagline */}
             <p
               data-reveal
-              className="mt-3 text-[10px] sm:text-xs font-bold uppercase tracking-[2px] text-brand opacity-90"
+              className="mt-4 text-xs sm:text-sm font-bold uppercase tracking-[2px] text-brand opacity-90"
             >
               EARN COMMISSION ON EVERY PAYMENT VIA BBPS
             </p>
 
-            {/* Compact Lead Paragraph */}
+            {/* Lead Paragraph */}
             <p
               data-reveal
-              className="mt-2.5 max-w-md text-xs sm:text-sm text-ink/70 leading-relaxed"
+              className="mt-3 max-w-lg text-base sm:text-lg text-ink/70 leading-relaxed"
             >
               Mobile, DTH, electricity, gas, water, FASTag, and broadband — offer it all
               from your counter with instant settlement.
@@ -96,16 +96,16 @@ export default function RechargeHero() {
             <ul
               data-reveal
               aria-label="Quick recharge and bill payment categories"
-              className="mt-6 flex flex-wrap justify-center lg:justify-start items-center gap-2 max-w-md"
+              className="mt-7 flex flex-wrap justify-center lg:justify-start items-center gap-2.5 max-w-lg"
             >
               {quickCategories.map((cat) => {
                 const Icon = cat.icon;
                 return (
                   <li
                     key={cat.name}
-                    className="flex items-center gap-1.5 rounded-full border border-border/60 bg-card/40 px-3 py-1 text-[11px] font-medium text-ink/80 backdrop-blur-md transition-all duration-300 hover:border-brand/40 hover:bg-card hover:text-brand hover:-translate-y-0.5 shadow-sm"
+                    className="flex items-center gap-2 rounded-full border border-border/60 bg-card/40 px-4 py-1.5 text-sm font-medium text-ink/80 backdrop-blur-md transition-all duration-300 hover:border-brand/40 hover:bg-card hover:text-brand hover:-translate-y-0.5 shadow-sm"
                   >
-                    <Icon className="h-3 w-3 text-brand" aria-hidden="true" />
+                    <Icon className="h-3.5 w-3.5 text-brand" aria-hidden="true" />
                     <span>{cat.name}</span>
                   </li>
                 );
