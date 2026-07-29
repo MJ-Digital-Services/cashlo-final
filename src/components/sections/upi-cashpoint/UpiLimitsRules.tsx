@@ -78,7 +78,7 @@ export default function UpiLimitsRules() {
 
           <Image
             data-reveal
-            src="/illustrations/upi-cashpoint/limits.svg"
+            src="/illustrations/upi-cashpoint/withdrawal-limit.png"
             alt="Tracking savings and transaction limits"
             width={480}
             height={400}

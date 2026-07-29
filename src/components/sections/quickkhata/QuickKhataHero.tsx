@@ -20,12 +20,13 @@ export default function QuickKhataHero() {
             data-reveal
             className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl"
           >
-            Your Udhaar, Organized.
+            Your Udhaar, Smarter & Organized.
           </h1>
           <p data-reveal className="mt-5 max-w-xl text-lg text-ink/60">
-            Replace your paper khata with a digital ledger. Track what
-            customers owe you, what you owe them, and never lose a
-            transaction again.
+          Replace your traditional paper khata with Cashlo QuickKhata. 
+          Track customer credit, supplier payments, payment history, and 
+          outstanding balances in one secure place. Send payment reminders, 
+          access records anytime, and never lose an entry again.
           </p>
           <div data-reveal className="mt-8 flex flex-wrap gap-4">
             <a
