@@ -21,16 +21,25 @@ const rules = [
 ];
 
 export default function ImportantRules() {
-  const { scope, wrapRef, shapeRef } = useMorphRules();
+  const { scope, wrapRef, shapeRef, tintRef } = useMorphRules();
 
   return (
     <section ref={scope} className="relative overflow-hidden bg-bg md:h-screen">
+      {/* Full-bleed sketch, faint watermark behind everything */}
+      <div
+        className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.12]"
+        style={{ backgroundImage: "url(/images/important-rules-bg.png)" }}
+        aria-hidden="true"
+      />
+
       {/* ---------- Desktop: pinned morph scene ---------- */}
       <div className="relative hidden h-full flex-col items-center justify-center md:flex">
-        {/* Heading */}
+        {/* Heading — sits on its own small frosted panel, not the full image,
+            so it doesn't collide with the sketch's own "CASHLO" wordmark
+            behind it, while everything else in the illustration stays visible */}
         <div
           data-morph-head
-          className="absolute top-20 z-10 px-6 text-center"
+          className="absolute top-20 z-10 mx-auto max-w-2xl rounded-2xl bg-bg/80 px-8 py-5 text-center shadow-sm backdrop-blur-md"
         >
           <p className="text-sm font-semibold uppercase tracking-wider text-brand">
             Your Complete Business Companion
@@ -43,7 +52,29 @@ export default function ImportantRules() {
         {/* Morphing shape + rule cards */}
         <div ref={wrapRef} className="morph-wrap">
           <svg viewBox="0 0 600 600">
-            <path ref={shapeRef} />
+            <defs>
+              <clipPath id="morphClip">
+                <use href="#morphShapePath" />
+              </clipPath>
+            </defs>
+
+            {/* Invisible master path — its `d` drives the clip AND the tint below */}
+            <path id="morphShapePath" ref={shapeRef} fill="none" />
+
+            {/* The sketch illustration, only visible inside the current shape outline */}
+            <image
+              href="/images/important-rules-bg.png"
+              x="0"
+              y="0"
+              width="600"
+              height="600"
+              preserveAspectRatio="xMidYMid slice"
+              clipPath="url(#morphClip)"
+            />
+
+            {/* Color tint on top of the clipped image — ramps to fully
+                opaque brand as the shape becomes the final circle */}
+            <use href="#morphShapePath" ref={tintRef} />
           </svg>
 
           {rules.map((r) => (
@@ -74,7 +105,7 @@ export default function ImportantRules() {
       </div>
 
       {/* ---------- Mobile: simple cards ---------- */}
-      <div className="px-6 py-20 md:hidden">
+      <div className="relative px-6 py-20 md:hidden">
       <p className="text-sm font-semibold uppercase tracking-wider text-brand">
         Your Complete Business Companion
       </p>

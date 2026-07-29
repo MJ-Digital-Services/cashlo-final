@@ -86,10 +86,16 @@ export function useMorphRules() {
             ? S.r
             : S.r.map((v, i) => v + Math.sin(time * 1.6 + i) * 0.015);
           shape.setAttribute("d", blobPath(wob, 600, S.rot));
+        
+          // Alpha ramps from translucent (lets the background image show through
+          // during the blob/star/gem stages) up to fully opaque exactly as it
+          // finishes becoming the solid brand circle in stage 5 — so there's no
+          // visible "pop" when it needs to be opaque for the final CTA text.
+          const alpha = 0.8 + S.b * 0.2;
           shape.style.fill =
             S.b >= 0.999
               ? "var(--brand)" // live CSS var — follows theme toggles automatically
-              : `rgb(${S.c[0] | 0},${S.c[1] | 0},${S.c[2] | 0})`;
+              : `rgba(${S.c[0] | 0},${S.c[1] | 0},${S.c[2] | 0},${alpha.toFixed(2)})`;
         };
         gsap.ticker.add(tick);
 
