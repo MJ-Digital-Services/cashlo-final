@@ -21,7 +21,7 @@ const rules = [
 ];
 
 export default function ImportantRules() {
-  const { scope, wrapRef, shapeRef, tintRef } = useMorphRules();
+  const { scope, wrapRef, shapeRef } = useMorphRules();
 
   return (
     <section ref={scope} className="relative overflow-hidden bg-bg md:h-screen">
@@ -34,9 +34,8 @@ export default function ImportantRules() {
 
       {/* ---------- Desktop: pinned morph scene ---------- */}
       <div className="relative hidden h-full flex-col items-center justify-center md:flex">
-        {/* Heading — sits on its own small frosted panel, not the full image,
-            so it doesn't collide with the sketch's own "CASHLO" wordmark
-            behind it, while everything else in the illustration stays visible */}
+        {/* Heading — sits on its own small frosted panel so it doesn't
+            collide with the sketch's own "CASHLO" wordmark behind it */}
         <div
           data-morph-head
           className="absolute top-20 z-10 mx-auto max-w-2xl rounded-2xl bg-bg/80 px-8 py-5 text-center shadow-sm backdrop-blur-md"
@@ -74,7 +73,7 @@ export default function ImportantRules() {
 
             {/* Color tint on top of the clipped image — ramps to fully
                 opaque brand as the shape becomes the final circle */}
-            <use href="#morphShapePath" ref={tintRef} />
+            <use href="#morphShapePath" />
           </svg>
 
           {rules.map((r) => (
