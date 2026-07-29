@@ -1,17 +1,30 @@
 "use client";
 
+import {
+  Store,
+  ShoppingBasket,
+  Warehouse,
+  Building2,
+  TrendingUp,
+  Rocket,
+  Laptop,
+  Users,
+  Repeat,
+  type LucideIcon,
+} from "lucide-react";
 import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
-const personas = [
-  "Retailers",
-  "Wholesalers",
-  "Business Owners",
-  "Sales Professionals",
-  "Freelancers",
-  "Entrepreneurs",
-  "Field Sales Executives",
-  "Anyone looking for recurring income",
+const personas: { label: string; icon: LucideIcon }[] = [
+  { label: "Retailers", icon: Store },
+  { label: "Grocery Shop Owners", icon: ShoppingBasket },
+  { label: "Wholesalers", icon: Warehouse },
+  { label: "Business Owners", icon: Building2 },
+  { label: "Sales Professionals", icon: TrendingUp },
+  { label: "Entrepreneurs", icon: Rocket },
+  { label: "Freelancers", icon: Laptop },
+  { label: "Field Sales Executives", icon: Users },
+  { label: "Anyone Looking for Recurring Income", icon: Repeat },
 ];
 
 export default function DistributorWhoCanApply() {
@@ -28,12 +41,15 @@ export default function DistributorWhoCanApply() {
         </div>
 
         <div data-reveal className="mt-10 flex flex-wrap justify-center gap-3">
-          {personas.map((p) => (
+          {personas.map(({ label, icon: Icon }) => (
             <span
-              key={p}
-              className="rounded-full border border-border bg-card px-5 py-2.5 text-sm font-medium text-ink"
+              key={label}
+              className="group flex items-center gap-2.5 rounded-full border border-border bg-card py-2 pl-2.5 pr-5 text-sm font-medium text-ink shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md"
             >
-              {p}
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-brand/10 text-brand transition-colors group-hover:bg-brand group-hover:text-white">
+                <Icon size={14} strokeWidth={2.25} />
+              </span>
+              {label}
             </span>
           ))}
         </div>

@@ -4,7 +4,8 @@ import { useState, useEffect, useCallback, useRef, type FormEvent } from "react"
 import Script from "next/script";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
-import { MapPin, Lock } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { MapPin, Lock, ArrowRight, ShieldCheck, PartyPopper, QrCode, CheckCircle2 } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import {
@@ -47,12 +48,15 @@ interface RazorpayOptions {
 
 type Step = "pincode" | "form" | "otp" | "payment" | "qr" | "success";
 
+// ---- Stripe/Linear-flavoured shared styles ----
 const inputClass =
-  "mt-1.5 w-full rounded-xl border border-border bg-bg px-4 py-2.5 text-sm text-ink outline-none transition-colors focus:border-brand";
+  "mt-1.5 w-full rounded-lg border border-border bg-bg px-3.5 py-2.5 text-[15px] text-ink outline-none transition-all duration-200 placeholder:text-ink/35 focus:border-brand focus:ring-[3px] focus:ring-brand/15";
 const primaryBtnClass =
-  "w-full rounded-full bg-brand px-7 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark disabled:opacity-60";
+  "group inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-ink px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-ink/85 disabled:opacity-50 disabled:hover:bg-ink";
 const secondaryBtnClass =
-  "w-full rounded-full border border-border px-7 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand";
+  "inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-border px-6 py-3 text-sm font-medium text-ink transition-all duration-200 hover:border-ink/25 hover:bg-surface";
+const cardBaseClass =
+  "rounded-2xl border border-border bg-card shadow-[0_1px_2px_rgba(16,24,40,0.04),0_1px_1px_rgba(16,24,40,0.02)] p-6 sm:p-9";
 
 const CONSENT_ITEMS: { key: keyof Consents; label: string }[] = [
   {
@@ -70,6 +74,26 @@ const CONSENT_ITEMS: { key: keyof Consents; label: string }[] = [
     label: "I understand that policy violations may result in suspension or termination.",
   },
 ];
+
+// Drives the progress rail. Payment/QR/success all count as "step 4".
+const RAIL_STEPS = ["Territory", "Details", "Verify", "Confirm"];
+const RAIL_STEP: Record<Step, number> = {
+  pincode: 1,
+  form: 2,
+  otp: 2,
+  payment: 3,
+  qr: 3,
+  success: 4,
+};
+
+// Shared step-transition motion — quiet crossfade + tiny rise, Stripe/Linear-style
+// (no bounce, no scale — just an ease-out fade so it reads as "settling in").
+const stepMotion = {
+  initial: { opacity: 0, y: 10 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -6 },
+  transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const },
+};
 
 export default function BecomeDistributorSection() {
   const scope = useScrollReveal();
@@ -170,7 +194,7 @@ export default function BecomeDistributorSection() {
       if (pincodeResult.available) {
         gsap.to(input, {
           borderColor: "#22c55e",
-          boxShadow: "0 0 0 4px rgba(34,197,94,0.18)",
+          boxShadow: "0 0 0 4px rgba(34,197,94,0.14)",
           duration: 0.45,
           ease: "power2.out",
         });
@@ -178,7 +202,7 @@ export default function BecomeDistributorSection() {
       } else if (pincodeResult.reason === "already_allotted") {
         gsap.to(input, {
           borderColor: "#ef4444",
-          boxShadow: "0 0 0 4px rgba(239,68,68,0.18)",
+          boxShadow: "0 0 0 4px rgba(239,68,68,0.14)",
           duration: 0.3,
         });
         if (!prefersReducedMotion) {
@@ -198,7 +222,7 @@ export default function BecomeDistributorSection() {
       } else if (pincodeResult.reason === "temporarily_reserved") {
         gsap.to(input, {
           borderColor: "#f59e0b",
-          boxShadow: "0 0 0 4px rgba(245,158,11,0.18)",
+          boxShadow: "0 0 0 4px rgba(245,158,11,0.14)",
           duration: 0.3,
         });
       }
@@ -507,8 +531,10 @@ export default function BecomeDistributorSection() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [step, razorpayLoaded]);
 
+  const railStep = RAIL_STEP[step];
+
   return (
-    <section id="reserve" ref={scope} className="scroll-mt-24 bg-surface py-20 sm:py-24">
+    <section id="reserve" ref={scope} className="scroll-mt-24 bg-surface py-20 sm:py-28">
       <Script
         src="https://checkout.razorpay.com/v1/checkout.js"
         strategy="afterInteractive"
@@ -517,341 +543,485 @@ export default function BecomeDistributorSection() {
           setPaymentError("Failed to load the payment system. Please check your connection and refresh the page.")
         }
       />
-      <Container className="mx-auto max-w-xl">
-
-        <div data-reveal className="rounded-2xl border border-border bg-card p-6 sm:p-8">
-          {step === "pincode" && (
-            <div>
-              <form onSubmit={handleCheckPincode} className="flex gap-3">
-                <div className="relative flex-1">
-                  <div
-                    ref={pincodeConfettiRef}
-                    className="pointer-events-none absolute inset-x-0 -top-2 h-0 overflow-visible"
-                    aria-hidden="true"
-                  />
-                  <input
-                    ref={pincodeInputRef}
-                    value={pincodeInput}
-                    onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                    placeholder="Enter your area PIN code"
-                    inputMode="numeric"
-                    className={inputClass + " mt-0"}
-                  />
-                </div>
-                <button
-                  type="submit"
-                  disabled={pincodeLoading}
-                  className="shrink-0 rounded-xl bg-brand px-6 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-dark disabled:opacity-60"
-                >
-                  Find
-                </button>
-              </form>
-
-              {pincodeError && <p className="mt-3 text-sm text-red-600">{pincodeError}</p>}
-
-              {pincodeLoading && (
-                <div className="mt-5 flex flex-col items-center gap-2 py-4">
-                  <MapPin ref={pinIconRef} className="h-6 w-6 text-brand" />
-                  <p className="text-sm font-medium text-ink">🔍 Checking PIN Code Availability...</p>
-                  <p className="text-xs text-ink/50">Finding your exclusive territory...</p>
-                  <div className="mt-1 flex gap-1">
-                    <span className="loading-dot h-1.5 w-1.5 rounded-full bg-brand" />
-                    <span className="loading-dot h-1.5 w-1.5 rounded-full bg-brand" />
-                    <span className="loading-dot h-1.5 w-1.5 rounded-full bg-brand" />
-                  </div>
-                </div>
-              )}
-
-              {pincodeResult?.available && (
-                <div className="mt-5 rounded-xl border border-green-200 bg-green-50 p-5">
-                  <p className="font-semibold text-green-700">
-                    🎉 Great News! Your selected PIN Code is available for reservation.
-                  </p>
-                  <p className="mt-1 text-sm text-green-700/80">
-                    {pincodeResult.district}, {pincodeResult.state}
-                  </p>
-                  <p className="mt-2 text-sm text-ink/60">
-                    You&apos;re one step closer to owning this exclusive territory. Reserve it now before
-                    someone else books it.
-                  </p>
-                  <p className="mt-2 text-xs text-ink/50">
-                    A ₹1,180 Booking Fee reserves your territory. A separate Registration Fee
-                    applies later, during onboarding.
-                  </p>
-                  <button
-                    onClick={() => setStep("form")}
-                    className="mt-4 w-full rounded-full bg-brand px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-brand-dark"
-                  >
-                    Reserve This PIN Code
-                  </button>
-                </div>
-              )}
-
-              {pincodeResult && !pincodeResult.available && pincodeResult.reason === "already_allotted" && (
-                <div className="mt-5 rounded-xl border border-red-200 bg-red-50 p-5">
-                  <div className="flex items-center gap-2">
-                    <Lock ref={lockIconRef} className="h-5 w-5 shrink-0 text-red-600" />
-                    <p className="font-semibold text-red-700">
-                      😔 Oops! This PIN Code has already been assigned to another Cashlo Distributor.
-                    </p>
-                  </div>
-                  <p className="mt-2 text-sm text-ink/60">
-                    Please try another nearby PIN Code to continue. We&apos;d love to help you find an
-                    available territory.
-                  </p>
-
-                  {nearbyLoading && <p className="mt-3 text-xs text-ink/50">Finding nearby pincodes...</p>}
-
-                  {!nearbyLoading && nearbySuggestions.length > 0 && (
-                    <div className="mt-4">
-                      <p className="text-xs font-medium uppercase tracking-wider text-ink/40">
-                        Available Nearby
-                      </p>
-                      <div className="mt-2 flex flex-wrap gap-2">
-                        {nearbySuggestions.map((s) => (
-                          <button
-                            key={s.pincode}
-                            onClick={() => selectSuggestedPincode(s.pincode)}
-                            className="rounded-full border border-border bg-bg px-4 py-1.5 text-xs font-medium text-ink transition-colors hover:border-brand hover:text-brand"
-                          >
-                            {s.pincode}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {!nearbyLoading && nearbySuggestions.length === 0 && (
-                    <p className="mt-3 text-xs text-ink/40">
-                      No nearby PIN codes available right now — try a different area.
-                    </p>
-                  )}
-
-                  <button
-                    onClick={resetToPincodeStep}
-                    className="mt-4 w-full rounded-full border border-border px-7 py-3 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand"
-                  >
-                    Try Another PIN Code
-                  </button>
-                </div>
-              )}
-
-              {pincodeResult && !pincodeResult.available && pincodeResult.reason === "temporarily_reserved" && (
-                <div className="mt-5 rounded-xl border border-amber-200 bg-amber-50 p-5">
-                  <p className="font-semibold text-amber-700">
-                    This PIN Code is currently being reserved by another user.
-                  </p>
-                  <p className="mt-2 text-sm text-ink/60">
-                    Please try again in a few minutes, or choose a nearby PIN Code.
-                  </p>
-                  <button onClick={resetToPincodeStep} className="mt-4 w-full rounded-full border border-border px-7 py-3 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand">
-                    Try Another PIN Code
-                  </button>
-                </div>
-              )}
-            </div>
-          )}
-
-          {step === "form" && pincodeResult && (
-            <form onSubmit={submitFormAndSendOtp}>
-              <div className="mb-5 rounded-xl bg-bg px-4 py-3 text-sm text-ink/70">
-                PIN Code <span className="font-semibold text-ink">{pincodeResult.pincode}</span> —{" "}
-                {pincodeResult.district}, {pincodeResult.state}
+      <Container className="mx-auto max-w-lg">
+        {/* ---- Progress rail: thin track + labels, Linear-style ---- */}
+        <div data-reveal className="mb-10">
+          <div className="flex items-center gap-1.5">
+            {[1, 2, 3, 4].map((n) => (
+              <div key={n} className="h-[3px] flex-1 overflow-hidden rounded-full bg-border">
+                <motion.div
+                  className="h-full bg-ink"
+                  initial={false}
+                  animate={{ width: n <= railStep ? "100%" : "0%" }}
+                  transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                />
               </div>
-
-              <div className="grid gap-5 sm:grid-cols-2">
-                <div className="sm:col-span-2">
-                  <label className="text-sm font-medium text-ink">Full Name</label>
-                  <input
-                    required
-                    value={form.name}
-                    onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                    className={inputClass}
-                    placeholder="Your full name"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-ink">Mobile Number</label>
-                  <input
-                    required
-                    type="tel"
-                    value={form.mobile}
-                    onChange={(e) => setForm((f) => ({ ...f, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) }))}
-                    className={inputClass}
-                    placeholder="10-digit mobile number"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-ink">Email Address</label>
-                  <input
-                    required
-                    type="email"
-                    value={form.email}
-                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                    className={inputClass}
-                    placeholder="you@example.com"
-                  />
-                </div>
-                <div className="sm:col-span-2">
-                  <label className="text-sm font-medium text-ink">Referral Code (Optional)</label>
-                  <input
-                    value={form.referralCode}
-                    onChange={(e) => setForm((f) => ({ ...f, referralCode: e.target.value }))}
-                    className={inputClass}
-                    placeholder="Enter referral code if you have one"
-                  />
-                  <p className="mt-1.5 text-xs text-ink/40">
-                    Note: Referral Code refers to your Employee RT, DT, or MD Code.
-                  </p>
-                </div>
-              </div>
-
-              <div className="mt-5 rounded-xl border border-brand/20 bg-brand/5 px-4 py-3 text-xs leading-relaxed text-ink/70">
-                <span className="font-semibold text-ink">Two-step payment:</span> The{" "}
-                <span className="font-semibold text-brand">₹1,180 Booking Fee</span> below
-                reserves this PIN code exclusively for you. A separate{" "}
-                <span className="font-semibold text-ink">Registration Fee</span> applies
-                after your booking is confirmed, payable during onboarding.
-              </div>
-
-              <div className="mt-6 space-y-3">
-                {CONSENT_ITEMS.map(({ key, label }) => (
-                  <label key={key} className="flex items-start gap-3 text-sm text-ink/70">
-                    <input
-                      type="checkbox"
-                      checked={consents[key]}
-                      onChange={(e) => setConsents((c) => ({ ...c, [key]: e.target.checked }))}
-                      className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-brand"
-                    />
-                    {label}
-                  </label>
-                ))}
-              </div>
-
-              {formError && <p className="mt-4 text-sm text-red-600">{formError}</p>}
-
-              <SubmitButton type="submit" loading={formLoading} loadingText="Sending OTP..." className="mt-6">
-                Verify Email & Continue
-                </SubmitButton>
-            </form>
-          )}
-
-          {step === "otp" && (
-            <form onSubmit={handleVerifyOtp}>
-              <p className="text-sm text-ink/70">
-                We&apos;ve sent a 6-digit OTP to <span className="font-medium text-ink">{form.email}</span>.
-                It&apos;s valid for 5 minutes.
-              </p>
-              <label className="mt-5 block text-sm font-medium text-ink">Enter OTP</label>
-              <input
-                required
-                value={otpInput}
-                onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                inputMode="numeric"
-                className={inputClass + " tracking-[0.3em] text-center text-lg"}
-                placeholder="------"
-              />
-
-              {otpError && <p className="mt-3 text-sm text-red-600">{otpError}</p>}
-
-              <SubmitButton type="submit" loading={otpLoading} loadingText="Verifying..." className="mt-6">
-                Verify OTP
-                </SubmitButton>
-
-              <button
-                type="button"
-                onClick={handleResendOtp}
-                disabled={resendCooldown > 0}
-                className="mt-3 w-full text-center text-sm text-brand disabled:text-ink/40"
+            ))}
+          </div>
+          <div className="mt-2.5 flex justify-between">
+            {RAIL_STEPS.map((label, i) => (
+              <span
+                key={label}
+                className={`text-[11px] font-medium tracking-wide transition-colors duration-300 ${
+                  i + 1 <= railStep ? "text-ink" : "text-ink/35"
+                }`}
               >
-                {resendCooldown > 0 ? `Resend OTP in ${resendCooldown}s` : "Resend OTP"}
-              </button>
-            </form>
-          )}
+                {label}
+              </span>
+            ))}
+          </div>
+        </div>
 
-{step === "qr" && (
-            <form onSubmit={handleSubmitUtr}>
-              <div className="text-center">
-                <p className="text-sm font-medium text-ink">Scan & Pay ₹1,180 Booking Fee</p>
-                <p className="mt-1 text-xs text-ink/50">
-                  Scan the QR code below using any UPI app to complete your booking payment.
-                </p>
-
-                <div className="mx-auto mt-5 w-56 overflow-hidden rounded-xl border border-border">
-                  <img
-                    src="/payment/distributor-booking-qr.png"
-                    alt="Scan to pay the ₹1,180 Cashlo distributor booking fee"
-                    className="h-auto w-full"
-                  />
+        <div data-reveal className={cardBaseClass}>
+          <AnimatePresence mode="wait">
+            {step === "pincode" && (
+              <motion.div key="pincode" {...stepMotion}>
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink/5">
+                    <MapPin size={16} strokeWidth={2} className="text-ink" />
+                  </span>
+                  <div>
+                    <p className="text-[15px] font-semibold text-ink">Reserve your territory</p>
+                    <p className="text-[13px] text-ink/50">Enter your area PIN code to check availability</p>
+                  </div>
                 </div>
 
-                <p className="mt-4 text-xs text-ink/50">
-                  After paying, your UPI app will show a transaction reference number
-                  (also called a UTR or Ref No.) — enter it below to confirm your payment.
+                <form onSubmit={handleCheckPincode} className="flex gap-2.5">
+                  <div className="relative flex-1">
+                    <div
+                      ref={pincodeConfettiRef}
+                      className="pointer-events-none absolute inset-x-0 -top-2 h-0 overflow-visible"
+                      aria-hidden="true"
+                    />
+                    <input
+                      ref={pincodeInputRef}
+                      value={pincodeInput}
+                      onChange={(e) => setPincodeInput(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                      placeholder="Area PIN code"
+                      inputMode="numeric"
+                      className={inputClass + " mt-0 font-mono tracking-wide"}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={pincodeLoading}
+                    className="shrink-0 rounded-lg bg-ink px-5 text-sm font-medium text-white transition-all duration-200 hover:bg-ink/85 disabled:opacity-50"
+                  >
+                    Find
+                  </button>
+                </form>
+
+                <AnimatePresence>
+                  {pincodeError && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-2.5 text-[13px] text-red-600"
+                    >
+                      {pincodeError}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {pincodeLoading && (
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="mt-6 flex flex-col items-center gap-2.5 py-6"
+                    >
+                      <MapPin ref={pinIconRef} className="h-5 w-5 text-ink/40" strokeWidth={1.75} />
+                      <p className="text-[13px] font-medium text-ink/70">Checking availability</p>
+                      <div className="flex gap-1">
+                        <span className="loading-dot h-1 w-1 rounded-full bg-ink/40" />
+                        <span className="loading-dot h-1 w-1 rounded-full bg-ink/40" />
+                        <span className="loading-dot h-1 w-1 rounded-full bg-ink/40" />
+                      </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {pincodeResult?.available && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="mt-6 rounded-xl border border-emerald-200 bg-emerald-50/60 p-5"
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <CheckCircle2 size={18} className="mt-0.5 shrink-0 text-emerald-600" />
+                        <div>
+                          <p className="text-[14px] font-semibold text-emerald-900">
+                            This territory is available
+                          </p>
+                          <p className="mt-0.5 text-[13px] text-emerald-800/70">
+                            {pincodeResult.district}, {pincodeResult.state}
+                          </p>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-[13px] leading-relaxed text-ink/60">
+                        Reserve it now before someone else books it. A ₹1,180 booking fee holds this
+                        PIN code exclusively for you — a separate registration fee applies later, during
+                        onboarding.
+                      </p>
+                      <button
+                        onClick={() => setStep("form")}
+                        className={primaryBtnClass + " mt-4"}
+                      >
+                        Reserve this PIN code
+                        <ArrowRight size={15} className="transition-transform duration-200 group-hover:translate-x-0.5" />
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {pincodeResult && !pincodeResult.available && pincodeResult.reason === "already_allotted" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="mt-6 rounded-xl border border-red-200 bg-red-50/60 p-5"
+                    >
+                      <div className="flex items-start gap-2.5">
+                        <Lock ref={lockIconRef} className="mt-0.5 h-[18px] w-[18px] shrink-0 text-red-600" />
+                        <p className="text-[14px] font-semibold text-red-900">
+                          This PIN code is already taken
+                        </p>
+                      </div>
+                      <p className="mt-2 text-[13px] leading-relaxed text-ink/60">
+                        It's already assigned to another Cashlo distributor. Try a nearby PIN code instead.
+                      </p>
+
+                      {nearbyLoading && (
+                        <p className="mt-3 text-[12px] text-ink/40">Finding nearby pincodes…</p>
+                      )}
+
+                      {!nearbyLoading && nearbySuggestions.length > 0 && (
+                        <div className="mt-4">
+                          <p className="text-[11px] font-medium uppercase tracking-wider text-ink/35">
+                            Available nearby
+                          </p>
+                          <div className="mt-2 flex flex-wrap gap-1.5">
+                            {nearbySuggestions.map((s) => (
+                              <button
+                                key={s.pincode}
+                                onClick={() => selectSuggestedPincode(s.pincode)}
+                                className="rounded-full border border-border bg-bg px-3.5 py-1.5 text-[12px] font-medium text-ink transition-all duration-200 hover:border-ink/30 hover:bg-surface"
+                              >
+                                {s.pincode}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {!nearbyLoading && nearbySuggestions.length === 0 && (
+                        <p className="mt-3 text-[12px] text-ink/35">
+                          No nearby PIN codes available right now — try a different area.
+                        </p>
+                      )}
+
+                      <button onClick={resetToPincodeStep} className={secondaryBtnClass + " mt-4"}>
+                        Try another PIN code
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <AnimatePresence>
+                  {pincodeResult && !pincodeResult.available && pincodeResult.reason === "temporarily_reserved" && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -6 }}
+                      transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+                      className="mt-6 rounded-xl border border-amber-200 bg-amber-50/60 p-5"
+                    >
+                      <p className="text-[14px] font-semibold text-amber-900">
+                        Currently being reserved by someone else
+                      </p>
+                      <p className="mt-1.5 text-[13px] text-ink/60">
+                        Try again in a few minutes, or choose a nearby PIN code.
+                      </p>
+                      <button onClick={resetToPincodeStep} className={secondaryBtnClass + " mt-4"}>
+                        Try another PIN code
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            )}
+
+            {step === "form" && pincodeResult && (
+              <motion.form key="form" {...stepMotion} onSubmit={submitFormAndSendOtp}>
+                <div className="mb-6 flex items-center justify-between rounded-lg bg-surface px-4 py-3">
+                  <span className="text-[13px] text-ink/60">Reserving</span>
+                  <span className="text-[13px] font-semibold text-ink">
+                    {pincodeResult.pincode} · {pincodeResult.district}, {pincodeResult.state}
+                  </span>
+                </div>
+
+                <div className="grid gap-5 sm:grid-cols-2">
+                  <div className="sm:col-span-2">
+                    <label className="text-[13px] font-medium text-ink/70">Full name</label>
+                    <input
+                      required
+                      value={form.name}
+                      onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                      className={inputClass}
+                      placeholder="Your full name"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[13px] font-medium text-ink/70">Mobile number</label>
+                    <input
+                      required
+                      type="tel"
+                      value={form.mobile}
+                      onChange={(e) => setForm((f) => ({ ...f, mobile: e.target.value.replace(/\D/g, "").slice(0, 10) }))}
+                      className={inputClass}
+                      placeholder="10-digit number"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-[13px] font-medium text-ink/70">Email address</label>
+                    <input
+                      required
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                      className={inputClass}
+                      placeholder="you@example.com"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="text-[13px] font-medium text-ink/70">Referral code (optional)</label>
+                    <input
+                      value={form.referralCode}
+                      onChange={(e) => setForm((f) => ({ ...f, referralCode: e.target.value }))}
+                      className={inputClass}
+                      placeholder="Employee RT, DT, or MD code"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6 rounded-lg border border-border bg-surface/60 px-4 py-3.5 text-[12.5px] leading-relaxed text-ink/60">
+                  <span className="font-medium text-ink">Two-step payment.</span> The{" "}
+                  <span className="font-medium text-ink">₹1,180 booking fee</span> below reserves this PIN
+                  code exclusively for you. A separate registration fee applies after your booking is
+                  confirmed, payable during onboarding.
+                </div>
+
+                <div className="mt-6 space-y-1">
+                  {CONSENT_ITEMS.map(({ key, label }) => (
+                    <label
+                      key={key}
+                      className="flex cursor-pointer items-start gap-3 rounded-lg px-2 py-2 text-[13px] text-ink/65 transition-colors duration-150 hover:bg-surface"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={consents[key]}
+                        onChange={(e) => setConsents((c) => ({ ...c, [key]: e.target.checked }))}
+                        className="mt-0.5 h-4 w-4 shrink-0 rounded border-border accent-ink"
+                      />
+                      {label}
+                    </label>
+                  ))}
+                </div>
+
+                <AnimatePresence>
+                  {formError && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-4 text-[13px] text-red-600"
+                    >
+                      {formError}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
+                <SubmitButton type="submit" loading={formLoading} loadingText="Sending code…" className="mt-7">
+                  Continue
+                </SubmitButton>
+              </motion.form>
+            )}
+
+            {step === "otp" && (
+              <motion.form key="otp" {...stepMotion} onSubmit={handleVerifyOtp}>
+                <div className="mb-6 flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink/5">
+                    <ShieldCheck size={16} strokeWidth={2} className="text-ink" />
+                  </span>
+                  <div>
+                    <p className="text-[15px] font-semibold text-ink">Verify your email</p>
+                    <p className="text-[13px] text-ink/50">
+                      Code sent to <span className="text-ink/70">{form.email}</span> · valid 5 minutes
+                    </p>
+                  </div>
+                </div>
+
+                <input
+                  required
+                  value={otpInput}
+                  onChange={(e) => setOtpInput(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                  inputMode="numeric"
+                  autoFocus
+                  className={inputClass + " mt-0 text-center text-xl font-mono tracking-[0.5em]"}
+                  placeholder="——————"
+                />
+
+                <AnimatePresence>
+                  {otpError && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-2.5 text-[13px] text-red-600"
+                    >
+                      {otpError}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
+                <SubmitButton type="submit" loading={otpLoading} loadingText="Verifying…" className="mt-6">
+                  Verify code
+                </SubmitButton>
+
+                <button
+                  type="button"
+                  onClick={handleResendOtp}
+                  disabled={resendCooldown > 0}
+                  className="mt-3 w-full text-center text-[13px] font-medium text-ink/50 transition-colors hover:text-ink disabled:text-ink/25"
+                >
+                  {resendCooldown > 0 ? `Resend code in ${resendCooldown}s` : "Resend code"}
+                </button>
+              </motion.form>
+            )}
+
+            {step === "qr" && (
+              <motion.form key="qr" {...stepMotion} onSubmit={handleSubmitUtr}>
+                <div className="text-center">
+                  <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-ink/5">
+                    <QrCode size={16} strokeWidth={2} className="text-ink" />
+                  </span>
+                  <p className="mt-3 text-[15px] font-semibold text-ink">Scan &amp; pay ₹1,180</p>
+                  <p className="mt-1 text-[13px] text-ink/50">
+                    Scan with any UPI app to complete your booking payment
+                  </p>
+
+                  <div className="mx-auto mt-6 w-52 overflow-hidden rounded-xl border border-border shadow-sm">
+                    <img
+                      src="/payment/distributor-booking-qr.png"
+                      alt="Scan to pay the ₹1,180 Cashlo distributor booking fee"
+                      className="h-auto w-full"
+                    />
+                  </div>
+
+                  <p className="mx-auto mt-5 max-w-sm text-[12.5px] leading-relaxed text-ink/45">
+                    After paying, your UPI app will show a transaction reference number (UTR / Ref No.) —
+                    enter it below to confirm.
+                  </p>
+                </div>
+
+                <label className="mt-6 block text-[13px] font-medium text-ink/70">
+                  UTR / transaction reference number
+                </label>
+                <input
+                  required
+                  value={utrInput}
+                  onChange={(e) => setUtrInput(e.target.value.trim())}
+                  className={inputClass}
+                  placeholder="e.g. 302518293746"
+                />
+
+                <AnimatePresence>
+                  {utrError && (
+                    <motion.p
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      className="mt-2.5 text-[13px] text-red-600"
+                    >
+                      {utrError}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
+
+                <SubmitButton type="submit" loading={utrLoading} loadingText="Submitting…" className="mt-6">
+                  Submit payment reference
+                </SubmitButton>
+
+                <p className="mt-4 text-center text-[12px] text-ink/40">
+                  Our team will verify your payment and confirm your reservation shortly. Keep your
+                  payment screenshot handy in case we need it.
                 </p>
-              </div>
-
-              <label className="mt-5 block text-sm font-medium text-ink">
-                UTR / Transaction Reference Number
-              </label>
-              <input
-                required
-                value={utrInput}
-                onChange={(e) => setUtrInput(e.target.value.trim())}
-                className={inputClass}
-                placeholder="e.g. 302518293746"
-              />
-
-              {utrError && <p className="mt-3 text-sm text-red-600">{utrError}</p>}
-
-              <SubmitButton type="submit" loading={utrLoading} loadingText="Submitting..." className="mt-6">
-                Submit Payment Reference
-              </SubmitButton>
-
-              <p className="mt-3 text-center text-xs text-ink/40">
-                Our team will verify your payment and confirm your PIN Code reservation
-                shortly. Please keep your payment screenshot handy in case we need it.
-              </p>
-            </form>
-          )}
+              </motion.form>
+            )}
 
             {step === "payment" && (
-            <div className="text-center">
+              <motion.div key="payment" {...stepMotion} className="py-4 text-center">
                 {(paymentStatus === "preparing" || paymentStatus === "waiting") && (
-                <p className="text-sm text-ink/60">
+                  <p className="text-[14px] text-ink/60">
                     {paymentStatus === "preparing"
-                    ? "🔍 Preparing your secure payment..."
-                    : "Complete your payment in the window that opened."}
-                </p>
+                      ? "Preparing your secure payment…"
+                      : "Complete your payment in the window that opened."}
+                  </p>
                 )}
 
                 {(paymentStatus === "verifying" || paymentStatus === "success") && (
-                <PaymentSuccessAnimation status={paymentStatus === "success" ? "success" : "processing"} />
+                  <PaymentSuccessAnimation status={paymentStatus === "success" ? "success" : "processing"} />
                 )}
 
-                {paymentError && <p className="mt-3 text-sm text-red-600">{paymentError}</p>}
+                <AnimatePresence>
+                  {paymentError && (
+                    <motion.p
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="mt-3 text-[13px] text-red-600"
+                    >
+                      {paymentError}
+                    </motion.p>
+                  )}
+                </AnimatePresence>
 
                 {paymentStatus === "dismissed" && (
-                <SubmitButton onClick={initiateOrder} className="mt-5">
-                    Retry Payment
-                </SubmitButton>
+                  <SubmitButton onClick={initiateOrder} className="mt-5">
+                    Retry payment
+                  </SubmitButton>
                 )}
-            </div>
+              </motion.div>
             )}
 
-          {step === "success" && (
-            <div className="text-center">
-              <p className="text-2xl">🎉</p>
-              <h3 className="mt-3 text-xl font-bold text-ink">Congratulations!</h3>
-              <p className="mt-2 text-sm text-ink/60">
-                Your PIN Code has been successfully reserved. This territory is now exclusively assigned to
-                you. Our team will contact you shortly for onboarding.
-              </p>
-              <a href="/" className={secondaryBtnClass + " mt-6 inline-block"}>
-                Back to Home
-              </a>
-            </div>
-          )}
+            {step === "success" && (
+              <motion.div key="success" {...stepMotion} className="py-2 text-center">
+                <motion.span
+                  initial={{ scale: 0.6, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
+                  className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100"
+                >
+                  <PartyPopper size={24} className="text-emerald-600" />
+                </motion.span>
+                <h3 className="mt-4 text-lg font-semibold text-ink">You're all set</h3>
+                <p className="mx-auto mt-2 max-w-sm text-[13.5px] leading-relaxed text-ink/55">
+                  Your PIN code has been reserved and is now exclusively assigned to you. Our team will
+                  reach out shortly for onboarding.
+                </p>
+                <a href="/" className={secondaryBtnClass + " mt-6 inline-flex"}>
+                  Back to home
+                </a>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
       </Container>
     </section>
