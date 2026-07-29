@@ -63,7 +63,7 @@ export default function ImportantRules() {
           className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-0"
         >
           <div className="max-w-3xl px-6 text-center text-white">
-          <h3 className="text-5xl font-bold sm:text-6xl lg:text-7xl">
+          <h3 className="text-6xl font-bold sm:text-7xl lg:text-8xl">
             Payment bhi. Kamai bhi.
           </h3>
           <p className="mt-5 whitespace-nowrap text-lg text-white/80 sm:text-xl">
