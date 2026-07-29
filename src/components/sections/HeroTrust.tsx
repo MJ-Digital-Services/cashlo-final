@@ -2,12 +2,18 @@
 
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { Poppins } from "next/font/google";
+import { Poppins, Outfit } from "next/font/google";
 import { useHeroTrust } from "@/hooks/useHeroTrust";
 
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
+});
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  weight: ["700"],
   display: "swap",
 });
 
@@ -21,7 +27,10 @@ export default function HeroTrust() {
          ============================================================ */}
       <div
         className={`hero cx-hero ${poppins.className}`}
-        style={{ "--cx-font": poppins.style.fontFamily } as CSSProperties}
+        style={{
+          "--cx-font": poppins.style.fontFamily,
+          "--cx-font-heading": outfit.style.fontFamily,
+        } as CSSProperties}
       >
         <div className="mesh" />
         <div className="orb o1" />
