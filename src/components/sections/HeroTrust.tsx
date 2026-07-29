@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import type { CSSProperties } from "react";
-import { Poppins, Outfit } from "next/font/google";
+import { Poppins } from "next/font/google";
 import { useHeroTrust } from "@/hooks/useHeroTrust";
 
 const poppins = Poppins({
@@ -11,25 +11,15 @@ const poppins = Poppins({
   display: "swap",
 });
 
-const outfit = Outfit({
-  subsets: ["latin"],
-  weight: ["700"],
-  display: "swap",
-});
-
 export default function HeroTrust() {
   const { scope } = useHeroTrust();
 
   return (
     <section ref={scope} className="relative overflow-hidden bg-bg">
-      {/* ============================================================
-          HERO (1:1 port of the reference HTML hero)
-         ============================================================ */}
       <div
         className={`hero cx-hero ${poppins.className}`}
         style={{
           "--cx-font": poppins.style.fontFamily,
-          "--cx-font-heading": outfit.style.fontFamily,
         } as CSSProperties}
       >
         <div className="mesh" />
