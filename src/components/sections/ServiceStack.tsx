@@ -26,6 +26,7 @@ const chapters = [
     desc: "Offer digital services to your customers and generate additional income. Every successful transaction helps you earn more.",
     image: "/services/recharge-bills.png",
     imagePosition: "center 20%",
+    textTheme: "dark",
     items: [
       { icon: Smartphone, label: "Mobile Recharge" },
       { icon: Zap, label: "Electricity Bills" },
@@ -45,6 +46,7 @@ const chapters = [
     desc: "Offer instant loan services to yourself and your customers. Cashlo enables eligible merchants to assist customers with loan applications while earning attractive commissions.",
     image: "/services/loan-services.png",
     imagePosition: "center",
+    textTheme: "light",
     items: [
       { icon: User, label: "Personal Loan" },
       { icon: Briefcase, label: "Business Loan" },
@@ -55,20 +57,44 @@ const chapters = [
 ];
 
 function ChapterContent({ c }: { c: (typeof chapters)[number] }) {
+  const dark = c.textTheme === "dark";
+
   return (
     <div className="max-w-xl">
-      <p className="text-sm font-semibold uppercase tracking-wider text-white/70">
+      <p
+        className={
+          "text-sm font-semibold uppercase tracking-wider " +
+          (dark ? "text-ink/60" : "text-white/70")
+        }
+      >
         {c.eyebrow}
       </p>
-      <h2 className="mt-3 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+      <h2
+        className={
+          "mt-3 text-4xl font-bold tracking-tight sm:text-5xl " +
+          (dark ? "text-ink" : "text-white")
+        }
+      >
         {c.title}
       </h2>
-      <p className="mt-4 text-lg leading-relaxed text-white/80">{c.desc}</p>
+      <p
+        className={
+          "mt-4 text-lg leading-relaxed " +
+          (dark ? "text-ink/70" : "text-white/80")
+        }
+      >
+        {c.desc}
+      </p>
       <div className="mt-8 flex flex-wrap gap-3">
         {c.items.map((item) => (
           <span
             key={item.label}
-            className="flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm"
+            className={
+              "flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium backdrop-blur-sm " +
+              (dark
+                ? "border-ink/15 bg-white/60 text-ink"
+                : "border-white/25 bg-white/10 text-white")
+            }
           >
             <item.icon className="h-4 w-4" strokeWidth={1.75} />
             {item.label}
@@ -89,6 +115,10 @@ export default function ServiceStack() {
         ref={stageRef}
         className="relative hidden h-screen overflow-hidden md:block"
       >
+        {/* Top fade — blends the previous (light) section into this one
+            instead of cutting hard at the section boundary */}
+        <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-32 bg-gradient-to-b from-bg to-transparent lg:h-40" />
+
         {/* Side progress rail */}
         <div className="pointer-events-none absolute inset-y-0 right-8 z-30 hidden items-center lg:flex">
           <div className="flex flex-col gap-3">
@@ -102,51 +132,65 @@ export default function ServiceStack() {
           </div>
         </div>
 
-        {chapters.map((c, i) => (
-          <div
-            key={c.key}
-            data-chapter
-            className="absolute inset-0"
-            style={{ zIndex: i + 1 }}
-          >
+        {chapters.map((c, i) => {
+          const dark = c.textTheme === "dark";
+          return (
             <div
-                className="absolute inset-0 bg-[#0b0d12] bg-cover"
-                style={{ backgroundImage: `url(${c.image})`, backgroundPosition: c.imagePosition }}
-                />
-            <div className="absolute inset-0 bg-black/45" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-black/10" />
-            {/* darkening layer used by useCardStack when the NEXT chapter arrives */}
-            <div
-              data-chapter-dim
-              className="pointer-events-none absolute inset-0 bg-black opacity-0"
-            />
-            <div className="relative z-10 flex h-full items-center">
-              <Container>
-                <ChapterContent c={c} />
-              </Container>
+              key={c.key}
+              data-chapter
+              className="absolute inset-0"
+              style={{ zIndex: i + 1 }}
+            >
+              <div
+                  className="absolute inset-0 bg-[#0b0d12] bg-cover"
+                  style={{ backgroundImage: `url(${c.image})`, backgroundPosition: c.imagePosition }}
+                  />
+              {dark ? (
+                // Light scrim: brightens toward the text corner instead of
+                // darkening it, since this image is naturally light there
+                <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/25 to-transparent" />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              )}
+              {/* darkening layer used by useCardStack when the NEXT chapter arrives */}
+              <div
+                data-chapter-dim
+                className="pointer-events-none absolute inset-0 bg-black opacity-0"
+              />
+              <div className="relative z-10 flex h-full items-center">
+                <Container>
+                  <ChapterContent c={c} />
+                </Container>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* ---------- Mobile: simple stacked sections ---------- */}
       <div className="space-y-6 px-6 py-20 md:hidden">
-        {chapters.map((c) => (
-          <article
-            key={c.key}
-            className="relative overflow-hidden rounded-2xl"
-          >
-            <div
-            className="absolute inset-0 bg-cover"
-            style={{ backgroundImage: `url(${c.image})`, backgroundPosition: c.imagePosition }}
-            />
-            <div className="absolute inset-0 bg-black/50" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10" />
-            <div className="relative z-10 p-6 pt-40">
-              <ChapterContent c={c} />
-            </div>
-          </article>
-        ))}
+        {chapters.map((c) => {
+          const dark = c.textTheme === "dark";
+          return (
+            <article
+              key={c.key}
+              className="relative overflow-hidden rounded-2xl"
+            >
+              <div
+              className="absolute inset-0 bg-cover"
+              style={{ backgroundImage: `url(${c.image})`, backgroundPosition: c.imagePosition }}
+              />
+              {dark ? (
+                <div className="absolute inset-0 bg-gradient-to-t from-white/75 via-white/25 to-transparent" />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+              )}
+              <div className="relative z-10 p-6 pt-40">
+                <ChapterContent c={c} />
+              </div>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
