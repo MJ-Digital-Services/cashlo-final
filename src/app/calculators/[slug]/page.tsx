@@ -1,8 +1,11 @@
 import { notFound } from "next/navigation";
+import Image from "next/image";
 import { getCalculatorBySlug, getAllCalculatorSlugs } from "@/lib/api/calculators";
+import { getBankBySlug } from "@/lib/data/banks";
 import EmiCalculatorWidget from "@/components/sections/calculators/EmiCalculatorWidget";
 import CalculatorSidebar from "@/components/sections/calculators/CalculatorSidebar";
 import CalculatorFaq from "@/components/sections/calculators/CalculatorFaq";
+
 
 export async function generateStaticParams() {
   try {
@@ -47,20 +50,32 @@ export default async function CalculatorPage({
   if (!data) notFound();
 
   const { calculator, variants } = data;
+  const bank = calculator.isBankVariant ? getBankBySlug(calculator.slug) : undefined;
 
   return (
     <section className="bg-bg pb-24 pt-28 sm:pt-32">
-      {/* Wider canvas than the site Container — calculator pages earn the room */}
       <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-10">
-        {/* Page header — tighter rhythm, no dead air */}
         <header className="max-w-2xl">
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">
             <span className="h-px w-6 bg-brand" />
             {calculator.isBankVariant ? calculator.bankName : "Calculator"}
           </p>
-          <h1 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem] sm:leading-[1.15]">
-            {calculator.title}
-          </h1>
+          <div className="mt-3 flex items-center gap-4">
+            {bank && (
+              <span className="flex h-10 w-auto max-w-[120px] shrink-0 items-center">
+                <Image
+                  src={bank.logo}
+                  alt={`${bank.name} logo`}
+                  width={120}
+                  height={40}
+                  className="h-full w-auto object-contain"
+                />
+              </span>
+            )}
+            <h1 className="text-3xl font-bold tracking-tight text-ink sm:text-[2.5rem] sm:leading-[1.15]">
+              {calculator.title}
+            </h1>
+          </div>
           {calculator.blurb && (
             <p className="mt-3 text-[15px] leading-relaxed text-ink/55">
               {calculator.blurb}

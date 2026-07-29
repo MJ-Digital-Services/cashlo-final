@@ -1,22 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Calculator, ArrowRight } from "lucide-react";
+import { banks } from "@/lib/data/banks";
 
-const banks = [
-  { name: "HDFC Bank", slug: "hdfc-bank-emi-calculator" },
-  { name: "SBI", slug: "sbi-emi-calculator" },
-  { name: "ICICI Bank", slug: "icici-bank-emi-calculator" },
-  { name: "Axis Bank", slug: "axis-bank-emi-calculator" },
-  { name: "Kotak Mahindra Bank", slug: "kotak-mahindra-bank-emi-calculator" },
-  { name: "Bank of Baroda", slug: "bank-of-baroda-emi-calculator" },
-  { name: "Punjab National Bank", slug: "punjab-national-bank-emi-calculator" },
-  { name: "Canara Bank", slug: "canara-bank-emi-calculator" },
-  { name: "IndusInd Bank", slug: "indusind-bank-emi-calculator" },
-  { name: "Tata Capital", slug: "tata-capital-emi-calculator" },
-];
 
 export default function EmiCalculatorsPromo() {
   const scope = useScrollReveal();
@@ -40,19 +30,31 @@ export default function EmiCalculatorsPromo() {
         <div className="mt-12 grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
           {banks.map((b) => (
             <Link
-              key={b.slug}
-              href={`/calculators/${b.slug}`}
-              data-reveal
-              className="group flex flex-col items-center gap-2.5 rounded-2xl border border-border bg-card p-5 text-center transition hover:-translate-y-1 hover:border-brand/30 hover:shadow-md"
-            >
-              <span className="grid h-11 w-11 place-items-center rounded-full bg-brand/10 text-brand">
-                <Calculator className="h-5 w-5" strokeWidth={1.75} />
-              </span>
-              <span className="text-sm font-medium text-ink">{b.name}</span>
-              <span className="flex items-center gap-1 text-xs font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
-                Calculate <ArrowRight className="h-3 w-3" />
-              </span>
-            </Link>
+            key={b.slug}
+            href={`/calculators/${b.slug}`}
+            data-reveal
+            className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-5 text-center transition hover:-translate-y-1 hover:border-brand/30 hover:shadow-md"
+          >
+            <span className="flex h-12 w-full max-w-[140px] items-center justify-center">
+              {b.logo ? (
+                <Image
+                  src={b.logo}
+                  alt={`${b.name} logo`}
+                  width={140}
+                  height={48}
+                  className="h-full w-auto max-w-full object-contain"
+                />
+              ) : (
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-brand/10">
+                  <Calculator className="h-5 w-5 text-brand" strokeWidth={1.75} />
+                </span>
+              )}
+            </span>
+            <span className="text-sm font-medium text-ink">{b.name}</span>
+            <span className="flex items-center gap-1 text-xs font-medium text-brand opacity-0 transition-opacity group-hover:opacity-100">
+              Calculate <ArrowRight className="h-3 w-3" />
+            </span>
+          </Link>
           ))}
         </div>
 
