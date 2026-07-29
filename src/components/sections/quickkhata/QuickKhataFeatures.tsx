@@ -9,25 +9,25 @@ const features = [
     num: "01",
     title: "Add Customers in Seconds",
     desc: "Save a customer's name and number once — reuse it for every future transaction.",
-    img: "/illustrations/quickkhata/features/add-customer.svg",
+    img: "/illustrations/quickkhata/features/add-customer.png",
   },
   {
     num: "02",
     title: "Log Every Transaction",
     desc: "Record what a customer owes you or what you owe them, with a running balance.",
-    img: "/illustrations/quickkhata/features/log-transaction.svg",
+    img: "/illustrations/quickkhata/features/log-transaction.png",
   },
   {
     num: "03",
     title: "Set Collection Reminders",
     desc: "Add a collection date and send a one-tap reminder — no more chasing payments manually.",
-    img: "/illustrations/quickkhata/features/reminders.svg",
+    img: "/illustrations/quickkhata/features/reminders.png",
   },
   {
     num: "04",
     title: "Export Your Ledger",
     desc: "Download your full khata anytime for your own records or to share with customers.",
-    img: "/illustrations/quickkhata/features/export.svg",
+    img: "/illustrations/quickkhata/features/export.png",
   },
 ];
 
