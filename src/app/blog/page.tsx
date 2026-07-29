@@ -28,12 +28,31 @@ export default async function BlogPage() {
     <>
       <section className="bg-bg pb-10 pt-40 sm:pt-44">
         <Container>
-          <p className="text-sm font-semibold uppercase tracking-wider text-brand">
-            Insights &amp; Updates
-          </p>
-          <h1 className="mt-3 text-4xl font-bold tracking-tight text-ink sm:text-5xl">
-            Cashlo Blog
-          </h1>
+          <div className="relative">
+            {/* Soft ambient glow behind the card */}
+            <div
+              className="absolute -inset-x-4 -inset-y-6 -z-10 rounded-[32px] bg-brand/20 blur-3xl"
+              aria-hidden="true"
+            />
+
+            <div className="relative overflow-hidden rounded-[28px] bg-gradient-to-r from-brand to-brand-dark px-8 py-10 sm:px-12 sm:py-12">
+              {/* Decorative overlapping circles, bottom-right */}
+              <div className="pointer-events-none absolute inset-0" aria-hidden="true">
+                <div className="absolute -bottom-16 right-10 h-56 w-56 rounded-full bg-white/10" />
+                <div className="absolute -bottom-24 right-32 h-72 w-72 rounded-full bg-white/5" />
+              </div>
+
+              <div className="relative">
+                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-white/80">
+                  <span className="h-1.5 w-1.5 rounded-full bg-white/80" />
+                  Insights &amp; Updates
+                </p>
+                <h1 className="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                  <span className="text-white/70">Cashlo</span> Blog
+                </h1>
+              </div>
+            </div>
+          </div>
         </Container>
       </section>
 
