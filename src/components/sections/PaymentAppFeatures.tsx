@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useMemo, useRef, useState } from "react";
+// import React, { useMemo, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import {
   motion,
   useMotionValue,
@@ -74,8 +75,10 @@ interface IllustrationProps {
 
 let gradientSeed = 0;
 /** Generates a stable, unique id so multiple card instances never clash defs. */
+/** Generates a stable, unique id so multiple card instances never clash defs. */
 function useGradId(prefix: string) {
-  return useMemo(() => `${prefix}-${gradientSeed++}`, [prefix]);
+  const id = useId().replace(/:/g, "");
+  return `${prefix}-${id}`;
 }
 
 /** Soft ambient colour wash behind an illustration — depth layer 0. */
@@ -354,8 +357,8 @@ const RechargeIllustration: React.FC<IllustrationProps> = ({ active, reduceMotio
       {/* orbiting icon chips */}
       {chips.map((chip, i) => {
         const rad = 86;
-        const cx = 160 + rad * Math.cos((chip.angle * Math.PI) / 180);
-        const cy = 108 + rad * 0.6 * Math.sin((chip.angle * Math.PI) / 180);
+        const cx = round(160 + rad * Math.cos((chip.angle * Math.PI) / 180));
+        const cy = round(108 + rad * 0.6 * Math.sin((chip.angle * Math.PI) / 180));
         return (
           <motion.g
             key={chip.label}
@@ -826,6 +829,12 @@ function hexToRgbTriplet(hex: string): string {
   const g = parseInt(clean.substring(2, 4), 16);
   const b = parseInt(clean.substring(4, 6), 16);
   return `${r}, ${g}, ${b}`;
+}
+
+/** Rounds to avoid cross-engine floating-point drift causing hydration mismatches. */
+function round(n: number, decimals = 3): number {
+  const f = 10 ** decimals;
+  return Math.round(n * f) / f;
 }
 
 /** Hover state for the 44×44 title icon: scale 1.08, lifts 3px, soft glow — spring, ~250ms. */
