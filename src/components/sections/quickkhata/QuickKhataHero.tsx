@@ -1,7 +1,26 @@
 "use client";
 
+import { ShieldCheck, Zap, Smartphone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import QuickKhataPhoneDemo from "./QuickKhataPhoneDemo";
+
+const trustBadges = [
+  {
+    icon: ShieldCheck,
+    title: "100% Secure Records",
+    desc: "Your customer and transaction data is safely stored in the cloud.",
+  },
+  {
+    icon: Zap,
+    title: "Easy to Use",
+    desc: "Create entries in seconds with a simple, clean interface.",
+  },
+  {
+    icon: Smartphone,
+    title: "Access Anytime",
+    desc: "Manage your udhaar from anywhere using your mobile.",
+  },
+];
 
 export default function QuickKhataHero() {
   const scope = useScrollReveal();
@@ -35,6 +54,23 @@ export default function QuickKhataHero() {
             >
               Become Merchant
             </a>
+          </div>
+
+          {/* Trust badges */}
+          <div data-reveal className="mt-10 grid gap-5 sm:grid-cols-3">
+            {trustBadges.map(({ icon: Icon, title, desc }) => (
+              <div key={title} className="flex items-start gap-3">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brand/10">
+                  <Icon size={18} strokeWidth={2.25} className="text-brand" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-ink">{title}</p>
+                  <p className="mt-0.5 text-xs leading-relaxed text-ink/60">
+                    {desc}
+                  </p>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
