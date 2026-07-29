@@ -9,31 +9,31 @@ const steps = [
     num: "01",
     title: "Login to the Cashlo App",
     desc: "Open the Cashlo merchant app and log in with your registered account.",
-    img: "/illustrations/upi-cashpoint/how-it-works/step-01.svg",
+    img: "/illustrations/upi-cashpoint/how-it-works/step-01.png",
   },
   {
     num: "02",
     title: "Select UPI CashPoint",
     desc: "Choose the UPI CashPoint / Cashout option from the app menu.",
-    img: "/illustrations/upi-cashpoint/how-it-works/step-02.svg",
+    img: "/illustrations/upi-cashpoint/how-it-works/step-02.png",
   },
   {
     num: "03",
     title: "Enter Amount & Mobile Number",
     desc: "Enter the withdrawal amount and the customer's registered mobile number.",
-    img: "/illustrations/upi-cashpoint/how-it-works/step-03.svg",
+    img: "/illustrations/upi-cashpoint/how-it-works/step-03.png",
   },
   {
     num: "04",
     title: "Customer Scans the Dynamic QR",
     desc: "Ask the customer to scan the one-time Dynamic QR using any UPI app.",
-    img: "/illustrations/upi-cashpoint/how-it-works/step-04.svg",
+    img: "/illustrations/upi-cashpoint/how-it-works/step-04.png",
   },
   {
     num: "05",
     title: "Hand Over Cash",
     desc: "Once the transaction is successful, give the cash to the customer.",
-    img: "/illustrations/upi-cashpoint/how-it-works/step-05.svg",
+    img: "/illustrations/upi-cashpoint/how-it-works/step-05.png",
   },
 ];
 

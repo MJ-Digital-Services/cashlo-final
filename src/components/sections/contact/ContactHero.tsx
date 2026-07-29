@@ -1,7 +1,15 @@
 "use client";
 
+import { UserPlus, Users, Wrench, Clock } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import CashloMerchantJourney from "./CashloMerchantJourney";
+
+const trustBadges = [
+  { icon: UserPlus, label: "Merchant Onboarding" },
+  { icon: Users, label: "Distributor Support" },
+  { icon: Wrench, label: "Technical Assistance" },
+  { icon: Clock, label: "Response Within 24 Hours" },
+];
 
 export default function ContactHero() {
   const scope = useScrollReveal();
@@ -20,12 +28,25 @@ export default function ContactHero() {
             data-reveal
             className="mt-3 max-w-xl text-4xl font-bold tracking-tight text-ink sm:text-5xl"
           >
-            We&apos;d Love to Hear From You
+            Let&apos;s Grow Your Shop Together
           </h1>
           <p data-reveal className="mt-5 max-w-xl text-lg text-ink/60">
-            Questions about becoming a merchant, a service issue, or just
-            feedback — reach out and our team will get back to you.
+          Whether you're looking to become a Cashlo Merchant, activate UPI Cash Point, join as a Distributor, 
+          or need help with your account, our dedicated team is here to assist you. Reach out today and we'll help you get started quickly.
           </p>
+
+          {/* Trust badges */}
+          <ul
+            data-reveal
+            className="mt-6 grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2"
+          >
+            {trustBadges.map(({ icon: Icon, label }) => (
+              <li key={label} className="flex items-center gap-2.5 text-sm font-medium text-ink">
+                <Icon className="h-5 w-5 shrink-0 text-brand" strokeWidth={1.75} />
+                {label}
+              </li>
+            ))}
+          </ul>
         </div>
         <div data-reveal className="relative mx-auto w-full max-w-md">
           <CashloMerchantJourney />
