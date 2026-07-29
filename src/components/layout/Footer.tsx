@@ -21,12 +21,11 @@ const social = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-border bg-surface pt-16">
+    <footer className="relative overflow-hidden border-t border-border bg-surface pt-16">
       <Container>
         <div className="grid gap-10 pb-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand */}
           <div className="lg:col-span-2">
-            {/* color logo in light, white logo in dark */}
             <Image
               src="/logo/cashlo-logo.png"
               alt="Cashlo"
@@ -107,6 +106,13 @@ export default function Footer() {
           </p>
         </div>
       </Container>
+
+      {/* Giant wordmark strip — own clipped window, sits after the copyright bar, full-bleed width */}
+      <div className="relative h-20 overflow-hidden sm:h-28 md:h-36" aria-hidden="true">
+    <p className="absolute inset-x-0 top-0 select-none text-center text-[18vw] font-extrabold leading-none tracking-tight text-brand/8 sm:text-[15vw]">
+      CASHLO
+    </p>
+  </div>
     </footer>
   );
 }
