@@ -24,7 +24,7 @@ const chapters = [
     eyebrow: "Har Service Par Commission",
     title: "Earn More with Every Service",
     desc: "Offer digital services to your customers and generate additional income. Every successful transaction helps you earn more.",
-    image: "/services/recharge-bills.png",
+    image: "/services/recharge-bills1.jpg",
     imagePosition: "center 20%",
     textTheme: "dark",
     items: [
@@ -44,9 +44,9 @@ const chapters = [
     eyebrow: "Loan Dilao. Commission Kamao.",
     title: "Help Customers. Earn More.",
     desc: "Offer instant loan services to yourself and your customers. Cashlo enables eligible merchants to assist customers with loan applications while earning attractive commissions.",
-    image: "/services/loan-services.png",
+    image: "/services/loan-services1.jpg",
     imagePosition: "center",
-    textTheme: "light",
+    textTheme: "dark",
     items: [
       { icon: User, label: "Personal Loan" },
       { icon: Briefcase, label: "Business Loan" },
@@ -92,11 +92,11 @@ function ChapterContent({ c }: { c: (typeof chapters)[number] }) {
             className={
               "flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium backdrop-blur-sm " +
               (dark
-                ? "border-ink/15 bg-white/60 text-ink"
-                : "border-white/25 bg-white/10 text-white")
+                ? "border-[#445df0]/25 bg-[#445df0]/10 text-[#445df0]"
+                : "border-[#445df0]/40 bg-[#445df0]/20 text-white")
             }
           >
-            <item.icon className="h-4 w-4" strokeWidth={1.75} />
+            <item.icon className="h-4 w-4 text-[#445df0]" strokeWidth={1.75} />
             {item.label}
           </span>
         ))}
