@@ -5,6 +5,7 @@ import AboutJourney from "@/components/sections/about/AboutJourney";
 import AboutStats from "@/components/sections/about/AboutStats";
 import AboutCTA from "@/components/sections/about/AboutCTA";
 import Footer from "@/components/layout/Footer";
+import WhyMerchantLovesCashlo from "@/components/sections/about/WhyMerchantLovesCashlo";
 
 export default function AboutPage() {
   return (
@@ -12,6 +13,7 @@ export default function AboutPage() {
       <AboutHero />
       <AboutStory />
       <AboutValues />
+      <WhyMerchantLovesCashlo />
       <AboutJourney />
       <AboutStats />
       <AboutCTA />
