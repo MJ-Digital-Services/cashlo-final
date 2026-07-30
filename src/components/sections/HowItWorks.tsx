@@ -11,7 +11,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 // cashlo-logo.png lives in /public — plain string path, not a static
 // import, so it works as a raw src on every <img> below without Next.js
 // turning it into a { src, width, height } object.
-const logo = '/cashlo-logo.png';
+const logo = '/cashlo-logo-sm.png';
 
 export default function HowItWorks() {
   const rootRef = useRef(null);

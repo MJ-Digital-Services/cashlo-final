@@ -55,7 +55,7 @@ export default function HeroTrust() {
 
               <div className="hero-ctas">
                 {/* adjust these two hrefs to your routes */}
-                <Link href="/how-it-works" className="btn btn-primary btn-lg magnetic">
+                <Link href="/#how-it-works" className="btn btn-primary btn-lg magnetic">
                   Get Started <span className="arr">→</span>
                 </Link>
                 <Link
