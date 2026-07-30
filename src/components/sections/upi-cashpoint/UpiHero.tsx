@@ -19,7 +19,7 @@ export default function UpiHero() {
       <div className="relative aspect-[2.4/1] w-full min-h-[400px] lg:min-h-[540px]">
         {/* Full-width background image */}
         <Image
-          src="/images/upi-cashpoint-hero.png"
+          src="/images/upi-cashpoint-hero.jpg"
           alt="Cashlo UPI Cash Point kiosk with merchant serving customers"
           fill
           priority

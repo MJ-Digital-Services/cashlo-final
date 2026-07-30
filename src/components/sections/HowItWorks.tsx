@@ -190,7 +190,7 @@ export default function HowItWorks() {
   <div className="particles" id="particles"></div>
 
   <div className="hiw-head">
-    <img className="brand-logo" src={logo} alt="Cashlo" />
+    {/* <img className="brand-logo" src={logo} alt="Cashlo" /> */}
     <span className="hiw-eyebrow">HOW CASHLO WORKS</span>
     <h2>From download to <span>daily earnings</span></h2>
     <p>Scroll to follow the complete merchant journey — install, register, verify, and start earning commission on every transaction.</p>
