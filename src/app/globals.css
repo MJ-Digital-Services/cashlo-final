@@ -378,7 +378,23 @@ body {
 .cx-hero .btn:focus-visible,.cx-hero a:focus-visible{outline:3px solid rgba(61,90,254,.55);outline-offset:3px}
 
 /* ---- reveal system ---- */
-.cx-hero .rv{opacity:0;transform:translateY(36px);transition:opacity .9s var(--ease),transform .9s var(--ease)}
+.cx-hero .rv{
+  opacity:0;
+  transform:translateY(36px);
+  animation: cxReveal .7s var(--ease) forwards;
+}
+@keyframes cxReveal {
+  to { opacity: 1; transform: none; }
+}
+
+/* H1 is the LCP element — reveal it immediately, no stagger */
+.cx-hero .h-hero.rv{ animation-delay: 0s; }
+
+/* everything else can stagger slightly after */
+.cx-hero .eyebrow.rv{ animation-delay: .05s; }
+.cx-hero .tagline.rv{ animation-delay: .1s; }
+.cx-hero .lede.rv{ animation-delay: .15s; }
+.cx-hero .hero-ctas.rv{ animation-delay: .2s; }
 .cx-hero .rv.in{opacity:1;transform:none}
 
 /* ---- hero shell ---- */

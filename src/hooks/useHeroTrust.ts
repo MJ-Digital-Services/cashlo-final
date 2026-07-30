@@ -69,14 +69,6 @@ export function useHeroTrust() {
       // mount instead of relying on the observer. Double rAF so the
       // initial hidden state is committed first and the CSS transition
       // actually animates.
-      const raf1 = requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          section
-            .querySelectorAll(".cx-hero .rv")
-            .forEach((el) => el.classList.add("in"));
-        })
-      );
-      cleanups.push(() => cancelAnimationFrame(raf1));
 
       /* ================================================================
          2) QR loop (ported 1:1 from qrLoop/spawnNotes, same timings)

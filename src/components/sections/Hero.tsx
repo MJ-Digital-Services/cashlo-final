@@ -19,8 +19,12 @@ export default function Hero() {
         muted
         loop
         playsInline
+        preload="auto"
         poster="/videos/hero-poster.jpg"
+        width={1920}
+        height={1080}
       >
+        <source src="/videos/cashlo-hero.webm" type="video/webm" />
         <source src="/videos/cashlo-hero.mp4" type="video/mp4" />
       </video>
 
