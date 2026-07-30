@@ -842,7 +842,7 @@ const iconTransition = { type: "spring" as const, stiffness: 380, damping: 22, m
 
 const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
   const [hovered, setHovered] = useState(false);
-  const reduceMotion = !!useReducedMotion();
+  const userReduceMotion = !!useReducedMotion();
   const { Illustration } = card;
   const ref = useRef<HTMLDivElement>(null);
 
@@ -856,7 +856,7 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
   const illustrationY = useSpring(useTransform(rawY, [-0.5, 0.5], [-4, 4]), springConfig);
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    if (reduceMotion || !ref.current) return;
+    if (userReduceMotion || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     rawX.set((e.clientX - rect.left) / rect.width - 0.5);
     rawY.set((e.clientY - rect.top) / rect.height - 0.5);
@@ -874,8 +874,8 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
       style={{
         borderColor: COLORS.border,
         perspective: 900,
-        rotateX: reduceMotion ? 0 : rotateX,
-        rotateY: reduceMotion ? 0 : rotateY,
+        rotateX: userReduceMotion ? 0 : rotateX,
+        rotateY: userReduceMotion ? 0 : rotateY,
         transformStyle: "preserve-3d",
       }}
       variants={cardVariants}
@@ -894,18 +894,20 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
       }}
       tabIndex={0}
     >
-      <AnimatePresence>{hovered && !reduceMotion && <HoverParticles color={card.accent} />}</AnimatePresence>
+      <AnimatePresence>{hovered && !userReduceMotion && <HoverParticles color={card.accent} />}</AnimatePresence>
 
       {/* Illustration zone — 65% */}
       <div className="flex aspect-[4/3] w-full items-center justify-center bg-white p-6 sm:aspect-[3/2]">
         <motion.div
           className="h-full w-full"
           style={{
-            x: reduceMotion ? 0 : illustrationX,
-            y: reduceMotion ? 0 : illustrationY,
+            x: userReduceMotion ? 0 : illustrationX,
+            y: userReduceMotion ? 0 : illustrationY,
           }}
         >
-          <Illustration active={hovered} reduceMotion={reduceMotion} />
+          {/* Static until hovered/focused — only the active card animates,
+              so idle cards run zero Framer Motion loops. */}
+          <Illustration active={hovered} reduceMotion={userReduceMotion || !hovered} />
         </motion.div>
       </div>
 
