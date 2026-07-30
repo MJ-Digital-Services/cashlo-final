@@ -272,7 +272,7 @@ function IlloPayment() {
         <div className="hiw-phone-notch" />
         <div className="hiw-phone-body">
           <p className="hiw-pay-k">PIN reservation fee</p>
-          <p className="hiw-pay-amt">₹1,100</p>
+          <p className="hiw-pay-amt">₹1,180</p>
           <p className="hiw-pay-sub">One-time · UPI</p>
           <div className="hiw-pay-state">
             <span className="hiw-spinner" />
@@ -461,8 +461,8 @@ const STEPS: Step[] = [
   },
   {
     num: "04",
-    title: "Pay ₹1,100 PIN reservation fee",
-    rail: "Pay ₹1,100 reservation fee",
+    title: "Pay ₹1,180 PIN reservation fee",
+    rail: "Pay ₹1,180 reservation fee",
     caption: "A one-time UPI payment holds the area in your name.",
     Illo: IlloPayment,
   },

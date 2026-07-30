@@ -1,8 +1,12 @@
+import Link from "next/link";
 import Container from "@/components/ui/Container";
 
 export default function DistributorHero() {
   return (
-    <section className="bg-bg pt-32 pb-16 sm:pt-40 sm:pb-20 mt-[-100]">
+    // note: the old `mt-[-100]` class was invalid Tailwind (missing a unit) and
+    // never applied — removed. Add `-mt-[100px]` here if you want the hero to
+    // tuck up under the story animation.
+    <section className="bg-bg pt-32 pb-16 sm:pt-40 sm:pb-20">
       <Container className="mx-auto max-w-3xl text-center">
         <p className="text-sm font-semibold uppercase tracking-wider text-brand">
           Exclusive Opportunity
@@ -22,12 +26,12 @@ export default function DistributorHero() {
         </p>
 
         <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-          <a
-            href="#reserve"
+          <Link
+            href="/become-distributor/reserve"
             className="w-full rounded-full bg-brand px-8 py-3.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark sm:w-auto"
           >
             Reserve My PIN Code
-          </a>
+          </Link>
           <a
             href="#how-it-works"
             className="w-full rounded-full border border-border px-8 py-3.5 text-sm font-semibold text-ink transition-colors hover:border-brand hover:text-brand sm:w-auto"
