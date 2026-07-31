@@ -9,13 +9,13 @@ export default function AboutStory() {
 
   return (
     <section ref={scope} className="bg-surface py-20 sm:py-24">
-      <Container className="grid items-center gap-10 sm:grid-cols-2 sm:gap-16">
-        <div data-reveal className="relative mx-auto w-full max-w-sm sm:order-1">
+      <Container className="grid items-center gap-10 sm:grid-cols-[1.15fr_1fr] sm:gap-12 lg:gap-16">
+        <div data-reveal className="relative mx-auto w-full max-w-xl sm:order-1 sm:max-w-none">
           <Image
-            src="/illustrations/about/about-story.svg"
+            src="/illustrations/about/about-story.png"
             alt="Cashlo story illustration"
-            width={480}
-            height={420}
+            width={720}
+            height={630}
             className="h-auto w-full"
           />
         </div>

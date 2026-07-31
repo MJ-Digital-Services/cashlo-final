@@ -6,39 +6,39 @@ import { useStepTimeline } from "@/hooks/useStepTimeline";
 
 const milestones = [
   {
-    year: "2023",
+    year: "2024",
     title: "Cashlo Founded",
     description:
       "Started with a mission to bring cardless cash withdrawal to every retail store in India.",
-    image: "/illustrations/about/journey/founded.svg",
+    image: "/illustrations/about/journey/founded.png",
   },
   {
-    year: "2024",
+    year: "2026",
     title: "UPI CashPoint Launches",
     description:
       "Our flagship service goes live, turning the first wave of retailers into digital banking points.",
-    image: "/illustrations/about/journey/upi-cashpoint.svg",
+    image: "/illustrations/about/journey/upi-cashpoint.png",
   },
   {
-    year: "2024",
+    year: "2026",
     title: "QuickKhata Introduced",
     description:
       "Merchants get a digital ledger to track customer credit — no more paper khata books.",
-    image: "/illustrations/about/journey/quickkhata.svg",
+    image: "/illustrations/about/journey/quickkhata.png",
   },
   {
-    year: "2025",
+    year: "2026",
     title: "Service Suite Expands",
     description:
       "Recharge, bill payments, travel, and insurance join the platform under one merchant app.",
-    image: "/illustrations/about/journey/service-suite.svg",
+    image: "/illustrations/about/journey/service-suite.png",
   },
   {
     year: "2026",
     title: "Scaling Nationwide",
     description:
       "Growing our merchant network across rural and semi-urban India, one neighborhood at a time.",
-    image: "/illustrations/about/journey/scaling.svg",
+    image: "/illustrations/about/journey/scaling.png",
   },
 ];
 
@@ -94,14 +94,14 @@ export default function AboutJourney() {
 
                 <div
                   data-content
-                  className="relative h-48 overflow-hidden rounded-2xl bg-bg sm:h-56"
+                  className="relative h-52 sm:h-64"
                 >
                   <Image
                     data-parallax-img
                     src={m.image}
                     alt={m.title}
                     fill
-                    className="scale-110 object-contain p-6"
+                    className="object-contain"
                   />
                 </div>
               </div>
