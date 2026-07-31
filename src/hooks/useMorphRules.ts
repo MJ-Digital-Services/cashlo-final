@@ -141,6 +141,9 @@ export function useMorphRules() {
           /* settle in as a soft blob */
           .from(wrap, { scale: 0.55, duration: 1 })
 
+          /* heading clears out right after the blob settles in */
+          .to("[data-morph-head]", { opacity: 0, duration: 0.5 })
+
           /* STAGE 1 — rule 1 emerges LEFT */
           .to(cards[0], { opacity: 1, scale: 1, xPercent: -118, duration: 1, ease: "back.out(1.4)" }, "+=.3")
 
@@ -163,8 +166,7 @@ export function useMorphRules() {
           .to(S, { rot: 1.6, b: 1, duration: 1.2 }, "<")
 
           /* STAGE 5 — the circle swallows the screen */
-          .to("[data-morph-head]", { opacity: 0, duration: 0.4 }, "+=.3")
-          .to(wrap, { scale: () => coverScale, duration: 2.2, ease: "power2.in" }, "<")
+          .to(wrap, { scale: () => coverScale, duration: 2.2, ease: "power2.in" }, "+=.3")
           // .to(
           //   scope.current,
           //   { backgroundColor: `rgb(${BRAND.join(",")})`, duration: 0.6 },
