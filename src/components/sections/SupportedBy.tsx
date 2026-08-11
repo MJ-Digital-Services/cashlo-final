@@ -80,7 +80,7 @@ function BrandFace({ brand }: { brand: Brand }) {
     <img
       src={brand.logo}
       alt={brand.name}
-      className="h-7 w-auto max-w-[130px] object-contain opacity-70 grayscale transition duration-300 group-hover/slot:opacity-100 group-hover/slot:grayscale-0"
+      className="h-7 w-auto max-w-[130px] object-contain opacity-100 transition duration-300 group-hover/slot:opacity-100 group-hover/slot:grayscale-0"
       draggable={false}
       loading="lazy"
       onError={() => setFailed(true)}
