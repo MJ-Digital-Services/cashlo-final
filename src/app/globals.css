@@ -1500,6 +1500,56 @@ body {
   --hiw-t-fast:220ms cubic-bezier(.4,0,.2,1);
   margin:0;background:#fff;font-family:'Inter',sans-serif;color:var(--hiw-ink);
 }
+/* ---- How It Works — dark mode ----
+   .hiw-root's tokens are hardcoded light-mode hex values, so they need
+   an explicit .dark override, same pattern as the site's :root/.dark
+   split. The phone mockup screens (.card, .field, .qr-box, .receipt,
+   etc.) are deliberately left light — they're simulated app
+   screenshots, not site chrome, same reasoning as PaymentAppFeatures'
+   illustration zone. */
+
+   .dark .hiw-root {
+    background: var(--bg);
+    --hiw-page-bg: #14161f;
+    --hiw-ink: #f4f5fa;
+    --hiw-muted: #9096ab;
+    --hiw-line: rgba(255, 255, 255, 0.12);
+    --hiw-danger-bg: rgba(229, 77, 77, 0.16);
+    --hiw-success-bg: rgba(31, 162, 74, 0.18);
+    --hiw-amber-bg: rgba(242, 169, 59, 0.18);
+  }
+  
+  .dark .hiw {
+    background: linear-gradient(
+      180deg,
+      var(--bg) 0%,
+      var(--hiw-page-bg) 45%,
+      #1a1d2b 100%
+    );
+  }
+  
+  .dark .hiw-eyebrow {
+    background: rgba(124, 142, 245, 0.12);
+  }
+  
+  .dark .step-tag {
+    background: rgba(124, 142, 245, 0.14);
+  }
+  
+  .dark .prog-track {
+    background: rgba(124, 142, 245, 0.18);
+  }
+  
+  .dark .demo-note {
+    background: var(--hiw-page-bg);
+    border-color: var(--hiw-line);
+  }
+  
+  /* Phone glow softens slightly against a dark backdrop so it doesn't
+     overpower the section the way it does on white */
+  .dark .phone-glow {
+    opacity: 0.7;
+  }
 .demo-note{max-width:920px;margin:40px auto 0;padding:14px 20px;background:var(--hiw-page-bg);border:1px solid var(--hiw-line);border-radius:12px;font-size:13px;color:var(--hiw-muted);text-align:center;}
 
 .hiw{position:relative;background:linear-gradient(180deg,#FFFFFF 0%, var(--hiw-page-bg) 45%, #ECEFFB 100%);overflow:clip;}

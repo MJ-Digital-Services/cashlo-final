@@ -870,9 +870,8 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
   return (
     <motion.div
       ref={ref}
-      className="group relative flex h-full flex-col overflow-hidden rounded-[24px] border bg-white"
+      className="group relative flex h-full flex-col overflow-hidden rounded-[24px] border border-border bg-card"
       style={{
-        borderColor: COLORS.border,
         perspective: 900,
         rotateX: userReduceMotion ? 0 : rotateX,
         rotateY: userReduceMotion ? 0 : rotateY,
@@ -896,7 +895,8 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
     >
       <AnimatePresence>{hovered && !userReduceMotion && <HoverParticles color={card.accent} />}</AnimatePresence>
 
-      {/* Illustration zone — 65% */}
+      {/* Illustration zone — deliberately stays light in both themes; the
+          illustrations' internal shading assumes a white backdrop */}
       <div className="flex aspect-[4/3] w-full items-center justify-center bg-white p-6 sm:aspect-[3/2]">
         <motion.div
           className="h-full w-full"
@@ -912,7 +912,7 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
       </div>
 
       {/* Copy zone — 35% */}
-      <div className="flex flex-1 flex-col gap-3 border-t px-6 py-6" style={{ borderColor: COLORS.border }}>
+      <div className="flex flex-1 flex-col gap-3 border-t border-border px-6 py-6">
         <div className="flex items-center gap-3">
           <motion.span
             className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-[14px]"
@@ -928,11 +928,11 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
           >
             <card.Icon size={23} strokeWidth={1.75} color={card.accent} aria-hidden="true" />
           </motion.span>
-          <h3 className="text-lg font-semibold leading-tight" style={{ color: COLORS.ink }}>
+          <h3 className="text-lg font-semibold leading-tight text-ink">
             {card.title}
           </h3>
         </div>
-        <p className="text-sm leading-relaxed" style={{ color: COLORS.inkSoft }}>
+        <p className="text-sm leading-relaxed text-ink/60">
           {card.description}
         </p>
       </div>
@@ -946,16 +946,16 @@ const FeatureCard: React.FC<{ card: FeatureCardData }> = ({ card }) => {
 
 const PaymentAppFeatures: React.FC = () => {
   return (
-    <section className="w-full bg-white py-20 sm:py-24">
+    <section className="w-full bg-bg py-20 sm:py-24">
       <div className="mx-auto max-w-6xl px-6">
         <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
           <span className="text-xs font-bold tracking-[0.12em]" style={{ color: COLORS.blue }}>
             HAR DUKAAN KI EXTRA INCOME
           </span>
-          <h2 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl" style={{ color: COLORS.ink }}>
+          <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink sm:text-4xl md:text-5xl">
             More Than Just a Payment App
           </h2>
-          <p className="mt-4 text-base leading-relaxed sm:text-lg" style={{ color: COLORS.inkSoft }}>
+          <p className="mt-4 text-base leading-relaxed text-ink/60 sm:text-lg">
             Most payment apps help you accept money.
             <br className="hidden sm:block" /> Cashlo helps you earn money from every transaction.
           </p>

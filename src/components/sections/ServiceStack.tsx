@@ -56,6 +56,10 @@ const chapters = [
   },
 ];
 
+// Contrast here is set by the PHOTO behind each chapter, not the site's
+// theme — deliberately fixed colors so they don't flip with .dark.
+// (Same reasoning as the phone-mockup screens in HowItWorks and the
+// illustration zone in PaymentAppFeatures.)
 function ChapterContent({ c }: { c: (typeof chapters)[number] }) {
   const dark = c.textTheme === "dark";
 
@@ -64,7 +68,7 @@ function ChapterContent({ c }: { c: (typeof chapters)[number] }) {
       <p
         className={
           "text-sm font-semibold uppercase tracking-wider " +
-          (dark ? "text-ink/60" : "text-white/70")
+          (dark ? "text-slate-700" : "text-white/70")
         }
       >
         {c.eyebrow}
@@ -72,7 +76,7 @@ function ChapterContent({ c }: { c: (typeof chapters)[number] }) {
       <h2
         className={
           "mt-3 text-4xl font-bold tracking-tight sm:text-5xl " +
-          (dark ? "text-ink" : "text-white")
+          (dark ? "text-slate-900" : "text-white")
         }
       >
         {c.title}
@@ -80,7 +84,7 @@ function ChapterContent({ c }: { c: (typeof chapters)[number] }) {
       <p
         className={
           "mt-4 text-lg leading-relaxed " +
-          (dark ? "text-ink/70" : "text-white/80")
+          (dark ? "text-slate-700" : "text-white/80")
         }
       >
         {c.desc}
@@ -92,11 +96,11 @@ function ChapterContent({ c }: { c: (typeof chapters)[number] }) {
             className={
               "flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium backdrop-blur-sm " +
               (dark
-                ? "border-[#445df0]/25 bg-[#445df0]/10 text-[#445df0]"
-                : "border-[#445df0]/40 bg-[#445df0]/20 text-white")
+                ? "border-brand/25 bg-brand/10 text-brand"
+                : "border-brand/40 bg-brand/20 text-white")
             }
           >
-            <item.icon className="h-4 w-4 text-[#445df0]" strokeWidth={1.75} />
+            <item.icon className="h-4 w-4 text-brand" strokeWidth={1.75} />
             {item.label}
           </span>
         ))}
@@ -115,8 +119,8 @@ export default function ServiceStack() {
         ref={stageRef}
         className="relative hidden h-screen overflow-hidden md:block"
       >
-        {/* Top fade — blends the previous (light) section into this one
-            instead of cutting hard at the section boundary */}
+        {/* Top fade — blends the previous section into this one; stays
+            token-aware since it's blending with actual site background */}
         <div className="pointer-events-none absolute inset-x-0 top-0 z-20 h-32 bg-gradient-to-b from-bg to-transparent lg:h-40" />
 
         {/* Side progress rail */}
@@ -146,8 +150,9 @@ export default function ServiceStack() {
                   style={{ backgroundImage: `url(${c.image})`, backgroundPosition: c.imagePosition }}
                   />
               {dark ? (
-                // Light scrim: brightens toward the text corner instead of
-                // darkening it, since this image is naturally light there
+                // Fixed white scrim — brightens toward the text corner
+                // because THIS image is naturally light there, regardless
+                // of site theme.
                 <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/25 to-transparent" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
