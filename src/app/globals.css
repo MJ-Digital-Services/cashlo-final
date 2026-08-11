@@ -1651,3 +1651,35 @@ body {
   .step-desc{font-size:16px;}
 }
 @media (prefers-reduced-motion: reduce){ .phone-float,.orb,.particle{animation:none !important;} }
+
+/* ---- Footer dot-grid texture — token-aware, works in both themes ---- */
+.footer-dot-grid {
+  background-image: radial-gradient(
+    color-mix(in srgb, var(--ink) 7%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+}
+
+/* ---- Footer nav link — dash slides in on hover ---- */
+.footer-nav-link {
+  position: relative;
+  transition: color 0.2s ease, padding-left 0.25s ease;
+}
+.footer-nav-link::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 1.5px;
+  background: var(--color-brand);
+  transition: width 0.25s ease;
+}
+.footer-nav-link:hover {
+  padding-left: 16px;
+}
+.footer-nav-link:hover::before {
+  width: 10px;
+}
