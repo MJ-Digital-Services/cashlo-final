@@ -133,6 +133,16 @@ function SettlementScene() {
           <stop offset="1" stopColor="#5EE0B5" />
         </linearGradient>
 
+        <filter id="tgInvert" x="-20%" y="-20%" width="140%" height="140%">
+          <feColorMatrix
+            type="matrix"
+            values="-1 0 0 0 1
+                    0 -1 0 0 1
+                    0 0 -1 0 1
+                    0 0 0 1 0"
+          />
+        </filter>
+
         <filter id="tgGlow" x="-120%" y="-120%" width="340%" height="340%">
           <feGaussianBlur stdDeviation="2.4" result="blur" />
           <feMerge>
@@ -181,16 +191,15 @@ function SettlementScene() {
             width="72"
             height="72"
             rx="18"
-            fill="url(#tgHub)"
             />
 
             <image
-            href="/cashlo-rupee-symbol.png"
-            x="-36"
-            y="-36"
-            width="72"
-            height="72"
-            preserveAspectRatio="xMidYMid slice"
+              href="/cashlo-icon.svg"
+              x="-36"
+              y="-36"
+              width="72"
+              height="72"
+              preserveAspectRatio="xMidYMid slice"
             />
         </g>
         </g>

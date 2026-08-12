@@ -24,9 +24,10 @@ const avatars: {
   className?: string;
 }[] = [
   { id: "ak", label: "AK", className: "bg-orange-400" },
-  { id: "photo", image: "/avatars/avatar-1.png" },
+  { id: "photo-1", image: "/avatars/avatar-1.jpg" },
+  { id: "photo-2", image: "/avatars/avatar-2.jpg" },
   { id: "pv", label: "PV", className: "bg-emerald-500" },
-  { id: "photo", image: "/avatars/avatar-3.png" },
+  { id: "mg", label: "MG", className: "bg-rose-300" },
 ];
 
 export default function Hero() {

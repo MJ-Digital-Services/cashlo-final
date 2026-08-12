@@ -30,10 +30,33 @@ interface CountdownTimerProps {
   label?: string;
 }
 
+function getEndOfMonthIso(): string {
+  const now = new Date();
+  // day 0 of *next* month = last day of *this* month
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const yyyy = lastDay.getFullYear();
+  const mm = String(lastDay.getMonth() + 1).padStart(2, "0");
+  const dd = String(lastDay.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}T23:59:59+05:30`;
+}
+
+function getEndOfMonthLabel(): string {
+  const now = new Date();
+  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+  const formatted = lastDay.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+  return `Time Remaining Until ${formatted}`;
+}
+
 export function CountdownTimer({
-  targetDateIso = "2026-07-31T23:59:59+05:30",
-  label = "Time Remaining Until 31st July 2026",
+  targetDateIso,
+  label,
 }: CountdownTimerProps) {
+  const resolvedTargetDateIso = targetDateIso ?? getEndOfMonthIso();
+  const resolvedLabel = label ?? getEndOfMonthLabel();
   const [timeLeft, setTimeLeft] = useState<TimeLeft>({
     days: 0,
     hours: 0,
@@ -42,7 +65,7 @@ export function CountdownTimer({
   });
 
   useEffect(() => {
-    const targetDate = new Date(targetDateIso).getTime();
+    const targetDate = new Date(resolvedTargetDateIso).getTime();
 
     const calculateTime = () => {
       const now = Date.now();
@@ -64,13 +87,13 @@ export function CountdownTimer({
     calculateTime();
     const interval = setInterval(calculateTime, 1000);
     return () => clearInterval(interval);
-  }, [targetDateIso]);
+  }, [resolvedTargetDateIso]);
 
   return (
     <div className="rounded-2xl border border-border bg-bg/80 p-6 text-center backdrop-blur-sm shadow-inner">
       <div className="flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-wider text-ink/60 mb-4">
         <Clock className="h-4 w-4 text-brand" />
-        <span>{label}</span>
+        <span>{resolvedLabel}</span>
       </div>
 
       <div className="grid grid-cols-4 gap-2 sm:gap-4">
@@ -273,10 +296,7 @@ export default function ItrDeadlines() {
 
             {/* Right side live countdown (Extracted Component) */}
             <div className="lg:col-span-6 flex flex-col gap-4">
-              <CountdownTimer
-                targetDateIso="2026-07-31T23:59:59+05:30"
-                label="Time Remaining Until 31st July 2026"
-              />
+              <CountdownTimer />
             </div>
           </div>
         </div>
