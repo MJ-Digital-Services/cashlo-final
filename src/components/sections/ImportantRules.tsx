@@ -28,7 +28,7 @@ export default function ImportantRules() {
       {/* Full-bleed sketch, faint watermark behind everything */}
       <div
         className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.12]"
-        style={{ backgroundImage: "url(/images/important-rules-bg.png)" }}
+        style={{ backgroundImage: "" }}
         aria-hidden="true"
       />
 
@@ -49,7 +49,7 @@ export default function ImportantRules() {
         </div>
 
         {/* Morphing shape + rule cards */}
-        <div ref={wrapRef} className="morph-wrap">
+        <div ref={wrapRef} className="morph-wrap z-11">
           <svg viewBox="0 0 600 600">
             <defs>
               <clipPath id="morphClip">
@@ -62,7 +62,6 @@ export default function ImportantRules() {
 
             {/* The sketch illustration, only visible inside the current shape outline */}
             <image
-              href="/images/important-rules-bg.png"
               x="0"
               y="0"
               width="600"
@@ -90,7 +89,7 @@ export default function ImportantRules() {
         {/* Final message inside the full-screen brand circle */}
         <div
           data-morph-final
-          className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center opacity-0"
+          className="pointer-events-none absolute inset-0 z-12 flex items-center justify-center opacity-0"
         >
           <div className="max-w-3xl px-6 text-center text-white">
           <h3 className="text-6xl font-bold sm:text-7xl lg:text-8xl">

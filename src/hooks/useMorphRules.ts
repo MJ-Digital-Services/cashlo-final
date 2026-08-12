@@ -142,7 +142,7 @@ export function useMorphRules() {
           .from(wrap, { scale: 0.55, duration: 1 })
 
           /* heading clears out right after the blob settles in */
-          .to("[data-morph-head]", { opacity: 0, duration: 0.5 })
+          // .to("[data-morph-head]", { opacity: 0, duration: 0.5 })
 
           /* STAGE 1 — rule 1 emerges LEFT */
           .to(cards[0], { opacity: 1, scale: 1, xPercent: -118, duration: 1, ease: "back.out(1.4)" }, "+=.3")
