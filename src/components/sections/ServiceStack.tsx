@@ -121,6 +121,47 @@ function ChapterBadges({ badges }: { badges: Badge[] }) {
   );
 }
 
+function ChapterImage({ c }: { c: Chapter }) {
+  return (
+    <div className="relative h-[420px] w-full overflow-hidden sm:h-[480px]">
+      {c.bgMask ? (
+        <div
+          className="absolute inset-0"
+          style={{
+            maskImage:
+              "radial-gradient(ellipse farthest-side at 50% 45%, black 55%, transparent 100%)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse farthest-side at 50% 45%, black 55%, transparent 100%)",
+          }}
+        >
+          <Image
+            src={c.bgImage}
+            alt=""
+            fill
+            className="scale-110 object-cover object-center blur-[3px]"
+          />
+        </div>
+      ) : (
+        <Image
+          src={c.bgImage}
+          alt=""
+          fill
+          className="scale-110 object-contain object-center blur-[3px]"
+        />
+      )}
+
+      <div className="absolute inset-x-0 bottom-0 h-[92%]">
+        <Image
+          src={c.personImage}
+          alt=""
+          fill
+          className="scale-110 object-contain object-bottom"
+        />
+      </div>
+    </div>
+  );
+}
+
 function ChapterGrid({ c }: { c: Chapter }) {
   return (
     <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
@@ -154,8 +195,8 @@ function ChapterGrid({ c }: { c: Chapter }) {
         )}
       </div>
 
-      {/* Right column — blurred background + sharp subject on top */}
-      <div className="relative h-[420px] w-full overflow-visible sm:h-[480px] lg:h-[560px]">
+      {/* Right column — desktop-only, uses this chapter's tuned scale/offset values */}
+      <div className="relative hidden h-[560px] w-full overflow-visible lg:block">
         {c.bgMask ? (
           <div
             className="absolute inset-0"
@@ -269,11 +310,41 @@ export default function ServiceStack() {
         </div>
       </div>
 
-      {/* Mobile: simple stacked sections, no pin/cover animation */}
-      <div className="space-y-20 px-6 py-20 lg:hidden">
+      {/* Mobile: image first (contained, no overflow), then text — no
+          absolute/oversized elements that could bleed over the heading */}
+      <div className="space-y-16 px-6 py-16 lg:hidden">
         {chapters.map((c) => (
           <div key={c.key}>
-            <ChapterGrid c={c} />
+            <ChapterImage c={c} />
+
+            <div className="mt-8">
+              <p className="text-sm font-semibold uppercase tracking-wider text-[#0EA371]">
+                {c.eyebrow}
+              </p>
+              <h2 className="mt-3 text-[32px] font-bold leading-[1.15] tracking-tight text-slate-900">
+                {c.title[0]}
+                <br />
+                {c.title[1]}
+              </h2>
+              <p className="mt-3 text-base leading-relaxed text-slate-500">
+                {c.desc}
+              </p>
+
+              <ChapterBadges badges={c.badges} />
+
+              {c.trustPrefix && (
+                <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-slate-100 bg-white/70 px-4 py-3">
+                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0EA371]/10">
+                    <ShieldCheck className="h-4 w-4 text-[#0EA371]" strokeWidth={2} />
+                  </span>
+                  <p className="text-sm text-slate-600">
+                    {c.trustPrefix}
+                    <span className="font-semibold text-[#0EA371]">{c.trustHighlight}</span>
+                    {c.trustSuffix}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>
