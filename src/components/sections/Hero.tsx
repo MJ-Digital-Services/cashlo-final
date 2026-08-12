@@ -32,8 +32,8 @@ const avatars: {
 
 export default function Hero() {
   return (
-    <section className="relative overflow-hidden bg-[#F9F4F4]">
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-6 pb-20 pt-32 lg:grid-cols-[1fr_1.05fr] lg:gap-4 lg:px-8 lg:pt-22">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-[#F9F4F4]">
+      <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-6 py-20 lg:grid-cols-[1fr_1.05fr] lg:gap-4 lg:px-8">
         {/* Left column */}
         <div className="relative z-10">
           <div className="mb-10 inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-2">
