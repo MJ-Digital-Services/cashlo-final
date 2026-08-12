@@ -526,10 +526,10 @@ export default function HowItWorks() {
         <span className="inline-block rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-brand">
           How Cashlo Works
         </span>
-        <h2 className="mt-4 whitespace-nowrap text-4xl font-bold tracking-tight text-ink sm:text-5xl">
-  From download to{" "}
-  <span className="text-brand">daily earnings</span>
-</h2>
+        <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink sm:text-5xl">
+          From download to{" "}
+          <span className="text-brand">daily earnings</span>
+        </h2>
         <p className="mt-3 text-base text-ink/60">
           A simple journey for every merchant — install, register, verify,
           and start earning commission on every transaction.
