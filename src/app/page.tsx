@@ -1,4 +1,5 @@
 import HeroTrust from "@/components/sections/HeroTrust";
+import Hero from "@/components/sections/Hero";
 import Stats from "@/components/sections/Stats";
 import PaymentAppFeatures from "@/components/sections/PaymentAppFeatures";
 import HowItWorks from "@/components/sections/HowItWorks";
@@ -17,7 +18,8 @@ import TrustGrid from "@/components/sections/TrustGrid";
 export default function Home() {
   return (
     <main>
-      <HeroTrust />
+      {/* <HeroTrust /> */}
+      <Hero />
       <TrustGrid />
       <Stats />
       <SupportedBy />

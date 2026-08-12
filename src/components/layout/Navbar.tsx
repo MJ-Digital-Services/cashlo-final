@@ -8,7 +8,6 @@ import { navItems } from "./navData";
 import NavDropdown from "./NavDropdown";
 import ServicesDropdown from "./ServicesDropdown";
 import MobileMenu from "./MobileMenu";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 export default function Navbar() {
@@ -46,15 +45,20 @@ export default function Navbar() {
       <nav className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6">
         {/* Logo */}
         <Link href="/" className="flex items-center">
-        <Image
-          // src={theme === "dark" ? "/logo/cashlo-logo-white1.png" : "/logo/cashlo-logo.png"}
-          src={scrolled ? theme == "dark" ? "/logo/cashlo-logo-white1.png" : "/logo/cashlo-logo.png" : "/logo/cashlo-logo.png"}
-          alt="Cashlo"
-          width={140}
-          height={40}
-          priority
-          className="h-9 w-auto object-contain"
-        />
+          <Image
+            src={
+              scrolled
+                ? theme === "dark"
+                  ? "/logo/cashlo-logo-white1.png"
+                  : "/logo/cashlo-logo.png"
+                : "/logo/cashlo-logo.png"
+            }
+            alt="Cashlo"
+            width={140}
+            height={40}
+            priority
+            className="h-9 w-auto object-contain"
+          />
         </Link>
 
         {/* Center nav — keyed to pathname so any open dropdown resets on navigation */}
@@ -77,7 +81,6 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-3">
-          <ThemeToggle onHero={!scrolled} />
           <Link
             href="/become-distributor"
             className={`hidden rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors lg:block ${
@@ -94,7 +97,7 @@ export default function Navbar() {
           >
             Become Merchant
           </Link>
-          <MobileMenu key={pathname}/>
+          <MobileMenu key={pathname} />
         </div>
       </nav>
     </header>
