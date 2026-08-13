@@ -288,7 +288,7 @@ function FloatingCards({ step }: { step: (typeof STEPS)[number] }) {
   }));
 
   return (
-    <div className="pointer-events-none absolute -right-24 top-4 hidden flex-col gap-14 lg:flex xl:-right-40">
+    <div className="pointer-events-none absolute -right-16 top-4 hidden flex-col gap-14 xl:flex xl:-right-28 2xl:-right-40">
       <svg
         className="absolute left-0 top-0 -z-10 overflow-visible"
         width={STAGGER_X + LINE_INSET + 20}
@@ -344,7 +344,7 @@ function FloatingCards({ step }: { step: (typeof STEPS)[number] }) {
 
 function Stepper({ activeStep }: { activeStep: number }) {
   return (
-    <div className="mt-10 flex items-center justify-between rounded-2xl border border-border bg-card px-6 py-6">
+    <div className="mt-6 flex items-center justify-between rounded-2xl border border-border bg-card px-6 py-4 lg:mt-8 lg:py-5 xl:mt-10 xl:py-6">
       {STEPS.map((s, i) => (
         <div key={s.key} className="flex flex-1 items-center last:flex-none">
           <div className="flex flex-col items-center gap-2">
@@ -392,7 +392,7 @@ function StepList({ activeStep }: { activeStep: number }) {
         return (
           <div
             key={s.key}
-            className={`rounded-2xl border-l-[3px] px-6 py-5 transition-all duration-300 ${
+            className={`rounded-2xl border-l-[3px] px-5 py-3 transition-all duration-300 lg:px-6 lg:py-4 xl:py-5 ${
               active
                 ? "border-brand bg-card shadow-sm"
                 : "border-transparent"
@@ -479,7 +479,7 @@ export default function HowItWorks() {
   const step = STEPS[activeStep];
 
   return (
-    <section ref={sectionRef} className="relative bg-bg pt-10">
+    <section ref={sectionRef} className="relative overflow-x-clip bg-bg pt-4 lg:pt-6 xl:pt-10">
       {/* ---------- Desktop: explicit-height scroll track, sticky-pinned content ---------- */}
       <div
         className="relative hidden lg:block"
@@ -491,17 +491,17 @@ export default function HowItWorks() {
             <span className="inline-block rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-brand">
               How Cashlo Works
             </span>
-            <h2 className="mt-4 whitespace-nowrap text-4xl font-bold tracking-tight text-ink sm:text-5xl">
+            <h2 className="mt-3 whitespace-nowrap text-3xl font-bold tracking-tight text-ink lg:text-4xl 2xl:text-5xl">
                 From download to{" "}
                 <span className="text-brand">daily earnings</span>
               </h2>
-              <p className="mt-4 text-base text-ink/60">
+              <p className="mt-2 text-sm text-ink/60 lg:mt-3 lg:text-base">
                 A simple journey for every merchant — install, register,
                 verify, and start earning commission on every transaction.
               </p>
             </div>
 
-            <div className="mt-16 grid grid-cols-[1fr_1.1fr] items-center gap-16">
+            <div className="mt-6 grid grid-cols-[1fr_1.1fr] items-center gap-10 lg:mt-10 xl:mt-16">
               <div>
                 <StepList activeStep={activeStep} />
                 <Stepper activeStep={activeStep} />
@@ -509,7 +509,7 @@ export default function HowItWorks() {
 
               <div className="relative flex justify-center">
                 <FloatingCards step={step} />
-                <div className="relative h-[600px] w-[300px] rounded-[40px] border-[6px] border-ink bg-bg shadow-2xl">
+                <div className="relative h-[clamp(420px,62vh,600px)] w-[clamp(210px,31vh,300px)] rounded-[40px] border-[6px] border-ink bg-bg shadow-2xl">
                   <div className="absolute left-1/2 top-0 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-ink" />
                   <div className="h-full overflow-hidden rounded-[34px] p-2 pt-8">
                     <Screen />

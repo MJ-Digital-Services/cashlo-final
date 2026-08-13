@@ -164,13 +164,13 @@ function ChapterImage({ c }: { c: Chapter }) {
 
 function ChapterGrid({ c }: { c: Chapter }) {
   return (
-    <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1.15fr_0.85fr] lg:gap-16">
+    <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_0.9fr] xl:grid-cols-[1.15fr_0.85fr] lg:gap-16">
       {/* Left column */}
-      <div className="max-w-2xl lg:-ml-16">
+      <div className="max-w-2xl xl:-ml-8 2xl:-ml-16">
         <p className="text-base font-semibold uppercase tracking-wider text-[#0EA371]">
           {c.eyebrow}
         </p>
-        <h2 className="mt-3 text-[48px] font-bold leading-[1.12] tracking-tight text-slate-900 sm:text-[52px]">
+        <h2 className="mt-3 text-[40px] leading-[1.12] font-bold tracking-tight text-slate-900 lg:text-[44px] xl:text-[48px] 2xl:text-[52px]">
           {c.title[0]}
           <br />
           {c.title[1]}
