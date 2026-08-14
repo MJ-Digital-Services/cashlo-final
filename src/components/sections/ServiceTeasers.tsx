@@ -50,7 +50,7 @@ const teasers = [
 
 export default function ServiceTeasers() {
   return (
-    <section className="bg-surface py-24">
+    <section className="bg-[#F9F4F4] py-24">
       <Container className="max-w-screen-2xl">
         <div className="mx-auto max-w-2xl text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand">

@@ -113,7 +113,7 @@ function FeatureCard({ card }: { card: FeatureCardData }) {
 
 const PaymentAppFeatures: React.FC = () => {
   return (
-    <section className="w-full bg-bg py-20 sm:py-24">
+    <section className="w-full bg-[#F9F4F4] py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-6">
         <div className="mx-auto flex max-w-2xl flex-col items-center text-center">
           <span className="text-xs font-bold tracking-[0.12em] text-brand">
