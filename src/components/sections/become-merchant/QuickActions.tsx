@@ -14,7 +14,7 @@ export default function QuickActions({
   onContactDistributor: () => void;
 }) {
   return (
-    <section className="relative px-5 pb-16 sm:px-8" aria-label="Quick actions">
+    <section className="relative px-5 pb-16 sm:px-8 bg-[#f9fafb]" aria-label="Quick actions">
       <StaggerGroup className="mx-auto grid max-w-7xl gap-5 md:grid-cols-3">
         <StaggerItem>
           <GlassCard className="group h-full p-7">

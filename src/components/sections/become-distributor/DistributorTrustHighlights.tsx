@@ -16,7 +16,7 @@ export default function DistributorTrustHighlights() {
   const scope = useScrollReveal();
 
   return (
-    <section ref={scope} className="border-y border-border bg-card py-10">
+    <section ref={scope} className="border-b border-border bg-[#f9fafb] py-10">
       <Container>
         <div data-reveal className="grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-5">
           {highlights.map((h) => (

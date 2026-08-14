@@ -4,14 +4,10 @@ import DistributorAbout from "@/components/sections/become-distributor/Distribut
 import DistributorHowItWorks from "@/components/sections/become-distributor/DistributorHowItWorks";
 import DistributorWhoCanApply from "@/components/sections/become-distributor/DistributorWhoCanApply";
 import DistributorWhyReserveEarly from "@/components/sections/become-distributor/DistributorWhyReserveEarly";
-import CashloDistributorStory from "@/components/sections/become-distributor/CashloDistributorStory";
 
 export default function BecomeDistributorPage() {
   return (
     <main>
-      <div className="pt-24 sm:pt-28">
-        <CashloDistributorStory className="w-full" />
-      </div>
       <DistributorHero />
       <DistributorTrustHighlights />
       <DistributorAbout />

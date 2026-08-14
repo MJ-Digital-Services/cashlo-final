@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { ToastProvider } from '@/components/sections/become-merchant/shared/Toast';
-import CashloMerchantHeroAnimation from '@/components/sections/become-merchant/CashloMerchantHeroAnimation';
 import Hero from '@/components/sections/become-merchant/Hero';
 import QuickActions from '@/components/sections/become-merchant/QuickActions';
 import LeadSection from '@/components/sections/become-merchant/LeadSection';
@@ -32,9 +31,6 @@ export default function BecomeMerchantPage() {
   return (
     <ToastProvider>
       <main className="relative bg-white pb-24 lg:pb-0 dark:bg-[#0B1020]">
-        <div className="pt-24 sm:pt-28">
-          <CashloMerchantHeroAnimation className="w-full" />
-        </div>
         <Hero onBecomeMerchant={scrollToRegister} />
         <QuickActions onContactSales={openSales} onContactDistributor={openDistributor} />
         <LeadSection />
