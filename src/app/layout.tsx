@@ -5,6 +5,7 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SiteChrome from "@/components/layout/SiteChrome";
+import LaunchAnnouncement from "@/components/layout/LaunchAnnouncement";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -31,6 +32,7 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-full flex-col">
         <ThemeProvider>
+          <LaunchAnnouncement />
           <SiteChrome>
             <Navbar />
           </SiteChrome>
