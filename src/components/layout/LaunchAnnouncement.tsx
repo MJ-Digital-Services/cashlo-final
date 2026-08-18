@@ -172,7 +172,7 @@ export default function LaunchAnnouncement() {
         <button
           onClick={handleClose}
           aria-label="Close"
-          className="absolute right-5 top-5 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink/60 shadow-md hover:text-ink transition-colors"
+          className="absolute right-5 top-5 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-ink/60 shadow-md hover:text-ink transition-colors"
         >
           <X size={18} />
         </button>
