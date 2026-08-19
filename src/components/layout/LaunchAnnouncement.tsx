@@ -184,18 +184,18 @@ export default function LaunchAnnouncement() {
         </p>
 
         <span className="mt-6 inline-flex items-center gap-2 rounded-full border border-[#5B2D8E]/25 bg-[#5B2D8E]/10 px-4 py-1.5 text-sm font-bold uppercase tracking-widest text-[#5B2D8E]">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#5B2D8E]" />
-        Live Today
-        </span>
+  <span className="h-1.5 w-1.5 rounded-full bg-[#5B2D8E]" />
+  Now Live
+</span>
 
-        <h2 className="mt-4 text-6xl font-extrabold leading-none tracking-tight text-[#1a1030] sm:text-8xl">
-        We&apos;re <span className="text-[#5B2D8E]">Live!</span>
-        </h2>
+<h2 className="mt-4 text-6xl font-extrabold leading-none tracking-tight text-[#1a1030] sm:text-8xl">
+  We&apos;re <span className="text-[#5B2D8E]">Live!</span>
+</h2>
 
-          <p className="mt-4 text-xl text-[#1a1030]">
-            <span className="font-semibold text-[#5B2D8E]">Cashlo</span> is
-            officially launching today.
-          </p>
+<p className="mt-4 text-xl text-[#1a1030]">
+  <span className="font-semibold text-[#5B2D8E]">Cashlo</span> has
+  officially launched.
+</p>
           <p className="mt-1 mx-auto max-w-sm text-md text-[#1a1030]/60">
             Your smarter way to manage digital payments and grow your business.
             </p>
