@@ -44,6 +44,28 @@ export type NearbyPincodeSuggestion = {
   state: string;
 };
 
+export type ExistingBookingLookup = {
+  bookingId: string;
+  pincode: string;
+  name: string;
+  maskedMobile: string;
+  maskedEmail: string;
+  status: "paid" | "activated";
+};
+
+export type ExistingBookingSummary = {
+  bookingId: string;
+  pincode: string;
+  name: string;
+  mobile: string;
+  email: string;
+  bookingDate: string;
+  status: string;
+  totalFee: number;
+  amountPaid: number;
+  pendingAmount: number;
+};
+
 class ApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
@@ -98,6 +120,21 @@ export const distributorApi = {
     razorpay_payment_id: string;
     razorpay_signature: string;
   }) => post<{ bookingId: string; lockLost: boolean }>("/distributor/verify-payment", params),
+
+  findExistingBooking: (pincode: string) =>
+    post<ExistingBookingLookup>("/distributor/find-existing-booking", { pincode }),
+
+  sendExistingBookingOtp: (bookingId: string) =>
+    post<{ bookingId: string }>("/distributor/existing-booking/send-otp", { bookingId }),
+
+  verifyExistingBookingOtp: (bookingId: string, otp: string) =>
+    post<ExistingBookingSummary>("/distributor/existing-booking/verify-otp", { bookingId, otp }),
+
+  submitFinalUtr: (bookingId: string, utr: string) =>
+    post<{ bookingId: string; status: string }>(
+      "/distributor/existing-booking/submit-final-utr",
+      { bookingId, utr }
+    ),
 };
 
 export { ApiError };

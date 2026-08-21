@@ -90,7 +90,7 @@ export default function DistributorHero() {
           {/* CTA buttons */}
           <div data-reveal className="mt-10 flex flex-wrap items-center gap-4">
             <a
-              href="/become-distributor/reserve"
+              href="/become-distributor/choose"
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5"
             >
               Become a Distributor
