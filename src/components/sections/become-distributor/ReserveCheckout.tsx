@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
 import { AnimatePresence, motion } from "framer-motion";
+import { QRCodeSVG } from "qrcode.react";
 import {
   MapPin,
   Lock,
@@ -1203,11 +1204,21 @@ export default function ReserveCheckout() {
                         </p>
 
                         <div className="mx-auto mt-6 w-52 overflow-hidden rounded-xl border border-border shadow-sm">
-                          <img
-                            src="/payment/distributor-booking-qr.png"
-                            alt="Scan to pay the ₹1,180 Cashlo distributor booking fee"
-                            className="h-auto w-full"
-                          />
+                          <div className="relative bg-white p-4">
+                            <span className="absolute left-1/2 top-2 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
+                              Pay ₹1,180
+                            </span>
+                            <div className="mt-6 flex items-center justify-center">
+                              <QRCodeSVG
+                                value={`upi://pay?pa=MAB.037215011487460@AXISBANK&pn=Cashlo&am=1180&cu=INR&tn=Cashlo Distributor Booking Fee`}
+                                size={176}
+                                level="M"
+                              />
+                            </div>
+                            <p className="mt-3 text-center text-[10.5px] font-medium text-ink/50">
+                              Scan with any UPI app
+                            </p>
+                          </div>
                         </div>
 
                         <p className="mx-auto mt-5 max-w-sm text-[12.5px] leading-relaxed text-ink/45">

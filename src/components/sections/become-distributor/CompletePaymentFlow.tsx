@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { ArrowLeft, Search, Lock, ShieldCheck, User, Wallet, QrCode, PartyPopper } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import {
   distributorApi,
   ApiError,
@@ -369,11 +370,21 @@ export default function CompletePaymentFlow() {
                     </p>
 
                     <div className="mx-auto mt-6 w-52 overflow-hidden rounded-xl border border-border shadow-sm">
-                      <img
-                        src="/payment/distributor-booking-qr.png"
-                        alt={`Scan to pay the ${formatPaise(summary.pendingAmount)} Cashlo distributor final payment`}
-                        className="h-auto w-full"
-                      />
+                      <div className="relative bg-white p-4">
+                        <span className="absolute left-1/2 top-2 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
+                          Pay {formatPaise(summary.pendingAmount)}
+                        </span>
+                        <div className="mt-6 flex items-center justify-center">
+                          <QRCodeSVG
+                            value={`upi://pay?pa=MAB.037215011487460@AXISBANK&pn=Cashlo&am=${summary.pendingAmount / 100}&cu=INR&tn=Cashlo Distributor Final Payment`}
+                            size={176}
+                            level="M"
+                          />
+                        </div>
+                        <p className="mt-3 text-center text-[10.5px] font-medium text-ink/50">
+                          Scan with any UPI app
+                        </p>
+                      </div>
                     </div>
 
                     <p className="mx-auto mt-5 max-w-sm text-[12.5px] leading-relaxed text-ink/45">
