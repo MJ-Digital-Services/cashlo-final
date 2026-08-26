@@ -27,8 +27,8 @@ export async function generateMetadata({
     const blog = await getBlogBySlug(slug);
     const title = blog.metaTitle || `${blog.title} | Cashlo`;
     const description = blog.metaDescription || blog.excerpt;
-    const canonical = `https://www.cashlo.in/blog/${slug}`;
-    const ogImage = blog.coverImage || "https://www.cashlo.in/og-image.png";
+    const canonical = `https://www.cashlo.app/blog/${slug}`;
+    const ogImage = blog.coverImage || "https://www.cashlo.app/og-image.png";
 
     return {
       title,
@@ -99,25 +99,25 @@ export default async function BlogDetailPage({
     "@type": "Article",
     headline: blog.title,
     description: blog.excerpt,
-    image: blog.coverImage ?? "https://www.cashlo.in/og-image.png",
+    image: blog.coverImage ?? "https://www.cashlo.app/og-image.png",
     author: { "@type": "Person", name: blog.createdBy?.name ?? "Cashlo Team" },
     publisher: {
       "@type": "Organization",
       name: "Cashlo",
-      logo: { "@type": "ImageObject", url: "https://www.cashlo.in/og-image.png" },
+      logo: { "@type": "ImageObject", url: "https://www.cashlo.app/og-image.png" },
     },
     datePublished: blog.publishedAt ?? undefined,
     dateModified: blog.updatedAt ?? blog.publishedAt ?? undefined,
-    mainEntityOfPage: { "@type": "WebPage", "@id": `https://www.cashlo.in/blog/${blog.slug}` },
+    mainEntityOfPage: { "@type": "WebPage", "@id": `https://www.cashlo.app/blog/${blog.slug}` },
   };
 
   const breadcrumbSchema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
-      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.cashlo.in" },
-      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.cashlo.in/blog" },
-      { "@type": "ListItem", position: 3, name: blog.title, item: `https://www.cashlo.in/blog/${blog.slug}` },
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://www.cashlo.app" },
+      { "@type": "ListItem", position: 2, name: "Blog", item: "https://www.cashlo.app/blog" },
+      { "@type": "ListItem", position: 3, name: blog.title, item: `https://www.cashlo.app/blog/${blog.slug}` },
     ],
   };
 

@@ -6,11 +6,11 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Blog | Cashlo",
   description: "Insights on UPI, digital payments, merchant banking, and fintech from the Cashlo team.",
-  alternates: { canonical: "https://www.cashlo.in/blog" },
+  alternates: { canonical: "https://www.cashlo.app/blog" },
   openGraph: {
     title: "Blog | Cashlo",
     description: "Insights on UPI, digital payments, merchant banking, and fintech from the Cashlo team.",
-    url: "https://www.cashlo.in/blog",
+    url: "https://www.cashlo.app/blog",
     siteName: "Cashlo",
     type: "website",
   },

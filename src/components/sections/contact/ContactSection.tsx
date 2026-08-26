@@ -7,7 +7,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const contactDetails = [
   { icon: Phone, label: "Phone", value: "+91 00000 00000" },
-  { icon: Mail, label: "Email", value: "support@cashlo.in" },
+  { icon: Mail, label: "Email", value: "support@cashlo.app" },
   { icon: MapPin, label: "Office", value: "Gurugram, Haryana, India" },
 ];
 

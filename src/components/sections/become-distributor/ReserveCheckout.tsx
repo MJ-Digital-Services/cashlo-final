@@ -1328,8 +1328,8 @@ export default function ReserveCheckout() {
                 <p className="mt-4 flex items-center justify-center gap-1.5 text-[12px] text-ink/40">
                   <LifeBuoy size={13} />
                   Spotted a mistake in your details? Don&apos;t pay twice — email{" "}
-                  <a href="mailto:support@cashlo.in" className="font-medium text-ink/60 hover:text-ink">
-                    support@cashlo.in
+                  <a href="mailto:support@cashlo.app" className="font-medium text-ink/60 hover:text-ink">
+                    support@cashlo.app
                   </a>
                 </p>
               )}
@@ -1342,8 +1342,8 @@ export default function ReserveCheckout() {
       <footer className="border-t border-border bg-bg py-5">
         <p className="text-center text-[11.5px] text-ink/40">
           © {new Date().getFullYear()} Cashlo · Payments secured by Razorpay · Need help?{" "}
-          <a href="mailto:support@cashlo.in" className="font-medium text-ink/55 transition-colors hover:text-ink">
-            support@cashlo.in
+          <a href="mailto:support@cashlo.app" className="font-medium text-ink/55 transition-colors hover:text-ink">
+            support@cashlo.app
           </a>
         </p>
       </footer>

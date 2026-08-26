@@ -185,7 +185,7 @@ export default function BecomeDistributorThanksPage() {
             </div>
             <p className="mt-4 text-center text-[11px] text-ink/35">
               This is a computer-generated receipt and does not require a signature. For any queries,
-              contact support@cashlo.in.
+              contact support@cashlo.app.
             </p>
           </motion.div>
         ) : (

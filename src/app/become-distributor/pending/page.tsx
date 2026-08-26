@@ -324,10 +324,10 @@ export default function BecomeDistributorPendingPage() {
             <LifeBuoy size={13} />
             Questions about your booking? Email{" "}
             <a
-              href="mailto:support@cashlo.in"
+              href="mailto:support@cashlo.app"
               className="font-medium text-ink/60 transition-colors hover:text-ink"
             >
-              support@cashlo.in
+              support@cashlo.app
             </a>
           </p>
         </motion.div>

@@ -109,8 +109,8 @@ export default function DistributorChooseFlow() {
       <footer className="border-t border-border bg-bg py-5">
         <p className="text-center text-[11.5px] text-ink/40">
           © {new Date().getFullYear()} Cashlo · Need help?{" "}
-          <a href="mailto:support@cashlo.in" className="font-medium text-ink/55 transition-colors hover:text-ink">
-            support@cashlo.in
+          <a href="mailto:support@cashlo.app" className="font-medium text-ink/55 transition-colors hover:text-ink">
+            support@cashlo.app
           </a>
         </p>
       </footer>

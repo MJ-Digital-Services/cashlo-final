@@ -162,7 +162,7 @@ function IlloForm() {
   const fields = [
     { icon: User, label: "Full name", value: "Rahul Sharma" },
     { icon: Phone, label: "Mobile number", value: "98765 43210" },
-    { icon: AtSign, label: "Email", value: "rahul@cashlo.in" },
+    { icon: AtSign, label: "Email", value: "rahul@cashlo.app" },
     { icon: Briefcase, label: "Business name", value: "Sharma Enterprises" },
   ];
   return (
@@ -202,7 +202,7 @@ function IlloOtp() {
         <Mail size={26} strokeWidth={2.2} />
         <span className="hiw-badge-dot" />
       </div>
-      <p className="hiw-otp-note">Code sent to rahul@cashlo.in</p>
+      <p className="hiw-otp-note">Code sent to rahul@cashlo.app</p>
       <div className="hiw-otp-row">
         {digits.map((d, i) => (
           <span
