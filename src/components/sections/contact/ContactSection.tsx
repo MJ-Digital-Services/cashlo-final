@@ -8,7 +8,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 const contactDetails = [
   { icon: Phone, label: "Phone", value: "+91 00000 00000" },
   { icon: Mail, label: "Email", value: "support@cashlo.app" },
-  { icon: MapPin, label: "Office", value: "Gurugram, Haryana, India" },
+  { icon: MapPin, label: "Office", value: "7th Floor AWFIS, Tower D, Bhutani Techno Park, Plot No. 5, Sector 127, Noida, Uttar Pradesh 201313" },
 ];
 
 function FacebookIcon(props: React.SVGProps<SVGSVGElement>) {

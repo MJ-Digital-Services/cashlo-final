@@ -74,6 +74,9 @@ export default function Footer() {
               height={40}
               className="hidden h-9 w-auto object-contain dark:block"
             />
+            <p className="mt-2 text-base font-bold text-ink/80">
+              MJ Digital Services
+            </p>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-ink/60">
               India&apos;s trusted UPI CashPoint network — helping local
               merchants turn their shops into cash points for Tier 2 &amp; Tier 3
