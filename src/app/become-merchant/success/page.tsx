@@ -58,8 +58,8 @@ export default function BecomeMerchantSuccessPage() {
 
           <p className="mt-6 text-xs text-slate-500 dark:text-slate-400">
             Questions in the meantime? Call{' '}
-            <a href="tel:1800000000" className="font-semibold text-[#3F5EF7] hover:underline">
-              1800-000-000
+            <a href="tel:9220448607" className="font-semibold text-[#3F5EF7] hover:underline">
+              92204 48607
             </a>
             .
           </p>

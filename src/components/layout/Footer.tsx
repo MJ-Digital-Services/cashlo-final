@@ -143,7 +143,7 @@ export default function Footer() {
             <ul className="mt-5 space-y-2.5 text-sm text-ink/60">
               <li>support@cashlo.app</li>
               <li>sales@cashlo.app</li>
-              <li>+91-XXXXXXXXXX</li>
+              <li>+91-9220448607</li>
             </ul>
           </div>
         </div>

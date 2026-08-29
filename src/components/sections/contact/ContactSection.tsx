@@ -6,7 +6,7 @@ import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 
 const contactDetails = [
-  { icon: Phone, label: "Phone", value: "+91 00000 00000" },
+  { icon: Phone, label: "Phone", value: "+91 92204 48607" },
   { icon: Mail, label: "Email", value: "support@cashlo.app" },
   { icon: MapPin, label: "Office", value: "7th Floor AWFIS, Tower D, Bhutani Techno Park, Plot No. 5, Sector 127, Noida, Uttar Pradesh 201313" },
 ];
