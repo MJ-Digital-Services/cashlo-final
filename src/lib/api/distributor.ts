@@ -130,10 +130,14 @@ export const distributorApi = {
   verifyExistingBookingOtp: (bookingId: string, otp: string) =>
     post<ExistingBookingSummary>("/distributor/existing-booking/verify-otp", { bookingId, otp }),
 
-  submitFinalUtr: (bookingId: string, utr: string) =>
+  submitFinalUtr: (
+    bookingId: string,
+    utr: string,
+    distributorDetails: { aadhaarAddress: string; shopName: string; shopAddress: string }
+  ) =>
     post<{ bookingId: string; status: string }>(
       "/distributor/existing-booking/submit-final-utr",
-      { bookingId, utr }
+      { bookingId, utr, ...distributorDetails }
     ),
 };
 

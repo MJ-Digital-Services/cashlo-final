@@ -80,6 +80,21 @@ export default function CompletePaymentFlow() {
   const [resendCooldown, setResendCooldown] = useState(0);
   const [summary, setSummary] = useState<ExistingBookingSummary | null>(null);
 
+    // --- Distributor details (collected on summary step) ---
+    const [aadhaarAddress, setAadhaarAddress] = useState("");
+    const [shopName, setShopName] = useState("");
+    const [shopAddress, setShopAddress] = useState("");
+    const [detailsError, setDetailsError] = useState("");
+  
+    function handleProceedToPay() {
+      if (!aadhaarAddress.trim() || !shopName.trim() || !shopAddress.trim()) {
+        setDetailsError("Please fill in all fields to continue.");
+        return;
+      }
+      setDetailsError("");
+      setStep("utr");
+    }
+
   useEffect(() => {
     if (step !== "otp" || !booking || otpSent) return;
     setOtpSent(true);
@@ -135,7 +150,11 @@ export default function CompletePaymentFlow() {
     setUtrLoading(true);
     setUtrError("");
     try {
-      await distributorApi.submitFinalUtr(booking.bookingId, utrInput);
+      await distributorApi.submitFinalUtr(booking.bookingId, utrInput, {
+        aadhaarAddress,
+        shopName,
+        shopAddress,
+      });
       setStep("done");
     } catch (err) {
       setUtrError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
@@ -143,6 +162,8 @@ export default function CompletePaymentFlow() {
       setUtrLoading(false);
     }
   }
+
+  
 
   return (
     <div ref={rootRef} className="flex min-h-screen flex-col bg-surface">
@@ -350,7 +371,62 @@ export default function CompletePaymentFlow() {
                     </div>
                   </div>
 
-                  <SubmitButton onClick={() => setStep("utr")} className="mt-6">
+                  <div className="mt-6 flex items-center gap-2">
+                    <User size={15} className="text-ink/40" />
+                    <p className="text-[13px] font-semibold text-ink">
+                      Distributor Details
+                    </p>
+                  </div>
+
+                  <label className="mt-3 block text-[13px] font-medium text-ink/70">
+                    Aadhaar Address
+                  </label>
+                  <textarea
+                    required
+                    value={aadhaarAddress}
+                    onChange={(e) => setAadhaarAddress(e.target.value)}
+                    rows={2}
+                    placeholder="Address as per Aadhaar card"
+                    className={inputClass + " resize-none"}
+                  />
+
+                  <label className="mt-3 block text-[13px] font-medium text-ink/70">
+                    Shop Name
+                  </label>
+                  <input
+                    required
+                    value={shopName}
+                    onChange={(e) => setShopName(e.target.value)}
+                    placeholder="e.g. Sharma General Store"
+                    className={inputClass}
+                  />
+
+                  <label className="mt-3 block text-[13px] font-medium text-ink/70">
+                    Shop Address
+                  </label>
+                  <textarea
+                    required
+                    value={shopAddress}
+                    onChange={(e) => setShopAddress(e.target.value)}
+                    rows={2}
+                    placeholder="Full shop address"
+                    className={inputClass + " resize-none"}
+                  />
+
+                  <AnimatePresence>
+                    {detailsError && (
+                      <motion.p
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-2.5 text-[13px] text-red-600"
+                      >
+                        {detailsError}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+
+                  <SubmitButton onClick={handleProceedToPay} className="mt-6">
                     Proceed to Pay {formatPaise(summary.pendingAmount)}
                   </SubmitButton>
                 </motion.div>
