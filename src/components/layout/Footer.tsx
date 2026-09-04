@@ -12,6 +12,13 @@ const quickLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
+const legalLinks = [
+  { label: "Privacy Policy", href: "/privacy-policy" },
+  { label: "Terms of Use", href: "/terms-of-use" },
+  { label: "Refund & Dispute Policy", href: "/refund-policy" },
+  { label: "Grievance Redressal", href: "/grievance-redressal" },
+];
+
 const SOCIAL_ICONS: Record<string, React.ReactNode> = {
   Facebook: (
     <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15" aria-hidden="true">
@@ -57,7 +64,7 @@ export default function Footer() {
       />
 
       <Container>
-        <div className="grid gap-10 pb-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-10 pb-12 md:grid-cols-2 lg:grid-cols-5">
           {/* Brand */}
           <div className="lg:col-span-2">
             <Image
@@ -123,6 +130,25 @@ export default function Footer() {
             </h4>
             <ul className="mt-5 space-y-3">
               {quickLinks.map((l) => (
+                <li key={l.label}>
+                  <Link
+                    href={l.href}
+                    className="footer-nav-link inline-block text-sm text-ink/60 transition-colors hover:text-brand"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <h4 className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink/70">
+              Legal
+            </h4>
+            <ul className="mt-5 space-y-3">
+              {legalLinks.map((l) => (
                 <li key={l.label}>
                   <Link
                     href={l.href}
