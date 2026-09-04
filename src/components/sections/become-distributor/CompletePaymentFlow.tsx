@@ -81,14 +81,20 @@ export default function CompletePaymentFlow() {
   const [summary, setSummary] = useState<ExistingBookingSummary | null>(null);
 
     // --- Distributor details (collected on summary step) ---
+    const [panCard, setPanCard] = useState("");
     const [aadhaarAddress, setAadhaarAddress] = useState("");
     const [shopName, setShopName] = useState("");
     const [shopAddress, setShopAddress] = useState("");
     const [detailsError, setDetailsError] = useState("");
   
     function handleProceedToPay() {
-      if (!aadhaarAddress.trim() || !shopName.trim() || !shopAddress.trim()) {
+      if (!panCard.trim() || !aadhaarAddress.trim() || !shopName.trim() || !shopAddress.trim()) {
         setDetailsError("Please fill in all fields to continue.");
+        return;
+      }
+      const PAN_REGEX = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+      if (!PAN_REGEX.test(panCard.trim())) {
+        setDetailsError("Please enter a valid PAN card number (e.g. ABCDE1234F).");
         return;
       }
       setDetailsError("");
@@ -151,6 +157,7 @@ export default function CompletePaymentFlow() {
     setUtrError("");
     try {
       await distributorApi.submitFinalUtr(booking.bookingId, utrInput, {
+        panCard,
         aadhaarAddress,
         shopName,
         shopAddress,
@@ -377,6 +384,17 @@ export default function CompletePaymentFlow() {
                       Distributor Details
                     </p>
                   </div>
+
+                  <label className="mt-3 block text-[13px] font-medium text-ink/70">
+                    PAN Card Number
+                  </label>
+                  <input
+                    required
+                    value={panCard}
+                    onChange={(e) => setPanCard(e.target.value.toUpperCase().slice(0, 10))}
+                    placeholder="e.g. ABCDE1234F"
+                    className={inputClass + " font-mono tracking-wide uppercase"}
+                  />
 
                   <label className="mt-3 block text-[13px] font-medium text-ink/70">
                     Aadhaar Address
