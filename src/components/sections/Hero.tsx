@@ -79,7 +79,9 @@ export default function Hero() {
               <ArrowRight className="h-4 w-4" />
             </Link>
             <a
-              href="#download"
+              href="https://play.google.com/store/apps/details?id=in.cashlo.merchant"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-[14px] border border-brand px-7 py-3.5 text-[15px] font-semibold text-brand transition-colors hover:bg-brand/5"
             >
               <Download className="h-4 w-4" />

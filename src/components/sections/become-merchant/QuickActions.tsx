@@ -79,7 +79,9 @@ export default function QuickActions({
                 </div>
               </div>
               <a
-                href="https://play.google.com/store"
+                href="https://play.google.com/store/apps/details?id=in.cashlo.merchant"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#0B1020] text-[15px] font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3F5EF7] focus-visible:ring-offset-2"
               >
                 <Download className="h-4 w-4" aria-hidden />

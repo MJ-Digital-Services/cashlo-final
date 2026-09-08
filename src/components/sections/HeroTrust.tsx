@@ -59,7 +59,7 @@ export default function HeroTrust() {
                   Get Started <span className="arr">→</span>
                 </Link>
                 <Link
-                  href="https://play.google.com/store/apps/details?id=com.cashlo.app"
+                  href="https://play.google.com/store/apps/details?id=in.cashlo.merchant"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="btn btn-ghost btn-lg magnetic"

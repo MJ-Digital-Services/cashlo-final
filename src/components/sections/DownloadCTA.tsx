@@ -45,12 +45,14 @@ export default function DownloadCTA() {
       {/* Buttons */}
       <Container>
         <div className="mt-10 flex flex-wrap justify-center gap-4">
-          <Link
-            href="/download"
+          <a
+            href="https://play.google.com/store/apps/details?id=in.cashlo.merchant"
+            target="_blank"
+            rel="noopener noreferrer"
             className="rounded-full bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-transform hover:scale-[1.03]"
           >
             Download App
-          </Link>
+          </a>
           <Link
             href="/become-merchant"
             className="rounded-full border border-brand/30 px-7 py-3.5 text-base font-semibold text-brand transition-colors hover:bg-brand/5"

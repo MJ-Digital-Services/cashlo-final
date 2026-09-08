@@ -95,6 +95,25 @@ export default function Footer() {
               <FooterAssociations />
             </div>
 
+            <a
+              href="https://play.google.com/store/apps/details?id=in.cashlo.merchant"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-2.5 text-ink/80 transition-all duration-200 hover:border-brand hover:bg-brand/10 hover:-translate-y-0.5"
+            >
+              <Image
+                src="/icons/playstore.svg"
+                alt=""
+                width={18}
+                height={18}
+                className="h-[18px] w-[18px]"
+              />
+              <span className="text-xs leading-tight">
+                <span className="block text-[10px] text-ink/50">GET IT ON</span>
+                <span className="block font-semibold text-ink">Google Play</span>
+              </span>
+            </a>
+
             <div className="mt-6 flex gap-2.5">
               {social.map((s) =>
                 s.href ? (
