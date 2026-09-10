@@ -133,7 +133,13 @@ export const distributorApi = {
   submitFinalUtr: (
     bookingId: string,
     utr: string,
-    distributorDetails: { panCard: string; aadhaarAddress: string; shopName: string; shopAddress: string }
+    distributorDetails: {
+      panCard: string;
+      aadhaarAddress: string;
+      shopName: string;
+      shopAddress: string;
+      referralCode?: string;
+    }
   ) =>
     post<{ bookingId: string; status: string }>(
       "/distributor/existing-booking/submit-final-utr",

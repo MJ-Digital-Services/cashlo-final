@@ -85,6 +85,7 @@ export default function CompletePaymentFlow() {
     const [aadhaarAddress, setAadhaarAddress] = useState("");
     const [shopName, setShopName] = useState("");
     const [shopAddress, setShopAddress] = useState("");
+    const [referralCode, setReferralCode] = useState("");
     const [detailsError, setDetailsError] = useState("");
   
     function handleProceedToPay() {
@@ -161,6 +162,7 @@ export default function CompletePaymentFlow() {
         aadhaarAddress,
         shopName,
         shopAddress,
+        referralCode,
       });
       setStep("done");
     } catch (err) {
@@ -419,7 +421,7 @@ export default function CompletePaymentFlow() {
                     className={inputClass}
                   />
 
-                  <label className="mt-3 block text-[13px] font-medium text-ink/70">
+<label className="mt-3 block text-[13px] font-medium text-ink/70">
                     Shop Address
                   </label>
                   <textarea
@@ -429,6 +431,16 @@ export default function CompletePaymentFlow() {
                     rows={2}
                     placeholder="Full shop address"
                     className={inputClass + " resize-none"}
+                  />
+
+                  <label className="mt-3 block text-[13px] font-medium text-ink/70">
+                    Referral Code <span className="text-ink/35 font-normal">(optional)</span>
+                  </label>
+                  <input
+                    value={referralCode}
+                    onChange={(e) => setReferralCode(e.target.value)}
+                    placeholder="If someone referred you"
+                    className={inputClass}
                   />
 
                   <AnimatePresence>
