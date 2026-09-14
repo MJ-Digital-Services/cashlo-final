@@ -1033,7 +1033,12 @@ export default function ReserveCheckout() {
                           <input
                             required
                             value={form.name}
-                            onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+                            onChange={(e) =>
+                              setForm((f) => ({
+                                ...f,
+                                name: e.target.value.replace(/[^A-Za-z\s.'-]/g, ""),
+                              }))
+                            }
                             className={inputClass}
                             placeholder="Your full name"
                           />
