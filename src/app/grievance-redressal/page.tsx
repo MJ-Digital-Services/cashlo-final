@@ -9,10 +9,10 @@ export const metadata: Metadata = {
 
 const EFFECTIVE_DATE = "4 September 2026";
 
-// TODO: replace placeholders with the company's actual monitored contact
-// details before this page goes live.
-const GRIEVANCE_EMAIL = "[INSERT OFFICIAL GRIEVANCE EMAIL]";
-const GRIEVANCE_PHONE = "[INSERT OFFICIAL SUPPORT/GRIEVANCE NUMBER]";
+// TODO: replace placeholder with the company's actual grievance officer
+// name/designation before this page goes live.
+const GRIEVANCE_EMAIL = "grievance@cashlo.app";
+const GRIEVANCE_PHONE = "+91 74282 94451";
 const GRIEVANCE_OFFICER = "[INSERT NAME/DESIGNATION BEFORE PUBLICATION]";
 
 export default function GrievanceRedressalPage() {
@@ -86,11 +86,8 @@ export default function GrievanceRedressalPage() {
               </p>
             </div>
             <p className="mt-4 text-xs italic text-ink/50">
-              The above placeholders should be replaced with the
-              company&apos;s actual monitored email address, phone number and
-              designated officer before publication. Do not publish a
-              personal email/number unless the company intends to monitor it
-              for formal grievances.
+              The designated grievance officer&apos;s name/designation should
+              be added before publication.
             </p>
 
             <h2>3.4 Acknowledgement &amp; Resolution</h2>
