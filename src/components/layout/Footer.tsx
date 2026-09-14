@@ -195,7 +195,7 @@ export default function Footer() {
 
         <div className="border-t border-border py-6">
           <p className="text-xs leading-relaxed text-ink/45">
-            Copyright © {new Date().getFullYear()} Cashlo. All Rights Reserved.
+            Copyright © {new Date().getFullYear()} MJ Digital Services. All rights reserved.
             Transaction availability, limits and eligibility are subject to
             banking partner policies and applicable regulations.
           </p>
