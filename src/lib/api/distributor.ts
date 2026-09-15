@@ -66,6 +66,12 @@ export type ExistingBookingSummary = {
   pendingAmount: number;
 };
 
+export type AadhaarUploadResult = {
+  bookingId: string;
+  side: "front" | "back";
+  url: string;
+};
+
 class ApiError extends Error {
   status: number;
   constructor(message: string, status: number) {
@@ -79,6 +85,21 @@ async function post<T>(path: string, body: unknown): Promise<T> {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(body),
+  });
+
+  const json = await res.json().catch(() => null);
+
+  if (!res.ok || !json?.success) {
+    throw new ApiError(json?.message || "Something went wrong. Please try again.", res.status);
+  }
+
+  return json.data as T;
+}
+
+async function postFormData<T>(path: string, formData: FormData): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`, {
+    method: "POST",
+    body: formData,
   });
 
   const json = await res.json().catch(() => null);
@@ -129,6 +150,17 @@ export const distributorApi = {
 
   verifyExistingBookingOtp: (bookingId: string, otp: string) =>
     post<ExistingBookingSummary>("/distributor/existing-booking/verify-otp", { bookingId, otp }),
+
+  uploadAadhaarImage: (bookingId: string, side: "front" | "back", file: File) => {
+    const formData = new FormData();
+    formData.append("bookingId", bookingId);
+    formData.append("side", side);
+    formData.append("image", file);
+    return postFormData<AadhaarUploadResult>(
+      "/distributor/existing-booking/upload-aadhaar",
+      formData
+    );
+  },
 
   submitFinalUtr: (
     bookingId: string,

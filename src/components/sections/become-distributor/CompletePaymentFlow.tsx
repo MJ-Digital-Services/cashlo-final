@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowLeft, Search, Lock, ShieldCheck, User, Wallet, QrCode, PartyPopper } from "lucide-react";
+import { ArrowLeft, Search, Lock, ShieldCheck, User, Wallet, QrCode, PartyPopper, Upload, X } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import {
   distributorApi,
@@ -30,6 +30,9 @@ const stepMotion = {
   exit: { opacity: 0, y: -6 },
   transition: { duration: 0.32, ease: [0.16, 1, 0.3, 1] as const },
 };
+
+// Must match the backend's uploadImage multer limit (src/middlewares/upload.js)
+const MAX_AADHAAR_IMAGE_BYTES = 5 * 1024 * 1024;
 
 function formatPaise(paise: number) {
   return `₹${(paise / 100).toLocaleString("en-IN")}`;
@@ -87,7 +90,39 @@ export default function CompletePaymentFlow() {
     const [shopAddress, setShopAddress] = useState("");
     const [referralCode, setReferralCode] = useState("");
     const [detailsError, setDetailsError] = useState("");
-  
+
+    // --- Aadhaar front/back upload (collected on summary step) ---
+    const [aadhaarFrontUrl, setAadhaarFrontUrl] = useState("");
+    const [aadhaarBackUrl, setAadhaarBackUrl] = useState("");
+    const [aadhaarFrontUploading, setAadhaarFrontUploading] = useState(false);
+    const [aadhaarBackUploading, setAadhaarBackUploading] = useState(false);
+    const [aadhaarError, setAadhaarError] = useState("");
+    const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+
+    async function handleAadhaarUpload(side: "front" | "back", file: File | null) {
+      if (!file || !booking) return;
+      setAadhaarError("");
+      if (file.size > MAX_AADHAAR_IMAGE_BYTES) {
+        setAadhaarError(
+          `Aadhaar ${side} image is too large (max ${MAX_AADHAAR_IMAGE_BYTES / (1024 * 1024)}MB). Please choose a smaller file.`
+        );
+        return;
+      }
+      const setUploading = side === "front" ? setAadhaarFrontUploading : setAadhaarBackUploading;
+      const setUrl = side === "front" ? setAadhaarFrontUrl : setAadhaarBackUrl;
+      setUploading(true);
+      try {
+        const result = await distributorApi.uploadAadhaarImage(booking.bookingId, side, file);
+        setUrl(result.url);
+      } catch (err) {
+        setAadhaarError(
+          err instanceof ApiError ? err.message : `Failed to upload Aadhaar ${side} image.`
+        );
+      } finally {
+        setUploading(false);
+      }
+    }
+
     function handleProceedToPay() {
       if (!panCard.trim() || !aadhaarAddress.trim() || !shopName.trim() || !shopAddress.trim()) {
         setDetailsError("Please fill in all fields to continue.");
@@ -96,6 +131,10 @@ export default function CompletePaymentFlow() {
       const PAN_REGEX = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
       if (!PAN_REGEX.test(panCard.trim())) {
         setDetailsError("Please enter a valid PAN card number (e.g. ABCDE1234F).");
+        return;
+      }
+      if (!aadhaarFrontUrl || !aadhaarBackUrl) {
+        setDetailsError("Please upload both the front and back images of your Aadhaar card.");
         return;
       }
       setDetailsError("");
@@ -434,6 +473,77 @@ export default function CompletePaymentFlow() {
                   />
 
                   <label className="mt-3 block text-[13px] font-medium text-ink/70">
+                    Aadhaar Card Images
+                  </label>
+                  <div className="mt-1.5 grid grid-cols-2 gap-3">
+                    {(["front", "back"] as const).map((side) => {
+                      const url = side === "front" ? aadhaarFrontUrl : aadhaarBackUrl;
+                      const uploading = side === "front" ? aadhaarFrontUploading : aadhaarBackUploading;
+                      return (
+                        <div key={side}>
+                          <input
+                            id={`aadhaar-${side}`}
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={(e) => handleAadhaarUpload(side, e.target.files?.[0] ?? null)}
+                          />
+                          {url ? (
+                            <button
+                              type="button"
+                              onClick={() => setPreviewImageUrl(url)}
+                              className="group relative block aspect-[16/10] w-full overflow-hidden rounded-lg border border-border"
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={url}
+                                alt={`Aadhaar ${side}`}
+                                className="h-full w-full object-cover transition-opacity group-hover:opacity-80"
+                              />
+                              <label
+                                htmlFor={`aadhaar-${side}`}
+                                onClick={(e) => e.stopPropagation()}
+                                className="absolute bottom-1.5 right-1.5 rounded-md bg-black/60 px-2 py-1 text-[10.5px] font-medium text-white backdrop-blur-sm hover:bg-black/75"
+                              >
+                                Replace
+                              </label>
+                            </button>
+                          ) : (
+                            <label
+                              htmlFor={`aadhaar-${side}`}
+                              className="flex aspect-[16/10] w-full cursor-pointer flex-col items-center justify-center gap-1.5 rounded-lg border border-dashed border-border bg-surface/60 text-ink/45 transition-colors hover:border-brand/40 hover:text-ink/65"
+                            >
+                              {uploading ? (
+                                <span className="text-[12px]">Uploading…</span>
+                              ) : (
+                                <>
+                                  <Upload size={16} strokeWidth={2} />
+                                  <span className="text-[12px] font-medium capitalize">
+                                    {side} side
+                                  </span>
+                                </>
+                              )}
+                            </label>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <AnimatePresence>
+                    {aadhaarError && (
+                      <motion.p
+                        initial={{ opacity: 0, height: 0 }}
+                        animate={{ opacity: 1, height: "auto" }}
+                        exit={{ opacity: 0, height: 0 }}
+                        className="mt-2.5 text-[13px] text-red-600"
+                      >
+                        {aadhaarError}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+
+                  <label className="mt-3 block text-[13px] font-medium text-ink/70">
                     Referral Code <span className="text-ink/35 font-normal">(optional)</span>
                   </label>
                   <input
@@ -569,6 +679,41 @@ export default function CompletePaymentFlow() {
           </a>
         </p>
       </footer>
+
+      <AnimatePresence>
+        {previewImageUrl && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
+            onClick={() => setPreviewImageUrl(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="relative max-h-[85vh] max-w-3xl"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                onClick={() => setPreviewImageUrl(null)}
+                className="absolute -top-10 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+                aria-label="Close preview"
+              >
+                <X size={18} />
+              </button>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewImageUrl}
+                alt="Aadhaar preview"
+                className="max-h-[85vh] max-w-full rounded-lg object-contain shadow-2xl"
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
