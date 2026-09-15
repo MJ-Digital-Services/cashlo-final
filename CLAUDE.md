@@ -35,6 +35,16 @@ reservation flow. The actual reserve → pay → activate flow is under
   with the final submit; "Proceed to Pay" is blocked until both images are
   uploaded. Client-side rejects files over 5MB (`MAX_AADHAAR_IMAGE_BYTES`
   in `CompletePaymentFlow.tsx`) to match the backend's multer limit.
+  In-progress state (step, booking, summary, form fields, uploaded image
+  URLs) is cached in `sessionStorage` under
+  `cashlo_complete_payment_progress` — same hydrate-on-mount /
+  save-on-change / clear-on-completion pattern as `ReserveCheckout`'s
+  `cashlo_reserve_progress` above, so a refresh mid-flow resumes instead of
+  dropping back to the pincode/OTP screen. The OTP input itself is never
+  cached, and the `done` step is excluded from restoration (it's a
+  one-time confirmation, not a resumable state). If you add new form
+  fields to this flow, add them to both the hydrate and save effects or
+  they'll silently not survive a refresh.
 - `src/app/become-distributor/pending` / `/thanks` — status/receipt pages.
 - `src/lib/api/distributor.ts` — `distributorApi`, calls to
   `/distributor/check-pincode`, `/send-otp`, `/verify-otp`,

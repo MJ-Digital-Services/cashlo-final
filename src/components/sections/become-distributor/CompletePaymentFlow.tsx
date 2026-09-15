@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type FormEvent } from "react";
+import { useState, useEffect, useRef, useCallback, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
@@ -33,6 +33,10 @@ const stepMotion = {
 
 // Must match the backend's uploadImage multer limit (src/middlewares/upload.js)
 const MAX_AADHAAR_IMAGE_BYTES = 5 * 1024 * 1024;
+
+// Mirrors ReserveCheckout's cashlo_reserve_progress pattern (see that file)
+// so a refresh mid-flow resumes instead of dropping back to square one.
+const STORAGE_KEY = "cashlo_complete_payment_progress";
 
 function formatPaise(paise: number) {
   return `₹${(paise / 100).toLocaleString("en-IN")}`;
@@ -203,6 +207,7 @@ export default function CompletePaymentFlow() {
         shopAddress,
         referralCode,
       });
+      clearProgress();
       setStep("done");
     } catch (err) {
       setUtrError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
@@ -211,7 +216,87 @@ export default function CompletePaymentFlow() {
     }
   }
 
-  
+  /* ---------------- persistence & resume-on-refresh ---------------- */
+
+  const hydratedRef = useRef(false);
+
+  useEffect(() => {
+    try {
+      const raw = sessionStorage.getItem(STORAGE_KEY);
+      if (raw) {
+        const s = JSON.parse(raw) as {
+          step?: Step;
+          booking?: ExistingBookingLookup | null;
+          summary?: ExistingBookingSummary | null;
+          panCard?: string;
+          aadhaarAddress?: string;
+          shopName?: string;
+          shopAddress?: string;
+          referralCode?: string;
+          aadhaarFrontUrl?: string;
+          aadhaarBackUrl?: string;
+        };
+        if (s.booking) setBooking(s.booking);
+        if (s.summary) setSummary(s.summary);
+        if (s.panCard) setPanCard(s.panCard);
+        if (s.aadhaarAddress) setAadhaarAddress(s.aadhaarAddress);
+        if (s.shopName) setShopName(s.shopName);
+        if (s.shopAddress) setShopAddress(s.shopAddress);
+        if (s.referralCode) setReferralCode(s.referralCode);
+        if (s.aadhaarFrontUrl) setAadhaarFrontUrl(s.aadhaarFrontUrl);
+        if (s.aadhaarBackUrl) setAadhaarBackUrl(s.aadhaarBackUrl);
+        // "done" is a one-time confirmation screen, not a resumable state —
+        // land back on summary/utr instead so nothing looks half-submitted.
+        if (s.step && s.step !== "done") setStep(s.step);
+      }
+    } catch {
+      /* corrupted state — start fresh */
+    }
+    hydratedRef.current = true;
+  }, []);
+
+  useEffect(() => {
+    if (!hydratedRef.current || step === "done") return;
+    try {
+      sessionStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          step,
+          booking,
+          summary,
+          panCard,
+          aadhaarAddress,
+          shopName,
+          shopAddress,
+          referralCode,
+          aadhaarFrontUrl,
+          aadhaarBackUrl,
+        })
+      );
+    } catch {
+      /* storage unavailable — flow still works, just won't survive refresh */
+    }
+  }, [
+    step,
+    booking,
+    summary,
+    panCard,
+    aadhaarAddress,
+    shopName,
+    shopAddress,
+    referralCode,
+    aadhaarFrontUrl,
+    aadhaarBackUrl,
+  ]);
+
+  const clearProgress = useCallback(() => {
+    try {
+      sessionStorage.removeItem(STORAGE_KEY);
+    } catch {
+      /* noop */
+    }
+  }, []);
+
 
   return (
     <div ref={rootRef} className="flex min-h-screen flex-col bg-surface">
