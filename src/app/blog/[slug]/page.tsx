@@ -1,8 +1,8 @@
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Container from "@/components/ui/Container";
 import BlogPostContent from "@/components/blog/BlogPostContent";
 import BlogFAQs from "@/components/blog/BlogFAQs";
-import { getBlogBySlug, getBlogs } from "@/lib/blogApi";
+import { getBlogBySlug, getBlogs, getRedirectTarget } from "@/lib/blogApi";
 import Link from "next/link";
 import { User, Calendar, Clock, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
@@ -67,6 +67,8 @@ export default async function BlogDetailPage({
   try {
     blog = await getBlogBySlug(slug);
   } catch {
+    const target = await getRedirectTarget(slug).catch(() => null);
+    if (target) permanentRedirect(target);
     notFound();
   }
 

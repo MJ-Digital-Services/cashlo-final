@@ -157,6 +157,19 @@ export async function getBlogBySlug(slug: string): Promise<Blog> {
   return mapPost(data.docs[0]);
 }
 
+// Only called when getBlogBySlug already failed — cashlo-cms records an
+// old->new slug mapping whenever a published post's slug changes (see
+// cashlo-cms's Posts collection afterChange hook). Checking here, instead
+// of on every request via middleware, keeps the common case (slug that
+// was never renamed) at zero extra cost.
+export async function getRedirectTarget(slug: string): Promise<string | null> {
+  const query = new URLSearchParams({ limit: "1", depth: "0", "where[from][equals]": `/blog/${slug}` });
+  const res = await fetch(`${CMS_URL}/api/redirects?${query.toString()}`, { next: { revalidate: 60 } });
+  if (!res.ok) return null;
+  const data: PayloadListResponse<{ to?: { url?: string } }> = await res.json();
+  return data.docs[0]?.to?.url ?? null;
+}
+
 export async function getCategories(): Promise<BlogCategory[]> {
   const res = await fetch(`${CMS_URL}/api/categories?limit=100&sort=name`, { next: { revalidate: 300 } });
   if (!res.ok) throw new Error("Failed to fetch categories");
