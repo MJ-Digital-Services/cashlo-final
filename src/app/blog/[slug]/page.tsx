@@ -27,13 +27,14 @@ export async function generateMetadata({
     const blog = await getBlogBySlug(slug);
     const title = blog.metaTitle || `${blog.title} | Cashlo`;
     const description = blog.metaDescription || blog.excerpt;
-    const canonical = `https://www.cashlo.app/blog/${slug}`;
+    const canonical = blog.canonicalUrlOverride || `https://www.cashlo.app/blog/${slug}`;
     const ogImage = blog.coverImage || "https://www.cashlo.app/og-image.png";
 
     return {
       title,
       description,
       alternates: { canonical },
+      robots: blog.robots || "index,follow",
       openGraph: {
         title,
         description,
