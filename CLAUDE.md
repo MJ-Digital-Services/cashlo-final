@@ -51,8 +51,33 @@ reservation flow. The actual reserve → pay → activate flow is under
   `/create-order`, `/verify-payment`, `/submit-utr`,
   `/existing-booking/upload-aadhaar` (multipart `FormData`, via a separate
   `postFormData` helper — the generic `post()` helper is JSON-only).
-- Other pages (`services/*`, `blog`, `calculators`, `faq`, legal pages) are
-  unrelated marketing/content pages.
+- Other pages (`services/*`, `calculators`, `faq`, legal pages) are
+  unrelated marketing/content pages. `blog` is NOT unrelated — see below.
+
+## Blog (`src/app/blog/*`, `src/lib/blogApi.ts`)
+
+Blog content comes from **cashlo-cms** (a separate Payload CMS repo,
+`cms.cashlo.app`), not from `cashlo-backend`. `blogApi.ts` fetches its
+REST API directly (`NEXT_PUBLIC_CMS_URL` env var) and maps Payload's
+response shape onto this repo's own `Blog`/`BlogCategory` types. See
+`cashlo-cms/CLAUDE.md` for the CMS side (why it's a separate deploy/DB/
+auth, scheduled publishing, etc.) — that file is the source of truth for
+anything blog-schema-related; don't duplicate it here.
+
+- `content` and `faqs[].answer` arrive as **pre-rendered HTML** (Payload's
+  `contentHTML`/`answerHTML` virtual fields) — `blogApi.ts` must never try
+  to parse Lexical JSON itself or depend on `@payloadcms/richtext-lexical`.
+- `robots` and `canonicalUrlOverride` from the CMS feed directly into
+  `generateMetadata()` in `blog/[slug]/page.tsx` — those aren't decorative
+  fields, they change the actual `<meta>` output.
+- `cashlo-backend`'s old `Blog` model/API still exists but is no longer
+  used by this repo for anything — don't resurrect calls to
+  `/api/v1/blogs` here.
+- Local dev: `.claude/launch.json` has a `cashlo-final` entry (port 3902)
+  for previewing this repo standalone; `NEXT_PUBLIC_CMS_URL` in
+  `.env.local` points at production `cms.cashlo.app` by default (there's
+  no local CMS running day-to-day) — override it only if you're also
+  running `cashlo-cms` locally.
 
 ## Smooth scroll (Lenis + GSAP ScrollTrigger)
 
