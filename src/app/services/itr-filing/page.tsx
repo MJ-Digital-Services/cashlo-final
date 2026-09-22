@@ -6,7 +6,7 @@ import ItrDeadlines from "@/components/sections/itr-filing/ItrDeadlines";
 import ItrFAQs from "@/components/sections/itr-filing/ItrFAQs";
 import { itrFaqs } from "@/lib/data/faqs/itr-filing";
 import GstAccounting from "@/components/sections/GstAccounting";
-import { breadcrumbSchema, serviceSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME } from "@/lib/schema";
+import { breadcrumbSchema, serviceSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "@/lib/schema";
 import type { Metadata } from "next";
 
 const title = "ITR Filing | Cashlo";
@@ -18,8 +18,8 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: url },
   robots: "index,follow",
-  openGraph: { title, description, url, siteName: SITE_NAME, type: "website" },
-  twitter: { card: "summary_large_image", title, description },
+  openGraph: { title, description, url, siteName: SITE_NAME, type: "website", images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: title }] },
+  twitter: { card: "summary_large_image", title, description, images: [SITE_OG_IMAGE] },
 };
 
 export default function ItrFilingPage() {

@@ -2,7 +2,7 @@ import FaqHero from "@/components/sections/faq/FaqHero";
 import FaqAccordion from "@/components/sections/faq/FaqAccordion";
 import { faqGroups } from "@/lib/data/faqs/general";
 import FaqCTA from "@/components/sections/faq/FaqCTA";
-import { breadcrumbSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME } from "@/lib/schema";
+import { breadcrumbSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "@/lib/schema";
 import type { Metadata } from "next";
 
 const title = "FAQ | Cashlo";
@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: url },
   robots: "index,follow",
-  openGraph: { title, description, url, siteName: SITE_NAME, type: "website" },
-  twitter: { card: "summary_large_image", title, description },
+  openGraph: { title, description, url, siteName: SITE_NAME, type: "website", images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: title }] },
+  twitter: { card: "summary_large_image", title, description, images: [SITE_OG_IMAGE] },
 };
 
 const allFaqs = faqGroups.flatMap((group) => group.items);

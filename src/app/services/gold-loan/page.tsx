@@ -9,7 +9,7 @@ import GoldLoanFAQs from "@/components/sections/gold-loan/GoldLoanFAQs";
 import { goldLoanFaqs } from "@/lib/data/faqs/gold-loan";
 import SupportedBy from "@/components/sections/SupportedBy";
 import GoldLoanCTA from "@/components/sections/gold-loan/GoldLoanCTA";
-import { breadcrumbSchema, serviceSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME } from "@/lib/schema";
+import { breadcrumbSchema, serviceSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "@/lib/schema";
 import type { Metadata } from "next";
 
 const title = "Gold Loan | Cashlo";
@@ -21,8 +21,8 @@ export const metadata: Metadata = {
   description,
   alternates: { canonical: url },
   robots: "index,follow",
-  openGraph: { title, description, url, siteName: SITE_NAME, type: "website" },
-  twitter: { card: "summary_large_image", title, description },
+  openGraph: { title, description, url, siteName: SITE_NAME, type: "website", images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: title }] },
+  twitter: { card: "summary_large_image", title, description, images: [SITE_OG_IMAGE] },
 };
 
 export default function GoldLoanPage() {

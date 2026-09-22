@@ -8,6 +8,10 @@ export const SITE_NAME = "Cashlo";
 // which the blog's Article schema already references but which doesn't
 // exist in public/ - a pre-existing gap, not introduced here).
 export const SITE_LOGO = `${SITE_URL}/cashlo-logo.png`;
+// Dedicated 1200x630 social-preview image (WhatsApp/Facebook/Twitter link
+// cards) - distinct from SITE_LOGO, which is a square logo wrong-shaped for
+// an og:image card.
+export const SITE_OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 export function organizationSchema() {
   return {
