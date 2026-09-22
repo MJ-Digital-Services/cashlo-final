@@ -24,6 +24,20 @@ export interface Blog {
   excerpt: string;
   category: BlogCategory;
   coverImage?: string | null;
+  // Sized/format variants of the same featured image — prefer these over
+  // `coverImage` (the original upload) wherever the display context is
+  // known, so the browser downloads a file close to its actual render size
+  // instead of the full original every time.
+  coverImageCard?: string | null;
+  coverImageCardAvif?: string | null;
+  coverImageThumbnail?: string | null;
+  // Full-width hero banner rendered at the top of the post page itself.
+  coverImageHero?: string | null;
+  coverImageHeroAvif?: string | null;
+  // og:image / Twitter card / Article schema image. Prefers the SEO tab's
+  // manual OG image override, then the featured image's dedicated 1200x630
+  // `og` size, then the original upload.
+  ogImage?: string | null;
   tags: string[];
   readTime?: string | null;
   content?: string;
@@ -37,7 +51,7 @@ export interface Blog {
   isPublished: boolean;
   publishedAt?: string | null;
   createdBy?: { name: string; jobTitle?: string | null; bio?: string | null; linkedinUrl?: string | null; avatarUrl?: string | null };
-  relatedPosts?: { slug: string; title: string; coverImage?: string | null }[];
+  relatedPosts?: { slug: string; title: string; coverImage?: string | null; coverImageThumbnail?: string | null }[];
   updatedAt?: string;
 }
 
@@ -50,6 +64,14 @@ export interface GroupedBlogs {
 
 interface PayloadMedia {
   url?: string;
+  sizes?: {
+    thumbnail?: { url?: string };
+    card?: { url?: string };
+    cardAvif?: { url?: string };
+    og?: { url?: string };
+    hero?: { url?: string };
+    heroAvif?: { url?: string };
+  };
 }
 
 interface PayloadCategory {
@@ -70,7 +92,7 @@ interface PayloadPost {
   contentHTML?: string;
   faqsTitle?: string;
   faqs?: { question: string; answerHTML?: string }[];
-  meta?: { title?: string; description?: string }; // from @payloadcms/plugin-seo
+  meta?: { title?: string; description?: string; image?: PayloadMedia | null }; // from @payloadcms/plugin-seo
   canonicalUrlOverride?: string | null;
   robots?: string;
   robotsNoarchive?: boolean;
@@ -105,6 +127,12 @@ const mapPost = (doc: PayloadPost): Blog => {
       ? { _id: doc.category.id, name: doc.category.name, slug: doc.category.slug }
       : { _id: "", name: "", slug: "" },
     coverImage: doc.featuredImage?.url ?? null,
+    coverImageCard: doc.featuredImage?.sizes?.card?.url ?? doc.featuredImage?.url ?? null,
+    coverImageCardAvif: doc.featuredImage?.sizes?.cardAvif?.url ?? null,
+    coverImageThumbnail: doc.featuredImage?.sizes?.thumbnail?.url ?? doc.featuredImage?.url ?? null,
+    coverImageHero: doc.featuredImage?.sizes?.hero?.url ?? doc.featuredImage?.url ?? null,
+    coverImageHeroAvif: doc.featuredImage?.sizes?.heroAvif?.url ?? null,
+    ogImage: doc.meta?.image?.url ?? doc.featuredImage?.sizes?.og?.url ?? doc.featuredImage?.url ?? null,
     tags: (doc.tags ?? []).map((t) => t.tag),
     readTime: doc.readingTimeMinutes ? `${doc.readingTimeMinutes} min read` : null,
     content,
@@ -128,6 +156,7 @@ const mapPost = (doc: PayloadPost): Blog => {
       slug: p.slug,
       title: p.title,
       coverImage: p.featuredImage?.url ?? null,
+      coverImageThumbnail: p.featuredImage?.sizes?.thumbnail?.url ?? p.featuredImage?.url ?? null,
     })),
     updatedAt: doc.updatedAt,
   };

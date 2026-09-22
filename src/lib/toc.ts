@@ -1,3 +1,5 @@
+import { decodeEntities } from "./html";
+
 export interface TocItem {
   id: string;
   text: string;
@@ -12,19 +14,6 @@ const slugify = (value: string) =>
     .replace(/^-+|-+$/g, "");
 
 const HEADING_RE = /<h([1-4])([^>]*)>([\s\S]*?)<\/h\1>/gi;
-
-const HTML_ENTITIES: Record<string, string> = {
-  "&amp;": "&",
-  "&lt;": "<",
-  "&gt;": ">",
-  "&quot;": '"',
-  "&#39;": "'",
-  "&apos;": "'",
-  "&nbsp;": " ",
-};
-
-const decodeEntities = (text: string) =>
-  text.replace(/&(amp|lt|gt|quot|#39|apos|nbsp);/g, (m) => HTML_ENTITIES[m] ?? m);
 
 // Injects a stable `id` onto every h1-h4 in the (already-sanitized) content
 // HTML and returns the matching flat outline — done in one pass so the ids

@@ -5,6 +5,7 @@ import BlogFAQs from "@/components/blog/BlogFAQs";
 import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
 import BlogTOC from "@/components/blog/BlogTOC";
 import { getBlogBySlug, getBlogs, getRedirectTarget } from "@/lib/blogApi";
+import { htmlToPlainText } from "@/lib/html";
 import Link from "next/link";
 import { User, Calendar, Clock, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
 import type { Metadata } from "next";
@@ -30,7 +31,7 @@ export async function generateMetadata({
     const title = blog.metaTitle || `${blog.title} | Cashlo`;
     const description = blog.metaDescription || blog.excerpt;
     const canonical = blog.canonicalUrlOverride || `https://www.cashlo.app/blog/${slug}`;
-    const ogImage = blog.coverImage || "https://www.cashlo.app/og-image.png";
+    const ogImage = blog.ogImage || "https://www.cashlo.app/og-image.png";
 
     return {
       title,
@@ -92,7 +93,7 @@ export default async function BlogDetailPage({
       relatedPosts = recent.blogs
         .filter((p: any) => p.slug !== slug)
         .slice(0, 3)
-        .map((p: any) => ({ slug: p.slug, title: p.title, coverImage: p.coverImage }));
+        .map((p: any) => ({ slug: p.slug, title: p.title, coverImage: p.coverImage, coverImageThumbnail: p.coverImageThumbnail }));
     } catch {}
   }
 
@@ -104,7 +105,7 @@ export default async function BlogDetailPage({
     "@type": "Article",
     headline: blog.title,
     description: blog.excerpt,
-    image: blog.coverImage ?? "https://www.cashlo.app/og-image.png",
+    image: blog.ogImage ?? "https://www.cashlo.app/og-image.png",
     author: {
       "@type": "Person",
       name: blog.createdBy?.name ?? "Cashlo Team",
@@ -131,10 +132,30 @@ export default async function BlogDetailPage({
     ],
   };
 
+  // Google's FAQPage guidance wants plain-text answers, not the rich HTML
+  // we render on the page — a raw <p>/<strong> tag inside JSON-LD text is
+  // technically tolerated but not recommended, so strip it here rather than
+  // reusing the same answer HTML the page body renders.
+  const faqSchema =
+    faqs.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((faq: { question: string; answer: string }) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: { "@type": "Answer", text: htmlToPlainText(faq.answer) },
+          })),
+        }
+      : null;
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(articleSchema) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }} />
+      {faqSchema && (
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      )}
 
       <section className="bg-bg pb-24 pt-28 sm:pt-32">
         <Container className="max-w-[1440px]">
@@ -190,6 +211,15 @@ export default async function BlogDetailPage({
             ))}
           </div>
 
+          {blog.coverImageHero && (
+            <div className="mt-8 aspect-video w-full overflow-hidden rounded-2xl bg-surface">
+              <picture>
+                {blog.coverImageHeroAvif && <source srcSet={blog.coverImageHeroAvif} type="image/avif" />}
+                <img src={blog.coverImageHero} alt={blog.title} className="h-full w-full object-cover" />
+              </picture>
+            </div>
+          )}
+
           <div className="mt-10 grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)_320px] lg:gap-14">
             {blog.toc?.length > 0 ? (
               <aside className="hidden lg:block">
@@ -231,7 +261,11 @@ export default async function BlogDetailPage({
                         >
                           <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-surface">
                             {post.coverImage ? (
-                              <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover" />
+                              <img
+                                src={post.coverImageThumbnail ?? post.coverImage}
+                                alt={post.title}
+                                className="h-full w-full object-cover"
+                              />
                             ) : (
                               <div className="flex h-full w-full items-center justify-center text-[10px] font-semibold text-ink/30">
                                 CASHLO

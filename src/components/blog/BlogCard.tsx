@@ -10,11 +10,14 @@ export default function BlogCard({ blog }: { blog: Blog }) {
     >
       <div className="aspect-[16/10] w-full overflow-hidden bg-surface">
         {blog.coverImage ? (
-          <img
-            src={blog.coverImage}
-            alt={blog.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <picture>
+            {blog.coverImageCardAvif && <source srcSet={blog.coverImageCardAvif} type="image/avif" />}
+            <img
+              src={blog.coverImageCard ?? blog.coverImage}
+              alt={blog.title}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          </picture>
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-ink/30">
             No cover

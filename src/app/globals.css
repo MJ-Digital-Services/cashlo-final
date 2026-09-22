@@ -60,6 +60,18 @@ body {
   opacity: 1;
 }
 
+/* Blog post inline images: cashlo-cms's HTML converter (Posts.ts) floats a
+   Left/Right-aligned image so body text wraps around it, matching classic
+   blog-editor behavior. Without a clearfix, a floated child doesn't
+   contribute to its parent's height, so `.payload-richtext` (the wrapper
+   convertLexicalToHTML always emits) would collapse around it and the next
+   block (e.g. an FAQ section) could overlap the tail end of the float. */
+.payload-richtext::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
 /* ---- Scroll-inversion CTA ---- */
 .invert-stage {
   position: relative;
