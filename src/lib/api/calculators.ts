@@ -60,6 +60,12 @@ export async function getAllCalculatorSlugs() {
   return apiFetch<string[]>(`/calculators/slugs`);
 }
 
+export type CalculatorSitemapEntry = { slug: string; updatedAt: string };
+
+export async function getAllCalculatorsForSitemap() {
+  return apiFetch<CalculatorSitemapEntry[]>(`/calculators/sitemap`);
+}
+
 export async function getFeaturedCalculators() {
   return apiFetch<CalculatorVariantSummary[]>(`/calculators/featured`);
 }

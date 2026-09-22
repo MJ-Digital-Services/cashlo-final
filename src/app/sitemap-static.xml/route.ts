@@ -28,8 +28,14 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: SitemapU
 
 export async function GET(request: Request) {
   const siteUrl = getSiteUrl(request);
+  // These routes have no per-page "last edited" timestamp to draw from (they're
+  // static marketing pages, not CMS/DB-backed content) - stamping the request
+  // time here is just a reasonable "still live/served" signal for crawlers,
+  // not a claim about when the underlying content last changed.
+  const lastModified = new Date().toISOString();
   const entries: SitemapUrlEntry[] = STATIC_ROUTES.map((route) => ({
     url: `${siteUrl}${route.path}`,
+    lastModified,
     changeFrequency: route.changeFrequency,
     priority: route.priority,
   }));

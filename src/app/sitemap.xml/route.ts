@@ -17,6 +17,7 @@ const SUB_SITEMAPS = ["sitemap-static.xml", "sitemap-blog.xml", "sitemap-calcula
 export async function GET(request: Request) {
   const siteUrl = getSiteUrl(request);
   const body = `<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="/sitemap.xsl"?>
 <sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${SUB_SITEMAPS.map((path) => `  <sitemap>\n    <loc>${siteUrl}/${path}</loc>\n  </sitemap>`).join("\n")}
 </sitemapindex>`;
