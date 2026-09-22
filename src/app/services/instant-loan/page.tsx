@@ -4,13 +4,43 @@ import EligibilityCriteria from "@/components/sections/instant-loan/EligibilityC
 import DocumentsRequired from "@/components/sections/instant-loan/DocumentsRequired";
 import HowItWorks from "@/components/sections/instant-loan/HowItWorks";
 import EmiCalculatorsPromo from "@/components/sections/instant-loan/EmiCalculatorsPromo";
-import InstantLoanFAQs from "@/components/sections/instant-loan/InstantLoanFAQs";
+import InstantLoanFAQs, { instantLoanFaqs } from "@/components/sections/instant-loan/InstantLoanFAQs";
 import SupportedBy from "@/components/sections/SupportedBy";
 import InstantLoanCTA from "@/components/sections/instant-loan/InstantLoanCTA";
+import { breadcrumbSchema, serviceSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME } from "@/lib/schema";
+import type { Metadata } from "next";
+
+const title = "Instant Loan | Cashlo";
+const description = "Offer instant personal loans through Cashlo — fast approval, transparent EMI calculators, and commission on every successful disbursal.";
+const url = `${SITE_URL}/services/instant-loan`;
+
+export const metadata: Metadata = {
+  title,
+  description,
+  alternates: { canonical: url },
+  robots: "index,follow",
+  openGraph: { title, description, url, siteName: SITE_NAME, type: "website" },
+  twitter: { card: "summary_large_image", title, description },
+};
 
 export default function InstantLoanPage() {
   return (
     <main>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(serviceSchema({ name: "Instant Loan", description, url }))}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(
+          breadcrumbSchema([
+            { name: "Home", url: SITE_URL },
+            { name: "Services", url: `${SITE_URL}/services` },
+            { name: "Instant Loan", url },
+          ]),
+        )}
+      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={jsonLdScript(faqSchema(instantLoanFaqs.map((f) => ({ q: f.q, a: f.a }))))} />
       <InstantLoanHero />
       <WhyChooseInstantLoan />
       <EligibilityCriteria />

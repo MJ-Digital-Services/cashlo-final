@@ -5,7 +5,7 @@ import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Plus, Minus } from "lucide-react";
 
-const faqs = [
+export const instantLoanFaqs = [
   {
     q: "How quickly can a customer get an instant loan?",
     a: "Approval is often same-day once KYC and income details are submitted correctly. Actual disbursal timing depends on the lending partner's verification process.",
@@ -45,7 +45,7 @@ export default function InstantLoanFAQs() {
         </div>
 
         <div className="mx-auto mt-12 max-w-2xl divide-y divide-border rounded-2xl border border-border bg-card">
-          {faqs.map((f, i) => {
+          {instantLoanFaqs.map((f, i) => {
             const isOpen = open === i;
             return (
               <div key={f.q} data-reveal>

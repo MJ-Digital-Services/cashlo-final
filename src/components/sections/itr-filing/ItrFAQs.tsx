@@ -5,7 +5,7 @@ import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Plus, Minus } from "lucide-react";
 
-const faqs = [
+export const itrFaqs = [
   {
     q: "Who needs to file an ITR?",
     a: "Anyone whose total income exceeds the basic exemption limit, or who meets certain other conditions (like foreign travel expenses, high electricity bills, or foreign assets), is required to file an ITR — even if their tax liability is nil.",
@@ -45,7 +45,7 @@ export default function ItrFAQs() {
         </div>
 
         <div className="mx-auto mt-12 max-w-5xl divide-y divide-border rounded-2xl border border-border bg-card">
-          {faqs.map((f, i) => {
+          {itrFaqs.map((f, i) => {
             const isOpen = open === i;
             return (
               <div key={f.q} data-reveal>

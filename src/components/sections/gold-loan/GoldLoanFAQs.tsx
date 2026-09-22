@@ -5,7 +5,7 @@ import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Plus, Minus } from "lucide-react";
 
-const faqs = [
+export const goldLoanFaqs = [
   {
     q: "What is a Gold Loan?",
     a: "A loan taken against gold or jewellery is known as a gold loan. The customer hands over their gold in return for a specific amount, offering a quick and straightforward way to obtain funds with minimal documentation and flexible tenure.",
@@ -49,7 +49,7 @@ export default function GoldLoanFAQs() {
         </div>
 
         <div className="mx-auto mt-12 max-w-5xl divide-y divide-border rounded-2xl border border-border bg-card">
-          {faqs.map((f, i) => {
+          {goldLoanFaqs.map((f, i) => {
             const isOpen = open === i;
             return (
               <div key={f.q} data-reveal>

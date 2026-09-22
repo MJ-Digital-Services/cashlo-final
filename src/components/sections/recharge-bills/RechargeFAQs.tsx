@@ -5,7 +5,7 @@ import Container from "@/components/ui/Container";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
 import { Plus, Minus } from "lucide-react";
 
-const faqs = [
+export const rechargeFaqs = [
   {
     q: "How do I offer recharge and bill payment services to customers?",
     a: "Log in to the Cashlo merchant app, select the recharge or bill payment option, enter your customer's details, collect cash, and confirm the payment. You'll both get an instant receipt.",
@@ -45,7 +45,7 @@ export default function RechargeFAQs() {
         </div>
 
         <div className="mx-auto mt-12 max-w-5xl divide-y divide-border rounded-2xl border border-border bg-card">
-          {faqs.map((f, i) => {
+          {rechargeFaqs.map((f, i) => {
             const isOpen = open === i;
             return (
               <div key={f.q} data-reveal>

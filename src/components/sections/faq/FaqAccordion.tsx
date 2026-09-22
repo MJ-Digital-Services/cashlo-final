@@ -8,7 +8,7 @@ import { useScrollReveal } from "@/hooks/useScrollReveal";
 type FaqItem = { q: string; a: string };
 type FaqGroup = { category: string; items: FaqItem[] };
 
-const faqGroups: FaqGroup[] = [
+export const faqGroups: FaqGroup[] = [
   {
     category: "General",
     items: [
