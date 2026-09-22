@@ -87,6 +87,7 @@ interface PayloadPost {
   excerpt: string;
   category?: PayloadCategory | null;
   featuredImage?: PayloadMedia | null;
+  coverImage?: PayloadMedia | null;
   tags?: { tag: string }[];
   readingTimeMinutes?: number | null;
   contentHTML?: string;
@@ -126,13 +127,32 @@ const mapPost = (doc: PayloadPost): Blog => {
     category: doc.category
       ? { _id: doc.category.id, name: doc.category.name, slug: doc.category.slug }
       : { _id: "", name: "", slug: "" },
+    // Card/thumbnail: listing-card image only — always featuredImage.
     coverImage: doc.featuredImage?.url ?? null,
     coverImageCard: doc.featuredImage?.sizes?.card?.url ?? doc.featuredImage?.url ?? null,
     coverImageCardAvif: doc.featuredImage?.sizes?.cardAvif?.url ?? null,
     coverImageThumbnail: doc.featuredImage?.sizes?.thumbnail?.url ?? doc.featuredImage?.url ?? null,
-    coverImageHero: doc.featuredImage?.sizes?.hero?.url ?? doc.featuredImage?.url ?? null,
-    coverImageHeroAvif: doc.featuredImage?.sizes?.heroAvif?.url ?? null,
-    ogImage: doc.meta?.image?.url ?? doc.featuredImage?.sizes?.og?.url ?? doc.featuredImage?.url ?? null,
+    // Hero banner / OG image: prefer the dedicated `coverImage` field,
+    // falling back to the whole of featuredImage when an editor leaves it
+    // empty (older posts, or anyone who skips it) — picking ONE source doc
+    // first and deriving both the avif and non-avif URLs from it, rather
+    // than falling back per-field, matters here: a cover image smaller than
+    // the 1600x1000 hero target has no `hero`/`heroAvif` size at all
+    // (Payload correctly refuses to upscale it), and falling back to
+    // featuredImage's *avif* while still using coverImage's plain url
+    // produced a <picture> mixing two different underlying images — any
+    // AVIF-capable browser rendered the featured image via the <source>
+    // while the <img> fallback correctly showed the cover image, so it
+    // looked like the cover image change had no effect at all.
+    coverImageHero: (doc.coverImage ?? doc.featuredImage)?.sizes?.hero?.url ?? (doc.coverImage ?? doc.featuredImage)?.url ?? null,
+    coverImageHeroAvif: (doc.coverImage ?? doc.featuredImage)?.sizes?.heroAvif?.url ?? null,
+    ogImage:
+      doc.meta?.image?.url ??
+      doc.coverImage?.sizes?.og?.url ??
+      doc.coverImage?.url ??
+      doc.featuredImage?.sizes?.og?.url ??
+      doc.featuredImage?.url ??
+      null,
     tags: (doc.tags ?? []).map((t) => t.tag),
     readTime: doc.readingTimeMinutes ? `${doc.readingTimeMinutes} min read` : null,
     content,
