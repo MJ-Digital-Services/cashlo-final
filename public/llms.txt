@@ -1,0 +1,39 @@
+# Cashlo
+
+> Cashlo is India's UPI CashPoint network — it helps retailers and local shop owners become UPI CashPoints / distributors, offering cash withdrawal, money transfer, bill payments, and merchant banking services through a simple pincode-based onboarding flow.
+
+## Company
+
+- [About](https://www.cashlo.app/about): Who Cashlo is and what the CashPoint network does.
+- [Contact](https://www.cashlo.app/contact): How to reach Cashlo.
+- [FAQ](https://www.cashlo.app/faq): Common questions about becoming a distributor/merchant and using Cashlo's services.
+
+## Become a Distributor / Merchant
+
+- [Become a Distributor](https://www.cashlo.app/become-distributor): Reserve a pincode and activate as a Cashlo distributor/UPI CashPoint.
+- [Become a Merchant](https://www.cashlo.app/become-merchant): Lead-capture for merchants interested in Cashlo services.
+
+## Services
+
+- [Services](https://www.cashlo.app/services): Overview of Cashlo's service catalogue.
+- [UPI CashPoint](https://www.cashlo.app/upi-cashpoint): Cash withdrawal / UPI-based cash access at local shops.
+- [QuickKhata](https://www.cashlo.app/quickkhata): Digital credit/ledger tracking for shopkeepers, replacing paper bahi-khatas.
+- [Instant Loan](https://www.cashlo.app/services/instant-loan): Instant loan service details.
+- [Gold Loan](https://www.cashlo.app/services/gold-loan): Gold loan service details.
+- [ITR Filing](https://www.cashlo.app/services/itr-filing): Income tax return filing service.
+- [Recharge & Bill Payments](https://www.cashlo.app/services/recharge-bills): Mobile recharge and utility bill payment service.
+
+## Tools
+
+- [Calculators](https://www.cashlo.app/calculators): EMI, SIP, SWP, FD, and RD financial calculators.
+
+## Content
+
+- [Blog](https://www.cashlo.app/blog): Articles on UPI, digital payments, merchant banking, and fintech.
+
+## Policies
+
+- [Privacy Policy](https://www.cashlo.app/privacy-policy)
+- [Terms of Use](https://www.cashlo.app/terms-of-use)
+- [Refund Policy](https://www.cashlo.app/refund-policy)
+- [Grievance Redressal](https://www.cashlo.app/grievance-redressal)
