@@ -72,7 +72,7 @@ export default function Hero() {
           {/* CTA buttons */}
           <div className="mt-9 flex flex-wrap items-center gap-4">
             <Link
-              href="/get-started"
+              href="/contact"
               className="inline-flex items-center gap-2 rounded-[14px] bg-brand px-7 py-3.5 text-[15px] font-semibold text-white shadow-sm transition-colors hover:bg-brand-dark"
             >
               Get Started
