@@ -22,7 +22,7 @@ export default function BlogPostContent({ content }: { content: string }) {
   return (
     <div
       ref={rootRef}
-      className="prose prose-sm max-w-none text-ink/70 prose-headings:text-ink prose-a:text-brand"
+      className="prose prose-sm max-w-none text-ink/70 prose-headings:text-ink prose-headings:scroll-mt-28 prose-a:text-brand"
       dangerouslySetInnerHTML={{ __html: content }}
     />
   );

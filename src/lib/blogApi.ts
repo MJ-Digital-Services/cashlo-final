@@ -7,6 +7,8 @@
 // server-side in cashlo-cms from Lexical JSON) — this repo intentionally
 // never depends on @payloadcms/richtext-lexical or parses Lexical itself.
 
+import { withHeadingIds, type TocItem } from "./toc";
+
 const CMS_URL = process.env.NEXT_PUBLIC_CMS_URL || "http://localhost:3300";
 
 export interface BlogCategory {
@@ -25,6 +27,7 @@ export interface Blog {
   tags: string[];
   readTime?: string | null;
   content?: string;
+  toc?: TocItem[];
   faqs?: { question: string; answer: string }[];
   faqsTitle?: string;
   metaTitle?: string;
@@ -33,7 +36,7 @@ export interface Blog {
   robots?: string;
   isPublished: boolean;
   publishedAt?: string | null;
-  createdBy?: { name: string };
+  createdBy?: { name: string; jobTitle?: string | null; bio?: string | null; linkedinUrl?: string | null; avatarUrl?: string | null };
   relatedPosts?: { slug: string; title: string; coverImage?: string | null }[];
   updatedAt?: string;
 }
@@ -74,6 +77,10 @@ interface PayloadPost {
   _status?: "draft" | "published";
   publishedAt?: string | null;
   authorName?: string;
+  authorJobTitle?: string;
+  authorBio?: string;
+  authorLinkedinUrl?: string;
+  authorAvatarUrl?: string;
   relatedPosts?: Array<{ slug: string; title: string; featuredImage?: PayloadMedia | null }>;
   updatedAt?: string;
 }
@@ -86,34 +93,45 @@ interface PayloadListResponse<T> {
   totalPages: number;
 }
 
-const mapPost = (doc: PayloadPost): Blog => ({
-  _id: doc.id,
-  title: doc.title,
-  slug: doc.slug,
-  excerpt: doc.excerpt,
-  category: doc.category
-    ? { _id: doc.category.id, name: doc.category.name, slug: doc.category.slug }
-    : { _id: "", name: "", slug: "" },
-  coverImage: doc.featuredImage?.url ?? null,
-  tags: (doc.tags ?? []).map((t) => t.tag),
-  readTime: doc.readingTimeMinutes ? `${doc.readingTimeMinutes} min read` : null,
-  content: doc.contentHTML ?? "",
-  faqs: (doc.faqs ?? []).map((f) => ({ question: f.question, answer: f.answerHTML ?? "" })),
-  faqsTitle: doc.faqsTitle,
-  metaTitle: doc.meta?.title,
-  metaDescription: doc.meta?.description,
-  canonicalUrlOverride: doc.canonicalUrlOverride,
-  robots: doc.robotsNoarchive ? `${doc.robots ?? "index,follow"},noarchive` : doc.robots,
-  isPublished: doc._status === "published",
-  publishedAt: doc.publishedAt ?? null,
-  createdBy: { name: doc.authorName ?? "Cashlo Team" },
-  relatedPosts: (doc.relatedPosts ?? []).map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    coverImage: p.featuredImage?.url ?? null,
-  })),
-  updatedAt: doc.updatedAt,
-});
+const mapPost = (doc: PayloadPost): Blog => {
+  const { html: content, toc } = withHeadingIds(doc.contentHTML ?? "");
+
+  return {
+    _id: doc.id,
+    title: doc.title,
+    slug: doc.slug,
+    excerpt: doc.excerpt,
+    category: doc.category
+      ? { _id: doc.category.id, name: doc.category.name, slug: doc.category.slug }
+      : { _id: "", name: "", slug: "" },
+    coverImage: doc.featuredImage?.url ?? null,
+    tags: (doc.tags ?? []).map((t) => t.tag),
+    readTime: doc.readingTimeMinutes ? `${doc.readingTimeMinutes} min read` : null,
+    content,
+    toc,
+    faqs: (doc.faqs ?? []).map((f) => ({ question: f.question, answer: f.answerHTML ?? "" })),
+    faqsTitle: doc.faqsTitle,
+    metaTitle: doc.meta?.title,
+    metaDescription: doc.meta?.description,
+    canonicalUrlOverride: doc.canonicalUrlOverride,
+    robots: doc.robotsNoarchive ? `${doc.robots ?? "index,follow"},noarchive` : doc.robots,
+    isPublished: doc._status === "published",
+    publishedAt: doc.publishedAt ?? null,
+    createdBy: {
+      name: doc.authorName ?? "Cashlo Team",
+      jobTitle: doc.authorJobTitle ?? null,
+      bio: doc.authorBio ?? null,
+      linkedinUrl: doc.authorLinkedinUrl ?? null,
+      avatarUrl: doc.authorAvatarUrl ?? null,
+    },
+    relatedPosts: (doc.relatedPosts ?? []).map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      coverImage: p.featuredImage?.url ?? null,
+    })),
+    updatedAt: doc.updatedAt,
+  };
+};
 
 export async function getBlogs(params?: { limit?: string; category?: string }) {
   const query = new URLSearchParams({ depth: "2", sort: "-publishedAt" });

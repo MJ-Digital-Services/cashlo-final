@@ -2,6 +2,8 @@ import { notFound, permanentRedirect } from "next/navigation";
 import Container from "@/components/ui/Container";
 import BlogPostContent from "@/components/blog/BlogPostContent";
 import BlogFAQs from "@/components/blog/BlogFAQs";
+import BlogAuthorCard from "@/components/blog/BlogAuthorCard";
+import BlogTOC from "@/components/blog/BlogTOC";
 import { getBlogBySlug, getBlogs, getRedirectTarget } from "@/lib/blogApi";
 import Link from "next/link";
 import { User, Calendar, Clock, ChevronRight, ArrowLeft, ArrowRight } from "lucide-react";
@@ -103,7 +105,12 @@ export default async function BlogDetailPage({
     headline: blog.title,
     description: blog.excerpt,
     image: blog.coverImage ?? "https://www.cashlo.app/og-image.png",
-    author: { "@type": "Person", name: blog.createdBy?.name ?? "Cashlo Team" },
+    author: {
+      "@type": "Person",
+      name: blog.createdBy?.name ?? "Cashlo Team",
+      ...(blog.createdBy?.jobTitle ? { jobTitle: blog.createdBy.jobTitle } : {}),
+      ...(blog.createdBy?.linkedinUrl ? { sameAs: [blog.createdBy.linkedinUrl] } : {}),
+    },
     publisher: {
       "@type": "Organization",
       name: "Cashlo",
@@ -183,11 +190,23 @@ export default async function BlogDetailPage({
             ))}
           </div>
 
-          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
+          <div className="mt-10 grid gap-10 lg:grid-cols-[220px_minmax(0,1fr)_320px] lg:gap-14">
+            {blog.toc?.length > 0 ? (
+              <aside className="hidden lg:block">
+                <div className="lg:sticky lg:top-28">
+                  <BlogTOC items={blog.toc} />
+                </div>
+              </aside>
+            ) : (
+              <div className="hidden lg:block" />
+            )}
+
             <div className="min-w-0">
               <BlogPostContent content={blog.content ?? ""} />
 
               {faqs.length > 0 && <BlogFAQs faqs={faqs} title={faqsTitle} />}
+
+              {blog.createdBy && <BlogAuthorCard author={{ name: blog.createdBy.name, ...blog.createdBy }} />}
 
               <Link
                 href="/blog"
@@ -198,46 +217,48 @@ export default async function BlogDetailPage({
               </Link>
             </div>
 
-            <aside className="space-y-5 lg:sticky lg:top-28 lg:self-start">
-              {relatedPosts.length > 0 && (
-                <div className="rounded-2xl border border-border bg-card p-5">
-                  <h2 className="text-sm font-semibold text-ink">Related Posts</h2>
-                  <div className="mt-3 space-y-3">
-                    {relatedPosts.map((post: any) => (
-                      <Link
-                        key={post.slug}
-                        href={`/blog/${post.slug}`}
-                        className="flex items-center gap-3 rounded-xl transition-colors hover:bg-surface"
-                      >
-                        <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-surface">
-                          {post.coverImage ? (
-                            <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover" />
-                          ) : (
-                            <div className="flex h-full w-full items-center justify-center text-[10px] font-semibold text-ink/30">
-                              CASHLO
-                            </div>
-                          )}
-                        </div>
-                        <span className="line-clamp-2 text-sm text-ink/75">{post.title}</span>
-                      </Link>
-                    ))}
+            <aside>
+              <div className="space-y-5 lg:sticky lg:top-28">
+                {relatedPosts.length > 0 && (
+                  <div className="rounded-2xl border border-border bg-card p-5">
+                    <h2 className="text-sm font-semibold text-ink">Related Posts</h2>
+                    <div className="mt-3 space-y-3">
+                      {relatedPosts.map((post: any) => (
+                        <Link
+                          key={post.slug}
+                          href={`/blog/${post.slug}`}
+                          className="flex items-center gap-3 rounded-xl transition-colors hover:bg-surface"
+                        >
+                          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-surface">
+                            {post.coverImage ? (
+                              <img src={post.coverImage} alt={post.title} className="h-full w-full object-cover" />
+                            ) : (
+                              <div className="flex h-full w-full items-center justify-center text-[10px] font-semibold text-ink/30">
+                                CASHLO
+                              </div>
+                            )}
+                          </div>
+                          <span className="line-clamp-2 text-sm text-ink/75">{post.title}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              <div className="rounded-2xl border border-brand/20 bg-brand/[0.06] p-5">
-                <span className="text-xs font-semibold uppercase tracking-wider text-brand">Cashlo</span>
-                <h3 className="mt-1.5 text-sm font-semibold text-ink">Run a shop?</h3>
-                <p className="mt-1.5 text-xs leading-relaxed text-ink/55">
-                  Accept UPI payments and offer banking services to your customers with Cashlo.
-                </p>
-                <Link
-                  href="/become-merchant"
-                  className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand hover:text-brand/80"
-                >
-                  Become a merchant
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                <div className="rounded-2xl border border-brand/20 bg-brand/[0.06] p-5">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-brand">Cashlo</span>
+                  <h3 className="mt-1.5 text-sm font-semibold text-ink">Run a shop?</h3>
+                  <p className="mt-1.5 text-xs leading-relaxed text-ink/55">
+                    Accept UPI payments and offer banking services to your customers with Cashlo.
+                  </p>
+                  <Link
+                    href="/become-merchant"
+                    className="mt-3 inline-flex items-center gap-1 text-xs font-semibold text-brand hover:text-brand/80"
+                  >
+                    Become a merchant
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
               </div>
             </aside>
           </div>

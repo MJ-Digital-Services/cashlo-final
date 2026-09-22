@@ -42,7 +42,14 @@
 
 html,
 body {
-  overflow-x: hidden;
+  /* `overflow-x: hidden` (not `clip`) forces overflow-y to compute as `auto`
+     per spec whenever one axis is non-visible and the other isn't — this
+     turned both html and body into scroll containers, and since body never
+     actually scrolls (no fixed height), browsers used it as `position:
+     sticky`'s containing block instead of html (the one that really
+     scrolls), so every sticky sidebar on the site silently never stuck.
+     `clip` prevents the same horizontal overflow without that side effect. */
+  overflow-x: clip;
   background: var(--bg);
   color: var(--ink);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
