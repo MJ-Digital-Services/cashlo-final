@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { getCalculatorBySlug, getAllCalculatorSlugs } from "@/lib/api/calculators";
 import { getBankBySlug } from "@/lib/data/banks";
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE, breadcrumbSchema, faqSchema, jsonLdScript } from "@/lib/schema";
 import EmiCalculatorWidget from "@/components/sections/calculators/EmiCalculatorWidget";
 import CalculatorSidebar from "@/components/sections/calculators/CalculatorSidebar";
 import CalculatorFaq from "@/components/sections/calculators/CalculatorFaq";
@@ -27,15 +28,23 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
+  const url = `${SITE_URL}/calculators/${slug}`;
   try {
     const { calculator } = await getCalculatorBySlug(slug);
+    const title = calculator.metaTitle || calculator.title;
+    const description = calculator.metaDescription || `Calculate ${calculator.title} with Cashlo's free, easy-to-use calculator.`;
     return {
-      title: calculator.metaTitle || calculator.title,
-      description: calculator.metaDescription,
+      title,
+      description,
+      alternates: { canonical: url },
+      robots: "index,follow",
+      openGraph: { title, description, url, siteName: SITE_NAME, type: "website", images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: title }] },
+      twitter: { card: "summary_large_image", title, description, images: [SITE_OG_IMAGE] },
     };
   } catch {
     return {
       title: "EMI Calculator | Cashlo",
+      alternates: { canonical: url },
     };
   }
 }
@@ -51,9 +60,25 @@ export default async function CalculatorPage({
 
   const { calculator, variants } = data;
   const bank = calculator.isBankVariant ? getBankBySlug(calculator.slug) : undefined;
+  const url = `${SITE_URL}/calculators/${slug}`;
 
   return (
     <section className="bg-bg pb-24 pt-28 sm:pt-32">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={jsonLdScript(
+          breadcrumbSchema([
+            { name: "Home", url: SITE_URL },
+            { name: calculator.title, url },
+          ]),
+        )}
+      />
+      {calculator.faqs.length > 0 && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={jsonLdScript(faqSchema(calculator.faqs.map((f) => ({ q: f.question, a: f.answer }))))}
+        />
+      )}
       <div className="mx-auto w-full max-w-[1440px] px-5 sm:px-8 lg:px-10">
         <header className="max-w-2xl">
           <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-brand">

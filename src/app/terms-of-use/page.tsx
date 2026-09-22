@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "@/lib/schema";
+
+const title = "Terms of Use | Cashlo";
+const description = "The terms governing access to and use of the Cashlo website, application and merchant services.";
+const url = `${SITE_URL}/terms-of-use`;
 
 export const metadata: Metadata = {
-  title: "Terms of Use | Cashlo",
-  description:
-    "The terms governing access to and use of the Cashlo website, application and merchant services.",
+  title,
+  description,
+  alternates: { canonical: url },
+  robots: "index,follow",
+  openGraph: { title, description, url, siteName: SITE_NAME, type: "website", images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: title }] },
+  twitter: { card: "summary_large_image", title, description, images: [SITE_OG_IMAGE] },
 };
 
 const EFFECTIVE_DATE = "4 September 2026";

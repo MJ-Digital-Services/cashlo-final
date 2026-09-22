@@ -6,6 +6,7 @@ import { Button } from '@/components/sections/become-merchant/shared/Button';
 export const metadata = {
   title: 'Registration received — Cashlo',
   description: 'Your Cashlo merchant registration has been received.',
+  robots: { index: false }, // post-submit confirmation page, already disallowed in robots.txt
 };
 
 export default function BecomeMerchantSuccessPage() {

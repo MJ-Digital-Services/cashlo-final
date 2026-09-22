@@ -1,10 +1,18 @@
 import type { Metadata } from "next";
 import Container from "@/components/ui/Container";
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "@/lib/schema";
+
+const title = "Grievance Redressal | Cashlo";
+const description = "How to raise a complaint with Cashlo and how grievances are acknowledged, escalated and resolved.";
+const url = `${SITE_URL}/grievance-redressal`;
 
 export const metadata: Metadata = {
-  title: "Grievance Redressal | Cashlo",
-  description:
-    "How to raise a complaint with Cashlo and how grievances are acknowledged, escalated and resolved.",
+  title,
+  description,
+  alternates: { canonical: url },
+  robots: "index,follow",
+  openGraph: { title, description, url, siteName: SITE_NAME, type: "website", images: [{ url: SITE_OG_IMAGE, width: 1200, height: 630, alt: title }] },
+  twitter: { card: "summary_large_image", title, description, images: [SITE_OG_IMAGE] },
 };
 
 const EFFECTIVE_DATE = "4 September 2026";
