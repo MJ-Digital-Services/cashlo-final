@@ -243,3 +243,30 @@ export async function getCategories(): Promise<BlogCategory[]> {
   const data: PayloadListResponse<PayloadCategory> = await res.json();
   return data.docs.map((c) => ({ _id: c.id, name: c.name, slug: c.slug }));
 }
+
+export interface CategoryWithCount extends BlogCategory {
+  postCount: number;
+}
+
+// Payload has no built-in "group + count" aggregation endpoint, so this
+// pairs the categories list with a lightweight posts fetch (id + category
+// only, no depth) and counts client-side rather than issuing one count
+// query per category.
+export async function getCategoriesWithCounts(): Promise<CategoryWithCount[]> {
+  const [categories, postsRes] = await Promise.all([
+    getCategories(),
+    fetch(`${CMS_URL}/api/posts?limit=1000&depth=0&select[category]=true`, {
+      next: { revalidate: 60 },
+    }),
+  ]);
+  if (!postsRes.ok) return categories.map((c) => ({ ...c, postCount: 0 }));
+  const data: PayloadListResponse<{ category?: string | null }> = await postsRes.json();
+
+  const counts = new Map<string, number>();
+  for (const doc of data.docs) {
+    if (!doc.category) continue;
+    counts.set(doc.category, (counts.get(doc.category) ?? 0) + 1);
+  }
+
+  return categories.map((c) => ({ ...c, postCount: counts.get(c._id) ?? 0 }));
+}
