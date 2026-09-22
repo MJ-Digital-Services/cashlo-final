@@ -5,7 +5,8 @@ import InterestRateBanner from "@/components/sections/gold-loan/InterestRateBann
 import LoanBenefitsFeatures from "@/components/sections/gold-loan/LoanBenefitsFeatures";
 import DocumentsRequired from "@/components/sections/gold-loan/DocumentsRequired";
 import MoreAboutGoldLoan from "@/components/sections/gold-loan/MoreAboutGoldLoan";
-import GoldLoanFAQs, { goldLoanFaqs } from "@/components/sections/gold-loan/GoldLoanFAQs";
+import GoldLoanFAQs from "@/components/sections/gold-loan/GoldLoanFAQs";
+import { goldLoanFaqs } from "@/lib/data/faqs/gold-loan";
 import SupportedBy from "@/components/sections/SupportedBy";
 import GoldLoanCTA from "@/components/sections/gold-loan/GoldLoanCTA";
 import { breadcrumbSchema, serviceSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME } from "@/lib/schema";

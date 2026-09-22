@@ -1,5 +1,6 @@
 import FaqHero from "@/components/sections/faq/FaqHero";
-import FaqAccordion, { faqGroups } from "@/components/sections/faq/FaqAccordion";
+import FaqAccordion from "@/components/sections/faq/FaqAccordion";
+import { faqGroups } from "@/lib/data/faqs/general";
 import FaqCTA from "@/components/sections/faq/FaqCTA";
 import { breadcrumbSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME } from "@/lib/schema";
 import type { Metadata } from "next";

@@ -4,7 +4,8 @@ import EligibilityCriteria from "@/components/sections/instant-loan/EligibilityC
 import DocumentsRequired from "@/components/sections/instant-loan/DocumentsRequired";
 import HowItWorks from "@/components/sections/instant-loan/HowItWorks";
 import EmiCalculatorsPromo from "@/components/sections/instant-loan/EmiCalculatorsPromo";
-import InstantLoanFAQs, { instantLoanFaqs } from "@/components/sections/instant-loan/InstantLoanFAQs";
+import InstantLoanFAQs from "@/components/sections/instant-loan/InstantLoanFAQs";
+import { instantLoanFaqs } from "@/lib/data/faqs/instant-loan";
 import SupportedBy from "@/components/sections/SupportedBy";
 import InstantLoanCTA from "@/components/sections/instant-loan/InstantLoanCTA";
 import { breadcrumbSchema, serviceSchema, faqSchema, jsonLdScript, SITE_URL, SITE_NAME } from "@/lib/schema";
