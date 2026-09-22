@@ -16,9 +16,9 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
       {
         userAgent: "*",
         allow: "/",
-        // Mid-flow / transactional steps — nothing a search result should
-        // ever land a visitor on directly.
         disallow: [
+          // Mid-flow / transactional steps — nothing a search result should
+          // ever land a visitor on directly.
           "/become-distributor/reserve",
           "/become-distributor/choose",
           "/become-distributor/complete-payment",
@@ -26,6 +26,20 @@ export default async function robots(): Promise<MetadataRoute.Robots> {
           "/become-distributor/thanks",
           "/become-merchant/success",
           "/api/",
+          // Common technical/private paths, kept defensively even where this
+          // site has no matching route today — harmless no-ops if the path
+          // doesn't exist, but block crawling immediately if one is ever added.
+          "/admin/",
+          "/administrator/",
+          "/login/",
+          "/logout/",
+          "/register/",
+          "/_next/",
+          "/cdn-cgi/",
+          "/cart/",
+          "/checkout/",
+          "/account/",
+          "/search?",
         ],
       },
     ],
