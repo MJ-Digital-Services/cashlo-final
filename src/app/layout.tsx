@@ -14,6 +14,9 @@ const geistMono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin"]
 export const metadata: Metadata = {
   title: "Cashlo — India's Trusted UPI CashPoint Network",
   description: "Turn your shop into a UPI CashPoint and earn every day.",
+  verification: {
+    google: "ww8V9VrJ4RzF-YbL0W36KEnieUYbY5lSABA5SlvIYos",
+  },
 };
 
 const themeScript = `(function(){try{var t=localStorage.getItem('theme');if(!t)t=matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';if(t==='dark')document.documentElement.classList.add('dark');}catch(e){}})();`;
