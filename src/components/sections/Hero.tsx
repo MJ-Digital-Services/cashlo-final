@@ -139,6 +139,13 @@ export default function Hero() {
               alt="Cashlo app shown on a phone next to a shop payment QR stand"
               fill
               priority
+              // In this Next.js version, `priority` alone only controls the
+              // <link rel=preload> — it no longer implies fetchpriority="high"
+              // on the <img> itself (that's now a separate, explicit prop).
+              // Without this, the browser's request scheduler doesn't treat
+              // this LCP image's actual fetch as high-priority even though a
+              // preload hint exists for it.
+              fetchPriority="high"
               sizes="(min-width: 1024px) 470px, (min-width: 640px) 440px, 400px"
               className="object-contain"
             />

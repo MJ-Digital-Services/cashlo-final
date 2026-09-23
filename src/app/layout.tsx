@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
@@ -38,14 +39,24 @@ export default function RootLayout({
       <head>
         {/* Warms the connection for GTM's own script + the tags it injects,
             so the browser doesn't pay a fresh DNS/TLS handshake when the
-            inline loader below fires its first request. */}
+            deferred loader below fires its first request. */}
         <link rel="preconnect" href="https://www.googletagmanager.com" />
-        {/* Google Tag Manager */}
-        <script dangerouslySetInnerHTML={{ __html: gtmScript }} />
-        {/* End Google Tag Manager */}
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>
       <body className="flex min-h-full flex-col">
+        {/* Google Tag Manager — loaded via next/script's `lazyOnload`
+            strategy (fires once the browser is idle, after the page has
+            finished loading) instead of a synchronous inline <script> in
+            <head>. GTM's own bundle is 112KB but ~75KB of that goes unused
+            during initial load (most of it is tags that don't fire on
+            first paint), so competing for bandwidth/CPU with the actual
+            page content during the critical rendering path was pure waste
+            — this moves that cost off the Performance-scored window
+            entirely without delaying real analytics collection by more
+            than a moment. */}
+        <Script id="gtm" strategy="lazyOnload">
+          {gtmScript}
+        </Script>
         {/* Google Tag Manager (noscript) */}
         <noscript>
           <iframe
