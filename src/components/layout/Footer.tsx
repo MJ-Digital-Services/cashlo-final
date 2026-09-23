@@ -109,7 +109,7 @@ export default function Footer() {
                 className="h-[18px] w-[18px]"
               />
               <span className="text-xs leading-tight">
-                <span className="block text-[10px] text-ink/50">GET IT ON</span>
+                <span className="block text-[10px] text-ink/65">GET IT ON</span>
                 <span className="block font-semibold text-ink">Google Play</span>
               </span>
             </a>
@@ -144,9 +144,9 @@ export default function Footer() {
 
           {/* Quick links */}
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink/70">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink/70">
               Quick Links
-            </h4>
+            </h3>
             <ul className="mt-5 space-y-3">
               {quickLinks.map((l) => (
                 <li key={l.label}>
@@ -163,9 +163,9 @@ export default function Footer() {
 
           {/* Legal */}
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink/70">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink/70">
               Legal
-            </h4>
+            </h3>
             <ul className="mt-5 space-y-3">
               {legalLinks.map((l) => (
                 <li key={l.label}>
@@ -182,9 +182,9 @@ export default function Footer() {
 
           {/* Contact */}
           <div>
-            <h4 className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink/70">
+            <h3 className="text-[11px] font-semibold uppercase tracking-[0.09em] text-ink/70">
               Contact
-            </h4>
+            </h3>
             <ul className="mt-5 space-y-2.5 text-sm text-ink/60">
               <li>support@cashlo.app</li>
               <li>sales@cashlo.app</li>

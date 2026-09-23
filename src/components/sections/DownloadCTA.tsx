@@ -21,7 +21,7 @@ export default function DownloadCTA() {
             <h2 className="text-5xl font-bold tracking-tight text-brand sm:text-7xl lg:text-8xl">
               {HEADLINE}
             </h2>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-brand/80 sm:text-xl">
+            <p className="mx-auto mt-6 max-w-2xl text-lg text-brand sm:text-xl">
               {SUBLINE}
             </p>
           </div>
@@ -34,7 +34,7 @@ export default function DownloadCTA() {
               <h2 className="text-5xl font-bold tracking-tight text-white sm:text-7xl lg:text-8xl">
                 {HEADLINE}
               </h2>
-              <p className="mx-auto mt-6 max-w-2xl text-lg text-white/85 sm:text-xl">
+              <p className="mx-auto mt-6 max-w-2xl text-lg text-white sm:text-xl">
                 {SUBLINE}
               </p>
             </div>

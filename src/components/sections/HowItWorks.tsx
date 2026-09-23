@@ -97,7 +97,7 @@ function InstallScreen() {
       </div>
         <div className="flex-1">
           <div className="text-sm font-semibold text-ink">Cashlo</div>
-          <div className="text-xs text-ink/50">
+          <div className="text-xs text-ink/65">
             Finance · 4.8★ · MJ Digital Services
           </div>
         </div>
@@ -124,13 +124,13 @@ function RegisterScreen() {
         </div>
         <div>
           <div className="text-sm font-semibold text-ink">Cashlo</div>
-          <div className="text-[10px] text-ink/50">Shop Registration</div>
+          <div className="text-[10px] text-ink/65">Shop Registration</div>
         </div>
       </div>
       <div className="mt-3 text-sm font-semibold text-ink">
         Let&apos;s set up your shop
       </div>
-      <p className="mb-3 text-xs text-ink/50">
+      <p className="mb-3 text-xs text-ink/65">
         Add your details to create your Cashlo account
       </p>
       <div className="space-y-2">
@@ -141,7 +141,7 @@ function RegisterScreen() {
           >
             <f.icon className="h-4 w-4 shrink-0 text-ink/40" />
             <div className="flex-1">
-              <div className="text-[10px] text-ink/40">{f.label}</div>
+              <div className="text-[10px] text-ink/60">{f.label}</div>
               <div className="text-xs font-medium text-ink">{f.value}</div>
             </div>
             {f.verified && (
@@ -174,7 +174,7 @@ function KycScreen() {
         <ShieldCheck className="h-4 w-4 text-brand" />
       </div>
       <div className="mt-3 text-sm font-semibold text-ink">Complete your KYC</div>
-      <p className="mb-3 text-xs text-ink/50">
+      <p className="mb-3 text-xs text-ink/65">
         Verify your identity and business details to keep your account secure.
       </p>
       <div className="space-y-2">
@@ -186,7 +186,7 @@ function KycScreen() {
             <r.icon className="h-4 w-4 shrink-0 text-brand" />
             <div className="flex-1">
               <div className="text-xs font-medium text-ink">{r.label}</div>
-              <div className="text-[10px] text-ink/40">{r.sub}</div>
+              <div className="text-[10px] text-ink/60">{r.sub}</div>
             </div>
             {r.status === "In Progress" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin text-brand" />
@@ -217,23 +217,23 @@ function ActivateScreen() {
         <Bell className="h-4 w-4 text-ink/50" />
       </div>
       <div className="mx-4 rounded-2xl bg-brand p-4 text-white">
-        <div className="text-[10px] text-white/70">Available Balance</div>
+        <div className="text-[10px] text-white">Available Balance</div>
         <div className="mt-1 flex items-center gap-2 text-xl font-bold">
           ₹12,680.50
           <IndianRupee className="h-4 w-4" />
         </div>
-        <div className="mt-1 text-[10px] text-white/60">Wallet Balance</div>
+        <div className="mt-1 text-[10px] text-white">Wallet Balance</div>
       </div>
       <div className="mt-3 px-4 text-xs font-semibold text-ink">
         Today&apos;s Overview
       </div>
       <div className="mt-2 grid grid-cols-2 gap-2 px-4">
         <div className="rounded-xl border border-border bg-surface p-2.5">
-          <div className="text-[10px] text-ink/50">Transactions</div>
+          <div className="text-[10px] text-ink/65">Transactions</div>
           <div className="text-sm font-bold text-ink">28</div>
         </div>
         <div className="rounded-xl border border-border bg-surface p-2.5">
-          <div className="text-[10px] text-ink/50">Earnings</div>
+          <div className="text-[10px] text-ink/65">Earnings</div>
           <div className="text-sm font-bold text-ink">₹2,340.00</div>
         </div>
       </div>
@@ -246,7 +246,7 @@ function ActivateScreen() {
             <div className="grid h-9 w-9 place-items-center rounded-xl bg-brand/10 text-brand">
               <s.icon className="h-4 w-4" />
             </div>
-            <div className="text-center text-[8px] leading-tight text-ink/50">
+            <div className="text-center text-[8px] leading-tight text-ink/65">
               {s.label}
             </div>
           </div>
@@ -359,7 +359,7 @@ function Stepper({ activeStep }: { activeStep: number }) {
             </span>
             <span
               className={`text-xs font-medium ${
-                i === activeStep ? "text-brand" : "text-ink/40"
+                i === activeStep ? "text-brand" : "text-ink/60"
               }`}
             >
               {s.key === "install"
@@ -401,7 +401,7 @@ function StepList({ activeStep }: { activeStep: number }) {
             <div className="flex items-start gap-4">
               <span
                 className={`text-3xl font-extrabold leading-none ${
-                  active ? "text-brand" : "text-ink/25"
+                  active ? "text-brand" : "text-ink/45"
                 }`}
               >
                 {s.num}

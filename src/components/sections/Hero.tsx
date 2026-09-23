@@ -23,11 +23,11 @@ const avatars: {
   image?: string;
   className?: string;
 }[] = [
-  { id: "ak", label: "AK", className: "bg-orange-400" },
+  { id: "ak", label: "AK", className: "bg-orange-700" },
   { id: "photo-1", image: "/avatars/avatar-1.png" },
   { id: "photo-2", image: "/avatars/avatar-3.png" },
-  { id: "pv", label: "PV", className: "bg-emerald-500" },
-  { id: "mg", label: "MG", className: "bg-rose-300" },
+  { id: "pv", label: "PV", className: "bg-emerald-700" },
+  { id: "mg", label: "MG", className: "bg-rose-700" },
 ];
 
 export default function Hero() {
@@ -38,7 +38,7 @@ export default function Hero() {
         <div className="relative z-10">
           <div className="mb-10 inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-2">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            <span className="text-xs font-semibold tracking-wider text-brand">
+            <span className="text-xs font-semibold tracking-wider text-brand-dark">
               INDIA&apos;S TRUSTED SHOP INCOME PLATFORM
             </span>
           </div>
@@ -63,7 +63,7 @@ export default function Hero() {
                 <Icon className="h-7 w-7 text-brand" strokeWidth={1.8} />
                 <div className="text-sm leading-tight text-ink/80">
                   <div className="font-semibold text-ink">{title}</div>
-                  <div className="text-ink/50">{subtitle}</div>
+                  <div className="text-ink/65">{subtitle}</div>
                 </div>
               </div>
             ))}

@@ -167,7 +167,7 @@ function ChapterGrid({ c }: { c: Chapter }) {
     <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_0.9fr] xl:grid-cols-[1.15fr_0.85fr] lg:gap-16">
       {/* Left column */}
       <div className="max-w-2xl xl:-ml-8 2xl:-ml-16">
-        <p className="text-base font-semibold uppercase tracking-wider text-[#0EA371]">
+        <p className="text-base font-semibold uppercase tracking-wider text-[#0B7A56]">
           {c.eyebrow}
         </p>
         <h2 className="mt-3 text-[40px] leading-[1.12] font-bold tracking-tight text-slate-900 lg:text-[44px] xl:text-[48px] 2xl:text-[52px]">
@@ -175,7 +175,7 @@ function ChapterGrid({ c }: { c: Chapter }) {
           <br />
           {c.title[1]}
         </h2>
-        <p className="mt-4 max-w-md text-[19px] leading-relaxed text-slate-500">
+        <p className="mt-4 max-w-md text-[19px] leading-relaxed text-slate-600">
           {c.desc}
         </p>
 
@@ -184,11 +184,11 @@ function ChapterGrid({ c }: { c: Chapter }) {
         {c.trustPrefix && (
           <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-slate-100 bg-white/70 px-5 py-3.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0EA371]/10">
-              <ShieldCheck className="h-4.5 w-4.5 text-[#0EA371]" strokeWidth={2} />
+              <ShieldCheck className="h-4.5 w-4.5 text-[#0B7A56]" strokeWidth={2} />
             </span>
             <p className="text-sm text-slate-600">
               {c.trustPrefix}
-              <span className="font-semibold text-[#0EA371]">{c.trustHighlight}</span>
+              <span className="font-semibold text-[#0B7A56]">{c.trustHighlight}</span>
               {c.trustSuffix}
             </p>
           </div>
@@ -318,7 +318,7 @@ export default function ServiceStack() {
             <ChapterImage c={c} />
 
             <div className="mt-8">
-              <p className="text-sm font-semibold uppercase tracking-wider text-[#0EA371]">
+              <p className="text-sm font-semibold uppercase tracking-wider text-[#0B7A56]">
                 {c.eyebrow}
               </p>
               <h2 className="mt-3 text-[32px] font-bold leading-[1.15] tracking-tight text-slate-900">
@@ -326,7 +326,7 @@ export default function ServiceStack() {
                 <br />
                 {c.title[1]}
               </h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-500">
+              <p className="mt-3 text-base leading-relaxed text-slate-600">
                 {c.desc}
               </p>
 
@@ -335,11 +335,11 @@ export default function ServiceStack() {
               {c.trustPrefix && (
                 <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-slate-100 bg-white/70 px-4 py-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0EA371]/10">
-                    <ShieldCheck className="h-4 w-4 text-[#0EA371]" strokeWidth={2} />
+                    <ShieldCheck className="h-4 w-4 text-[#0B7A56]" strokeWidth={2} />
                   </span>
                   <p className="text-sm text-slate-600">
                     {c.trustPrefix}
-                    <span className="font-semibold text-[#0EA371]">{c.trustHighlight}</span>
+                    <span className="font-semibold text-[#0B7A56]">{c.trustHighlight}</span>
                     {c.trustSuffix}
                   </p>
                 </div>
