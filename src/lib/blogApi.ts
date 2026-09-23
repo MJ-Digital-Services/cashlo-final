@@ -55,11 +55,6 @@ export interface Blog {
   updatedAt?: string;
 }
 
-export interface GroupedBlogs {
-  category: BlogCategory;
-  blogs: Blog[];
-}
-
 // --- Payload's raw REST response shapes (only the fields we use) ---
 
 interface PayloadMedia {
@@ -191,28 +186,6 @@ export async function getBlogs(params?: { limit?: string; category?: string }) {
   if (!res.ok) throw new Error("Failed to fetch blogs");
   const data: PayloadListResponse<PayloadPost> = await res.json();
   return { blogs: data.docs.map(mapPost), pagination: { total: data.totalDocs, page: data.page, limit: data.limit, pages: data.totalPages } };
-}
-
-export async function getBlogsGrouped(): Promise<GroupedBlogs[]> {
-  const res = await fetch(`${CMS_URL}/api/posts?depth=2&sort=-publishedAt&limit=1000`, {
-    next: { revalidate: 60 },
-  });
-  if (!res.ok) throw new Error("Failed to fetch grouped blogs");
-  const data: PayloadListResponse<PayloadPost> = await res.json();
-
-  const groups = new Map<string, GroupedBlogs>();
-  for (const doc of data.docs) {
-    if (!doc.category) continue;
-    const key = doc.category.id;
-    if (!groups.has(key)) {
-      groups.set(key, {
-        category: { _id: doc.category.id, name: doc.category.name, slug: doc.category.slug },
-        blogs: [],
-      });
-    }
-    groups.get(key)!.blogs.push(mapPost(doc));
-  }
-  return Array.from(groups.values());
 }
 
 export async function getBlogBySlug(slug: string): Promise<Blog> {

@@ -46,7 +46,7 @@ const social = [
   { label: "Facebook", href: "https://www.facebook.com/share/1SopJkAMwQ/?mibextid=wwXIfr" },
   { label: "Instagram", href: "https://www.instagram.com/cashlo.app/" },
   { label: "LinkedIn", href: "https://www.linkedin.com/company/cashlo/about/" },
-  { label: "YouTube", href: null as string | null },
+  { label: "YouTube", href: "https://www.youtube.com/channel/UCtcQPV_m-LALWU-hjexpO5g/" },
 ];
 
 export default function Footer() {

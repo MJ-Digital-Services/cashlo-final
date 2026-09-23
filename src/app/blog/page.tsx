@@ -1,7 +1,7 @@
 import Container from "@/components/ui/Container";
 import BlogCard from "@/components/blog/BlogCard";
 import BlogCategorySidebar from "@/components/blog/BlogCategorySidebar";
-import { getBlogsGrouped, getCategoriesWithCounts } from "@/lib/blogApi";
+import { getBlogs, getCategoriesWithCounts } from "@/lib/blogApi";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -23,8 +23,8 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const [grouped, categories] = await Promise.all([
-    getBlogsGrouped().catch(() => []),
+  const [{ blogs }, categories] = await Promise.all([
+    getBlogs().catch(() => ({ blogs: [] })),
     getCategoriesWithCounts().catch(() => []),
   ]);
 
@@ -64,21 +64,12 @@ export default async function BlogPage() {
         <Container>
           <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_280px]">
             <div>
-              {grouped.length === 0 ? (
+              {blogs.length === 0 ? (
                 <p className="text-ink/50">No blogs published yet</p>
               ) : (
-                <div className="space-y-14">
-                  {grouped.map((group) => (
-                    <div key={group.category._id}>
-                      <h2 className="text-xl font-bold tracking-tight text-ink sm:text-2xl">
-                        {group.category.name}
-                      </h2>
-                      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                        {group.blogs.map((blog) => (
-                          <BlogCard key={blog._id} blog={blog} />
-                        ))}
-                      </div>
-                    </div>
+                <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                  {blogs.map((blog) => (
+                    <BlogCard key={blog._id} blog={blog} />
                   ))}
                 </div>
               )}
