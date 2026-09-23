@@ -102,6 +102,7 @@ export default function Hero() {
                       src={avatar.image}
                       alt=""
                       fill
+                      sizes="36px"
                       className="object-cover"
                     />
                   </div>
@@ -138,6 +139,7 @@ export default function Hero() {
               alt="Cashlo app shown on a phone next to a shop payment QR stand"
               fill
               priority
+              sizes="(min-width: 1024px) 470px, (min-width: 640px) 440px, 400px"
               className="object-contain"
             />
           </div>

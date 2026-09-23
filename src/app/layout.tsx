@@ -5,7 +5,6 @@ import SmoothScroll from "@/components/layout/SmoothScroll";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import SiteChrome from "@/components/layout/SiteChrome";
-import LaunchAnnouncement from "@/components/layout/LaunchAnnouncement";
 import { ThemeProvider } from "@/components/theme/ThemeProvider";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -37,6 +36,10 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
+        {/* Warms the connection for GTM's own script + the tags it injects,
+            so the browser doesn't pay a fresh DNS/TLS handshake when the
+            inline loader below fires its first request. */}
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
         {/* Google Tag Manager */}
         <script dangerouslySetInnerHTML={{ __html: gtmScript }} />
         {/* End Google Tag Manager */}
@@ -54,7 +57,6 @@ export default function RootLayout({
         </noscript>
         {/* End Google Tag Manager (noscript) */}
         <ThemeProvider>
-          <LaunchAnnouncement />
           <SiteChrome>
             <Navbar />
           </SiteChrome>
