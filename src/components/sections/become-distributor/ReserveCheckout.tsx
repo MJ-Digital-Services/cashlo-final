@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback, useRef, type FormEvent } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import Script from "next/script";
 import { useRouter } from "next/navigation";
 import { useGSAP } from "@gsap/react";
 import { gsap } from "gsap";
@@ -20,52 +19,29 @@ import {
   FileText,
   ChevronDown,
   LifeBuoy,
-  PartyPopper,
+  User,
 } from "lucide-react";
 import {
   distributorApi,
   ApiError,
   type PincodeCheckResult,
   type Consents,
-  type CreateOrderResult,
   type NearbyPincodeSuggestion,
+  type DistributorPlan,
+  type DistributorPlans,
+  DEFAULT_PLANS,
+  formatRupees,
 } from "@/lib/api/distributor";
-import { PaymentSuccessAnimation } from "./PaymentSuccessAnimation";
 import { SubmitButton } from "@/components/ui/SubmitButton";
+import { DistributorKycFields, EMPTY_KYC, kycError, type KycValues } from "./DistributorKycFields";
 
-declare global {
-  interface Window {
-    Razorpay: new (options: RazorpayOptions) => {
-      open: () => void;
-      on: (event: string, handler: (response: unknown) => void) => void;
-    };
-  }
-}
-
-interface RazorpayOptions {
-  key: string;
-  amount: number;
-  currency: string;
-  name: string;
-  description?: string;
-  order_id: string;
-  handler: (response: {
-    razorpay_order_id: string;
-    razorpay_payment_id: string;
-    razorpay_signature: string;
-  }) => void;
-  prefill?: { name?: string; email?: string; contact?: string };
-  theme?: { color?: string };
-  modal?: { ondismiss?: () => void };
-}
-
-type Step = "pincode" | "form" | "otp" | "payment" | "qr" | "success";
+// plan: pick booking (₹1,180 now + ₹5,900 later) vs full (₹6,490 once).
+// kyc: full plan only — PAN/Aadhaar/shop details before paying.
+// qr: scan + pay the chosen plan's amount, submit UTR → /pending.
+type Step = "pincode" | "form" | "otp" | "plan" | "kyc" | "qr";
+const STEPS: Step[] = ["pincode", "form", "otp", "plan", "kyc", "qr"];
 
 /* ---------------- constants ---------------- */
-
-// Display-only breakdown for the sticky summary. The authoritative amounts
-// still come from the backend via createOrder (paise) at payment time.
-const FEE = { base: "₹1,000.00", gst: "₹180.00", total: "₹1,180.00" };
 
 // In-progress checkout state survives an accidental refresh (never the OTP itself).
 const STORAGE_KEY = "cashlo_reserve_progress";
@@ -84,7 +60,7 @@ const backLinkClass =
 const CONSENT_ITEMS: { key: keyof Consents; label: string }[] = [
   {
     key: "nonRefundable",
-    label: "I understand that the \u20b91,180 Booking Fee is non-refundable.",
+    label: "I understand that the fee I pay to reserve my PIN code is non-refundable.",
   },
   { key: "kyc", label: "I agree to complete KYC whenever required." },
   { key: "genuineMerchants", label: "I agree to onboard only genuine merchants/business owners." },
@@ -103,9 +79,9 @@ const RAIL_STEP: Record<Step, number> = {
   pincode: 1,
   form: 2,
   otp: 3,
-  payment: 4,
+  plan: 4,
+  kyc: 4,
   qr: 4,
-  success: 4,
 };
 
 const stepMotion = {
@@ -120,7 +96,6 @@ const stepMotion = {
 export default function ReserveCheckout() {
   const rootRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const [razorpayLoaded, setRazorpayLoaded] = useState(false);
   const [step, setStep] = useState<Step>("pincode");
   const [summaryOpen, setSummaryOpen] = useState(false);
 
@@ -162,11 +137,13 @@ export default function ReserveCheckout() {
   const [nearbySuggestions, setNearbySuggestions] = useState<NearbyPincodeSuggestion[]>([]);
   const [nearbyLoading, setNearbyLoading] = useState(false);
 
-  // --- Payment step ---
-  const [paymentError, setPaymentError] = useState("");
-  const [paymentStatus, setPaymentStatus] = useState<
-    "preparing" | "waiting" | "dismissed" | "verifying" | "success"
-  >("preparing");
+  // --- Plan + KYC steps ---
+  // plans come from verifyOtp (the backend's live amounts); DEFAULT_PLANS
+  // only fills in before that. plan stays null until the customer picks one.
+  const [plans, setPlans] = useState<DistributorPlans>(DEFAULT_PLANS);
+  const [plan, setPlan] = useState<DistributorPlan | null>(null);
+  const [kyc, setKyc] = useState<KycValues>(EMPTY_KYC);
+  const [kycFormError, setKycFormError] = useState("");
 
   // --- QR self-payment step ---
   const [utrInput, setUtrInput] = useState("");
@@ -189,13 +166,21 @@ export default function ReserveCheckout() {
           form?: typeof form;
           consents?: Consents;
           bookingId?: string;
+          plans?: DistributorPlans;
+          plan?: DistributorPlan | null;
+          kyc?: Partial<KycValues>;
         };
         if (s.pincodeInput) setPincodeInput(s.pincodeInput);
         if (s.pincodeResult) setPincodeResult(s.pincodeResult);
         if (s.form) setForm(s.form);
         if (s.consents) setConsents(s.consents);
         if (s.bookingId) setBookingId(s.bookingId);
-        if (s.step && s.step !== "success") setStep(s.step);
+        if (s.plans) setPlans(s.plans);
+        if (s.plan) setPlan(s.plan);
+        if (s.kyc) setKyc({ ...EMPTY_KYC, ...s.kyc });
+        // Sessions saved before the Razorpay removal may hold a step that no
+        // longer exists ("payment"/"success") — only restore known steps.
+        if (s.step && STEPS.includes(s.step)) setStep(s.step);
         hydratedRef.current = true;
         return;
       }
@@ -214,16 +199,16 @@ export default function ReserveCheckout() {
   }, []);
 
   useEffect(() => {
-    if (!hydratedRef.current || step === "success") return;
+    if (!hydratedRef.current) return;
     try {
       sessionStorage.setItem(
         STORAGE_KEY,
-        JSON.stringify({ step, pincodeInput, pincodeResult, form, consents, bookingId })
+        JSON.stringify({ step, pincodeInput, pincodeResult, form, consents, bookingId, plans, plan, kyc })
       );
     } catch {
       /* storage unavailable — flow still works, just won't survive refresh */
     }
-  }, [step, pincodeInput, pincodeResult, form, consents, bookingId]);
+  }, [step, pincodeInput, pincodeResult, form, consents, bookingId, plans, plan, kyc]);
 
   const clearProgress = useCallback(() => {
     try {
@@ -452,31 +437,9 @@ export default function ReserveCheckout() {
     setOtpLoading(true);
     setOtpError("");
     try {
-      const { paymentMode } = await distributorApi.verifyOtp(bookingId, otpInput);
-
-      if (paymentMode === "manual") {
-        sessionStorage.setItem(
-          "cashlo_pending_booking",
-          JSON.stringify({
-            name: form.name,
-            pincode: pincodeResult?.pincode,
-            district: pincodeResult?.district,
-            state: pincodeResult?.state,
-            bookingId,
-            paymentMode: "manual",
-          })
-        );
-        clearProgress();
-        router.push("/become-distributor/pending");
-        return;
-      }
-
-      if (paymentMode === "qr_self") {
-        setStep("qr");
-        return;
-      }
-
-      setStep("payment");
+      const { plans: livePlans } = await distributorApi.verifyOtp(bookingId, otpInput);
+      if (livePlans) setPlans(livePlans);
+      setStep("plan");
     } catch (err) {
       setOtpError(err instanceof ApiError ? err.message : "Invalid OTP. Please try again.");
     } finally {
@@ -484,94 +447,35 @@ export default function ReserveCheckout() {
     }
   }
 
-  /* ---------------- payment ---------------- */
+  /* ---------------- plan + kyc ---------------- */
 
-  const startPayment = useCallback(
-    async (order: CreateOrderResult) => {
-      if (!window.Razorpay) {
-        setPaymentError("Payment system is still loading. Please try again in a moment.");
-        return;
-      }
+  function handleChoosePlan() {
+    if (!plan) return;
+    setUtrError("");
+    setStep(plan === "full" ? "kyc" : "qr");
+  }
 
-      setPaymentStatus("waiting");
+  function handleKycContinue() {
+    const error = kycError(kyc);
+    setKycFormError(error ?? "");
+    if (!error) setStep("qr");
+  }
 
-      const rzp = new window.Razorpay({
-        key: order.keyId,
-        amount: order.amount,
-        currency: order.currency,
-        name: "Cashlo",
-        description: "Distributor Booking Fee",
-        order_id: order.orderId,
-        prefill: { name: form.name, email: form.email, contact: form.mobile },
-        theme: { color: "#445df0" },
-        handler: async (response) => {
-          setPaymentStatus("verifying");
-          try {
-            await distributorApi.verifyPayment({
-              bookingId: order.bookingId,
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-            });
-
-            setPaymentStatus("success");
-
-            sessionStorage.setItem(
-              "cashlo_booking_receipt",
-              JSON.stringify({
-                name: form.name,
-                mobile: form.mobile,
-                email: form.email,
-                pincode: pincodeResult?.pincode,
-                district: pincodeResult?.district,
-                state: pincodeResult?.state,
-                baseAmount: order.gst.baseAmount,
-                gstAmount: order.gst.gstAmount,
-                totalAmount: order.gst.totalAmount,
-                paymentId: response.razorpay_payment_id,
-                orderId: order.orderId,
-                bookingId: order.bookingId,
-                date: new Date().toISOString(),
-              })
-            );
-
-            clearProgress();
-
-            // Let the checkmark + confetti animation actually play before leaving
-            setTimeout(() => {
-              router.push("/become-distributor/thanks");
-            }, 1800);
-          } catch (err) {
-            setPaymentError(
-              err instanceof ApiError
-                ? err.message
-                : "Payment succeeded but we couldn't confirm it. Please contact support with your payment ID: " +
-                    response.razorpay_payment_id
-            );
-          }
-        },
-        modal: {
-          ondismiss: () => setPaymentStatus("dismissed"),
-        },
-      });
-
-      rzp.on("payment.failed", () => {
-        setPaymentError("Payment failed. You can try again below.");
-        setPaymentStatus("dismissed");
-      });
-
-      rzp.open();
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [form.name, form.email, form.mobile, pincodeResult, clearProgress, router]
-  );
+  /* ---------------- payment (QR + UTR) ---------------- */
 
   async function handleSubmitUtr(e: FormEvent) {
     e.preventDefault();
     setUtrLoading(true);
     setUtrError("");
     try {
-      await distributorApi.submitUtr(bookingId, utrInput);
+      if (!plan) return;
+      await distributorApi.submitUtr(bookingId, utrInput, plan, {
+        panCard: kyc.panCard,
+        aadhaarAddress: kyc.aadhaarAddress,
+        shopName: kyc.shopName,
+        shopAddress: kyc.shopAddress,
+        referralCode: kyc.referralCode,
+      });
 
       sessionStorage.setItem(
         "cashlo_pending_booking",
@@ -581,7 +485,7 @@ export default function ReserveCheckout() {
           district: pincodeResult?.district,
           state: pincodeResult?.state,
           bookingId,
-          paymentMode: "qr_self",
+          plan,
         })
       );
       clearProgress();
@@ -593,56 +497,18 @@ export default function ReserveCheckout() {
     }
   }
 
-  const initiateOrder = useCallback(async () => {
-    setPaymentError("");
-    setPaymentStatus("preparing");
-    try {
-      const order = await distributorApi.createOrder(bookingId);
-      await startPayment(order);
-    } catch (err) {
-      setPaymentError(err instanceof ApiError ? err.message : "Something went wrong. Please try again.");
-      setPaymentStatus("dismissed");
-    }
-  }, [bookingId, startPayment]);
-
-  useEffect(() => {
-    if (step !== "payment") return;
-
-    if (razorpayLoaded) {
-      initiateOrder();
-      return;
-    }
-
-    const timeout = setTimeout(() => {
-      if (!window.Razorpay) {
-        setPaymentError(
-          "Payment system is taking longer than expected. Please check your connection or disable any ad-blocker, then retry."
-        );
-        setPaymentStatus("dismissed");
-      }
-    }, 8000);
-
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step, razorpayLoaded]);
-
   /* ---------------- render ---------------- */
 
   const railStep = RAIL_STEP[step];
   const territorySelected = Boolean(pincodeResult?.available);
-  const detailsLocked = step === "payment" || step === "qr" || step === "success";
+  const detailsLocked = step === "plan" || step === "kyc" || step === "qr";
+  // Sidebar + QR show the selected plan; before a choice, the booking plan
+  // (the smaller "due today") is what's displayed.
+  const activePlan = plans[plan ?? "booking"];
+  const fullSavings = plans.booking.total - plans.full.total;
 
   return (
     <div ref={rootRef} className="flex min-h-screen flex-col bg-surface">
-      <Script
-        src="https://checkout.razorpay.com/v1/checkout.js"
-        strategy="afterInteractive"
-        onLoad={() => setRazorpayLoaded(true)}
-        onError={() =>
-          setPaymentError("Failed to load the payment system. Please check your connection and refresh the page.")
-        }
-      />
-
       {/* ---- Checkout header: back / logo / secure ---- */}
       <header className="sticky top-0 z-40 border-b border-border bg-bg/90 backdrop-blur-md">
         <div className="relative mx-auto flex h-16 w-full max-w-5xl items-center justify-between px-4 sm:px-6">
@@ -696,7 +562,7 @@ export default function ReserveCheckout() {
                   {summaryOpen ? "Hide" : "Show"} order summary
                 </span>
                 <span className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink">
-                  {FEE.total}
+                  {formatRupees(activePlan.totalAmount, true)}
                   <ChevronDown
                     size={15}
                     className={`text-ink/40 transition-transform duration-300 ${summaryOpen ? "rotate-180" : ""}`}
@@ -744,16 +610,18 @@ export default function ReserveCheckout() {
                   {/* Price breakdown */}
                   <div className="mt-5 border-t border-border pt-4 text-[13px]">
                     <div className="flex items-center justify-between py-1 text-ink/60">
-                      <span>PIN code booking fee</span>
-                      <span className="font-mono">{FEE.base}</span>
+                      <span>{plan === "full" ? "Distributor fee (full payment)" : "PIN code booking fee"}</span>
+                      <span className="font-mono">{formatRupees(activePlan.baseAmount, true)}</span>
                     </div>
                     <div className="flex items-center justify-between py-1 text-ink/60">
                       <span>GST (18%)</span>
-                      <span className="font-mono">{FEE.gst}</span>
+                      <span className="font-mono">{formatRupees(activePlan.gstAmount, true)}</span>
                     </div>
                     <div className="mt-2 flex items-center justify-between border-t border-border pt-3">
                       <span className="text-[14px] font-semibold text-ink">Total due today</span>
-                      <span className="font-mono text-[15px] font-semibold text-ink">{FEE.total}</span>
+                      <span className="font-mono text-[15px] font-semibold text-ink">
+                        {formatRupees(activePlan.totalAmount, true)}
+                      </span>
                     </div>
                   </div>
 
@@ -765,7 +633,7 @@ export default function ReserveCheckout() {
                     </li>
                     <li className="flex items-start gap-2.5 text-[12.5px] text-ink/55">
                       <ShieldCheck size={14} className="mt-0.5 shrink-0 text-ink/35" />
-                      100% secure payment via Razorpay / UPI
+                      Pay with any UPI app — verified by our team
                     </li>
                     <li className="flex items-start gap-2.5 text-[12.5px] text-ink/55">
                       <FileText size={14} className="mt-0.5 shrink-0 text-ink/35" />
@@ -774,8 +642,11 @@ export default function ReserveCheckout() {
                   </ul>
 
                   <p className="mt-4 text-[11.5px] leading-relaxed text-ink/40">
-                    The booking fee is non-refundable. A separate registration fee applies later,
-                    during onboarding.
+                    {plan === "full"
+                      ? "One payment — nothing more to pay later."
+                      : `The booking fee is non-refundable. The remaining ${formatRupees(
+                          plans.booking.finalAmount ?? plans.booking.total - plans.booking.totalAmount
+                        )} is paid later, during onboarding — or pay ${formatRupees(plans.full.total)} once and save ${formatRupees(fullSavings)}.`}
                   </p>
                 </div>
               </div>
@@ -908,8 +779,9 @@ export default function ReserveCheckout() {
                               </div>
                             </div>
                             <p className="mt-3 text-[13px] leading-relaxed text-ink/60">
-                              Reserve it now before someone else books it. The ₹1,180 booking fee
-                              holds this PIN code exclusively for you.
+                              Reserve it now before someone else books it — from{" "}
+                              {formatRupees(plans.booking.totalAmount)}, or {formatRupees(plans.full.total)} paid
+                              in full.
                             </p>
                             <button onClick={() => setStep("form")} className={primaryBtnClass + " mt-4"}>
                               Reserve this PIN code
@@ -1084,10 +956,12 @@ export default function ReserveCheckout() {
                       </div>
 
                       <div className="mt-6 rounded-lg border border-border bg-surface/60 px-4 py-3.5 text-[12.5px] leading-relaxed text-ink/60">
-                        <span className="font-medium text-ink">Two-step payment.</span> The{" "}
-                        <span className="font-medium text-ink">₹1,180 booking fee</span> reserves
-                        this PIN code exclusively for you. A separate registration fee applies after
-                        your booking is confirmed, payable during onboarding.
+                        <span className="font-medium text-ink">Two ways to pay.</span> After
+                        verification, reserve this PIN code for{" "}
+                        <span className="font-medium text-ink">{formatRupees(plans.booking.totalAmount)}</span>{" "}
+                        and pay the rest during onboarding, or pay{" "}
+                        <span className="font-medium text-ink">{formatRupees(plans.full.total)}</span> once and
+                        save {formatRupees(fullSavings)}.
                       </div>
 
                       <div className="mt-6 space-y-1">
@@ -1195,27 +1069,155 @@ export default function ReserveCheckout() {
                     </motion.form>
                   )}
 
+                  {step === "plan" && (
+                    <motion.div key="plan" {...stepMotion}>
+                      <div className="mb-6">
+                        <p className="text-[15px] font-semibold text-ink">Choose how to pay</p>
+                        <p className="mt-1 text-[13px] text-ink/50">
+                          Both options reserve PIN {pincodeResult?.pincode} exclusively for you.
+                        </p>
+                      </div>
+
+                      <div className="space-y-3" role="radiogroup" aria-label="Payment plan">
+                        {(
+                          [
+                            {
+                              key: "full",
+                              title: `Pay in full — ${formatRupees(plans.full.total)}`,
+                              badge: `Save ${formatRupees(fullSavings)}`,
+                              detail:
+                                "One payment, nothing due later. Add your KYC details now and your PIN code is activated once we verify the payment.",
+                            },
+                            {
+                              key: "booking",
+                              title: `Reserve now — ${formatRupees(plans.booking.totalAmount)}`,
+                              badge: null,
+                              detail: `Pay ${formatRupees(
+                                plans.booking.finalAmount ?? plans.booking.total - plans.booking.totalAmount
+                              )} later during onboarding (${formatRupees(plans.booking.total)} in total).`,
+                            },
+                          ] as const
+                        ).map((option) => {
+                          const selected = plan === option.key;
+                          return (
+                            <button
+                              key={option.key}
+                              type="button"
+                              role="radio"
+                              aria-checked={selected}
+                              aria-label={option.title}
+                              onClick={() => setPlan(option.key)}
+                              className={`w-full rounded-xl border px-4 py-4 text-left transition-all duration-200 ${
+                                selected
+                                  ? "border-ink bg-surface ring-[3px] ring-ink/10"
+                                  : "border-border hover:border-ink/25"
+                              }`}
+                            >
+                              <span className="flex items-start gap-3">
+                                <span
+                                  className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+                                    selected ? "border-ink" : "border-ink/30"
+                                  }`}
+                                >
+                                  {selected && <span className="h-2 w-2 rounded-full bg-ink" />}
+                                </span>
+                                <span className="min-w-0 flex-1">
+                                  <span className="flex flex-wrap items-center gap-2">
+                                    <span className="text-[14.5px] font-semibold text-ink">{option.title}</span>
+                                    {option.badge && (
+                                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-700 dark:bg-emerald-950/50 dark:text-emerald-300">
+                                        {option.badge}
+                                      </span>
+                                    )}
+                                  </span>
+                                  <span className="mt-1 block text-[12.5px] leading-relaxed text-ink/55">
+                                    {option.detail}
+                                  </span>
+                                </span>
+                              </span>
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <SubmitButton onClick={handleChoosePlan} disabled={!plan} className="mt-6">
+                        Continue
+                      </SubmitButton>
+                    </motion.div>
+                  )}
+
+                  {step === "kyc" && (
+                    <motion.div key="kyc" {...stepMotion}>
+                      <button type="button" onClick={() => setStep("plan")} className={backLinkClass}>
+                        <ArrowLeft size={13} />
+                        Change plan
+                      </button>
+
+                      <div className="mb-2 flex items-center gap-3">
+                        <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-ink/5">
+                          <User size={16} strokeWidth={2} className="text-ink" />
+                        </span>
+                        <div>
+                          <p className="text-[15px] font-semibold text-ink">Distributor details</p>
+                          <p className="text-[13px] text-ink/50">Needed to activate your PIN code</p>
+                        </div>
+                      </div>
+
+                      <DistributorKycFields bookingId={bookingId} values={kyc} onChange={setKyc} showReferral={false} />
+
+                      <AnimatePresence>
+                        {kycFormError && (
+                          <motion.p
+                            initial={{ opacity: 0, height: 0 }}
+                            animate={{ opacity: 1, height: "auto" }}
+                            exit={{ opacity: 0, height: 0 }}
+                            className="mt-2.5 text-[13px] text-red-600"
+                          >
+                            {kycFormError}
+                          </motion.p>
+                        )}
+                      </AnimatePresence>
+
+                      <SubmitButton onClick={handleKycContinue} className="mt-6">
+                        Proceed to pay {formatRupees(plans.full.total)}
+                      </SubmitButton>
+                    </motion.div>
+                  )}
+
                   {step === "qr" && (
                     <motion.form key="qr" {...stepMotion} onSubmit={handleSubmitUtr}>
+                      <button
+                        type="button"
+                        onClick={() => setStep(plan === "full" ? "kyc" : "plan")}
+                        className={backLinkClass}
+                      >
+                        <ArrowLeft size={13} />
+                        {plan === "full" ? "Edit details" : "Change plan"}
+                      </button>
+
                       <div className="text-center">
                         <span className="mx-auto flex h-9 w-9 items-center justify-center rounded-full bg-ink/5">
                           <QrCode size={16} strokeWidth={2} className="text-ink" />
                         </span>
                         <p className="mt-3 text-[15px] font-semibold text-ink">
-                          Scan &amp; pay ₹1,180
+                          Scan &amp; pay {formatRupees(activePlan.totalAmount)}
                         </p>
                         <p className="mt-1 text-[13px] text-ink/50">
-                          Scan with any UPI app to complete your booking payment
+                          {plan === "full"
+                            ? "Scan with any UPI app to pay your distributor fee in full"
+                            : "Scan with any UPI app to complete your booking payment"}
                         </p>
 
                         <div className="mx-auto mt-6 w-52 overflow-hidden rounded-xl border border-border shadow-sm">
                           <div className="relative bg-white p-4">
                             <span className="absolute left-1/2 top-2 -translate-x-1/2 rounded-full bg-brand px-3 py-1 text-[11px] font-semibold text-white shadow-sm">
-                              Pay ₹1,180
+                              Pay {formatRupees(activePlan.totalAmount)}
                             </span>
                             <div className="mt-6 flex items-center justify-center">
                               <QRCodeSVG
-                                value={`upi://pay?pa=MAB.037215011487460@AXISBANK&pn=Cashlo&am=1180&cu=INR&tn=Cashlo Distributor Booking Fee`}
+                                value={`upi://pay?pa=MAB.037215011487460@AXISBANK&pn=Cashlo&am=${activePlan.totalAmount / 100}&cu=INR&tn=${
+                                  plan === "full" ? "Cashlo Distributor Fee (Full)" : "Cashlo Distributor Booking Fee"
+                                }`}
                                 size={176}
                                 level="M"
                               />
@@ -1261,75 +1263,18 @@ export default function ReserveCheckout() {
                       </SubmitButton>
 
                       <p className="mt-4 text-center text-[12px] text-ink/40">
-                        Our team will verify your payment and confirm your reservation shortly. Keep
-                        your payment screenshot handy in case we need it.
+                        Our team will verify your payment and{" "}
+                        {plan === "full" ? "activate your PIN code" : "confirm your reservation"} shortly.
+                        Keep your payment screenshot handy in case we need it.
                       </p>
                     </motion.form>
-                  )}
-
-                  {step === "payment" && (
-                    <motion.div key="payment" {...stepMotion} className="py-4 text-center">
-                      {(paymentStatus === "preparing" || paymentStatus === "waiting") && (
-                        <p className="text-[14px] text-ink/60">
-                          {paymentStatus === "preparing"
-                            ? "Preparing your secure payment…"
-                            : "Complete your payment in the window that opened."}
-                        </p>
-                      )}
-
-                      {(paymentStatus === "verifying" || paymentStatus === "success") && (
-                        <PaymentSuccessAnimation
-                          status={paymentStatus === "success" ? "success" : "processing"}
-                        />
-                      )}
-
-                      <AnimatePresence>
-                        {paymentError && (
-                          <motion.p
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            className="mt-3 text-[13px] text-red-600"
-                          >
-                            {paymentError}
-                          </motion.p>
-                        )}
-                      </AnimatePresence>
-
-                      {paymentStatus === "dismissed" && (
-                        <SubmitButton onClick={initiateOrder} className="mt-5">
-                          Retry payment
-                        </SubmitButton>
-                      )}
-                    </motion.div>
-                  )}
-
-                  {step === "success" && (
-                    <motion.div key="success" {...stepMotion} className="py-2 text-center">
-                      <motion.span
-                        initial={{ scale: 0.6, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ duration: 0.4, ease: [0.34, 1.56, 0.64, 1] }}
-                        className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100"
-                      >
-                        <PartyPopper size={24} className="text-emerald-600" />
-                      </motion.span>
-                      <h3 className="mt-4 text-lg font-semibold text-ink">You&apos;re all set</h3>
-                      <p className="mx-auto mt-2 max-w-sm text-[13.5px] leading-relaxed text-ink/55">
-                        Your PIN code has been reserved and is now exclusively assigned to you. Our
-                        team will reach out shortly for onboarding.
-                      </p>
-                      <Link href="/" className={secondaryBtnClass + " mt-6 inline-flex w-auto px-8"}>
-                        Back to home
-                      </Link>
-                    </motion.div>
                   )}
                 </AnimatePresence>
               </div>
 
               {/* After OTP verification the details are locked — no back button,
                   so give people a support path instead */}
-              {detailsLocked && step !== "success" && (
+              {detailsLocked && (
                 <p className="mt-4 flex items-center justify-center gap-1.5 text-[12px] text-ink/40">
                   <LifeBuoy size={13} />
                   Spotted a mistake in your details? Don&apos;t pay twice — email{" "}
@@ -1346,7 +1291,7 @@ export default function ReserveCheckout() {
       {/* ---- Minimal checkout footer ---- */}
       <footer className="border-t border-border bg-bg py-5">
         <p className="text-center text-[11.5px] text-ink/40">
-          © {new Date().getFullYear()} Cashlo · Payments secured by Razorpay · Need help?{" "}
+          © {new Date().getFullYear()} Cashlo · Need help?{" "}
           <a href="mailto:support@cashlo.app" className="font-medium text-ink/55 transition-colors hover:text-ink">
             support@cashlo.app
           </a>

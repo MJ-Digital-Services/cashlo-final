@@ -29,13 +29,39 @@ export type DistributorFormInput = {
   consents: Consents;
 };
 
-export type CreateOrderResult = {
-  orderId: string;
-  amount: number;
-  currency: string;
-  keyId: string;
-  bookingId: string;
-  gst: { baseAmount: number; gstAmount: number; totalAmount: number };
+// Mirrors cashlo-backend's publicPlans() (src/config/distributorFees.js),
+// returned by verifyOtp. All amounts are paise, inclusive of GST.
+export type DistributorPlan = "booking" | "full";
+
+export type PlanPricing = {
+  baseAmount: number;
+  gstAmount: number;
+  totalAmount: number; // what's paid now for this plan
+  total: number; // total distributor fee on this plan
+  finalAmount?: number; // booking plan only: the later ₹5,900
+};
+
+export type DistributorPlans = Record<DistributorPlan, PlanPricing>;
+
+// Shown before OTP verification, when the live plans from verifyOtp aren't
+// loaded yet (and for sessions restored from before they were). Must match
+// the backend's DISTRIBUTOR_PLANS — the backend's values win once loaded,
+// and are what's actually charged.
+export const DEFAULT_PLANS: DistributorPlans = {
+  booking: { baseAmount: 100000, gstAmount: 18000, totalAmount: 118000, total: 708000, finalAmount: 590000 },
+  full: { baseAmount: 550000, gstAmount: 99000, totalAmount: 649000, total: 649000 },
+};
+
+export function formatRupees(paise: number, decimals = false) {
+  return `₹${(paise / 100).toLocaleString("en-IN", decimals ? { minimumFractionDigits: 2 } : undefined)}`;
+}
+
+export type FullPlanKyc = {
+  panCard: string;
+  aadhaarAddress: string;
+  shopName: string;
+  shopAddress: string;
+  referralCode?: string;
 };
 
 export type NearbyPincodeSuggestion = {
@@ -111,7 +137,6 @@ async function postFormData<T>(path: string, formData: FormData): Promise<T> {
   return json.data as T;
 }
 
-export type PaymentMode = "razorpay" | "manual" | "qr_self";
 
 export const distributorApi = {
   checkPincode: (pincode: string) =>
@@ -124,23 +149,16 @@ export const distributorApi = {
     post<{ bookingId: string }>("/distributor/send-otp", input),
 
   verifyOtp: (bookingId: string, otp: string) =>
-    post<{ bookingId: string; manualPayment: boolean; paymentMode: PaymentMode }>(
-      "/distributor/verify-otp",
-      { bookingId, otp }
-    ),
+    post<{ bookingId: string; plans: DistributorPlans }>("/distributor/verify-otp", { bookingId, otp }),
 
-  submitUtr: (bookingId: string, utr: string) =>
-    post<{ bookingId: string; status: string }>("/distributor/submit-utr", { bookingId, utr }),
-
-  createOrder: (bookingId: string) =>
-    post<CreateOrderResult>("/distributor/create-order", { bookingId }),
-
-  verifyPayment: (params: {
-    bookingId: string;
-    razorpay_order_id: string;
-    razorpay_payment_id: string;
-    razorpay_signature: string;
-  }) => post<{ bookingId: string; lockLost: boolean }>("/distributor/verify-payment", params),
+  // kyc is required (and only sent) for the full plan.
+  submitUtr: (bookingId: string, utr: string, plan: DistributorPlan, kyc?: FullPlanKyc) =>
+    post<{ bookingId: string; plan: DistributorPlan; status: string }>("/distributor/submit-utr", {
+      bookingId,
+      utr,
+      plan,
+      ...(plan === "full" ? kyc : {}),
+    }),
 
   findExistingBooking: (pincode: string) =>
     post<ExistingBookingLookup>("/distributor/find-existing-booking", { pincode }),

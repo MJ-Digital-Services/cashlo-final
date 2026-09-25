@@ -22,33 +22,45 @@ reservation flow. The actual reserve → pay → activate flow is under
 
 - `src/app/become-distributor/reserve` +
   `src/components/sections/become-distributor/ReserveCheckout.tsx` — the
-  main stepper: pincode check → form/consents → OTP → payment (razorpay /
-  manual / qr_self) → success. In-progress state cached in
-  `sessionStorage` under `cashlo_reserve_progress`.
+  main stepper: pincode → form/consents → OTP → **plan** (booking ₹1,180
+  now + ₹5,900 later, or full ₹6,490 once) → **kyc** (full plan only) → QR +
+  UTR → `/pending`. QR/UTR is the only payment method (Razorpay + manual
+  mode were removed 2026-09-25 — no checkout script, no `/thanks` page).
+  Amounts come from `verifyOtp`'s `plans` (backend's
+  `src/config/distributorFees.js`); `DEFAULT_PLANS` in
+  `lib/api/distributor.ts` is only the pre-OTP fallback and must match the
+  backend. In-progress state (step, plan, plans, KYC incl. uploaded Aadhaar
+  URLs) is cached in `sessionStorage` under `cashlo_reserve_progress`;
+  unknown/removed steps (e.g. an old `"payment"`) are ignored on restore.
 - `src/app/become-distributor/choose` (`DistributorChooseFlow`) — "book
   new" vs "complete pending payment."
 - `src/app/become-distributor/complete-payment` (`CompletePaymentFlow`) —
-  the second, larger **activation fee** flow for an already-reserved pincode
-  (OTP to registered email → PAN/Aadhaar/shop details → Aadhaar front/back
-  image upload with click-to-preview lightbox → UTR). Upload is immediate
-  on file selection (via `distributorApi.uploadAadhaarImage`), not batched
-  with the final submit; "Proceed to Pay" is blocked until both images are
-  uploaded. Client-side rejects files over 5MB (`MAX_AADHAAR_IMAGE_BYTES`
-  in `CompletePaymentFlow.tsx`) to match the backend's multer limit.
-  In-progress state (step, booking, summary, form fields, uploaded image
-  URLs) is cached in `sessionStorage` under
+  the booking plan's second, larger **₹5,900 final payment** for an
+  already-reserved pincode (OTP to registered email → KYC → UTR).
+- `DistributorKycFields.tsx` — the shared KYC form (PAN, Aadhaar address,
+  shop name/address, Aadhaar front/back upload with click-to-preview
+  lightbox, optional referral) used by **both** KYC points: the full plan's
+  `kyc` step in `ReserveCheckout` and `CompletePaymentFlow`. Controlled via
+  a single `KycValues` object the parent persists; `kycError()` mirrors the
+  backend's validation. Upload is immediate on file selection (via
+  `distributorApi.uploadAadhaarImage`), not batched with the final submit;
+  continuing is blocked until both images are uploaded. Client-side rejects
+  files over 5MB (`MAX_AADHAAR_IMAGE_BYTES`) to match the backend's multer
+  limit. CompletePaymentFlow's in-progress state (step, booking, summary,
+  `kyc`) is cached in `sessionStorage` under
   `cashlo_complete_payment_progress` — same hydrate-on-mount /
   save-on-change / clear-on-completion pattern as `ReserveCheckout`'s
   `cashlo_reserve_progress` above, so a refresh mid-flow resumes instead of
   dropping back to the pincode/OTP screen. The OTP input itself is never
   cached, and the `done` step is excluded from restoration (it's a
-  one-time confirmation, not a resumable state). If you add new form
-  fields to this flow, add them to both the hydrate and save effects or
-  they'll silently not survive a refresh.
-- `src/app/become-distributor/pending` / `/thanks` — status/receipt pages.
+  one-time confirmation, not a resumable state). New KYC fields belong in
+  `KycValues`/`EMPTY_KYC`, which both flows already persist as one object.
+- `src/app/become-distributor/pending` — post-UTR status page; reads
+  `cashlo_pending_booking` (incl. `plan`) and shows a plan-specific
+  timeline. `/thanks` was Razorpay-only and has been deleted.
 - `src/lib/api/distributor.ts` — `distributorApi`, calls to
-  `/distributor/check-pincode`, `/send-otp`, `/verify-otp`,
-  `/create-order`, `/verify-payment`, `/submit-utr`,
+  `/distributor/check-pincode`, `/send-otp`, `/verify-otp`, `/submit-utr`
+  (`plan` + KYC for the full plan), `/existing-booking/*`, including
   `/existing-booking/upload-aadhaar` (multipart `FormData`, via a separate
   `postFormData` helper — the generic `post()` helper is JSON-only).
 - Other pages (`services/*`, `calculators`, `faq`, legal pages) are
@@ -224,8 +236,8 @@ way to force it).
 
 ## Known gaps (flagged, not fixed — pick up if revisiting SEO)
 
-- `/become-distributor/pending` and `/become-distributor/thanks` are
-  `'use client'` pages with **zero** metadata — no explicit `noindex` meta
+- `/become-distributor/pending` is a `'use client'` page with **zero**
+  metadata (`/thanks` was deleted with Razorpay) — no explicit `noindex` meta
   tag, unlike the other three flow pages (`reserve`/`choose`/
   `complete-payment`, which all set `robots: { index: false }` inline).
   They currently rely solely on `robots.txt`'s `Disallow`, which blocks

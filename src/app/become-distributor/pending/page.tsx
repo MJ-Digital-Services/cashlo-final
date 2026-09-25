@@ -7,13 +7,13 @@ import {
   Clock,
   Check,
   Copy,
-  PhoneCall,
   MailCheck,
   ShieldCheck,
   MapPin,
   LifeBuoy,
 } from "lucide-react";
 import Container from "@/components/ui/Container";
+import { DEFAULT_PLANS, formatRupees } from "@/lib/api/distributor";
 
 type PendingBooking = {
   name: string;
@@ -21,7 +21,8 @@ type PendingBooking = {
   district: string;
   state: string;
   bookingId: string;
-  paymentMode?: "manual" | "qr_self";
+  // Missing on sessions from before plans existed → treated as 'booking'.
+  plan?: "booking" | "full";
 };
 
 const cardBaseClass =
@@ -47,42 +48,29 @@ type TimelineItem = {
   state: "done" | "active" | "upcoming";
 };
 
-function buildTimeline(mode?: "manual" | "qr_self"): TimelineItem[] {
-  if (mode === "qr_self") {
-    return [
-      {
-        title: "Payment reference received",
-        detail: "Your UTR has been submitted successfully.",
-        state: "done",
-      },
-      {
-        title: "Our team verifies your payment",
-        detail: "We match your UTR against our bank records — usually done within a few hours.",
-        state: "active",
-      },
-      {
-        title: "Reservation confirmed by email",
-        detail: "You'll get a confirmation email, then our team contacts you for onboarding.",
-        state: "upcoming",
-      },
-    ];
-  }
+function buildTimeline(plan: "booking" | "full"): TimelineItem[] {
   return [
     {
-      title: "Reservation request received",
-      detail: "Your details and territory choice are with our sales team.",
+      title: "Payment reference received",
+      detail: "Your UTR has been submitted successfully.",
       state: "done",
     },
     {
-      title: "Our team calls you",
-      detail: "We'll call shortly to complete the ₹1,180 booking fee — keep your phone reachable.",
+      title: "Our team verifies your payment",
+      detail: "We match your UTR against our bank records — usually done within a few hours.",
       state: "active",
     },
-    {
-      title: "Territory confirmed",
-      detail: "Once paid, the PIN code is locked to you and onboarding begins.",
-      state: "upcoming",
-    },
+    plan === "full"
+      ? {
+          title: "PIN code activated",
+          detail: "You'll get an activation email with your receipt, then our team contacts you for onboarding.",
+          state: "upcoming",
+        }
+      : {
+          title: "Reservation confirmed by email",
+          detail: "You'll get a confirmation email, then our team contacts you for onboarding.",
+          state: "upcoming",
+        },
   ];
 }
 
@@ -178,8 +166,8 @@ export default function BecomeDistributorPendingPage() {
     }
   }
 
-  const isQr = booking?.paymentMode === "qr_self";
-  const timeline = buildTimeline(booking?.paymentMode);
+  const plan = booking?.plan ?? "booking";
+  const timeline = buildTimeline(plan);
 
   return (
     <main className="min-h-screen bg-surface pt-32 pb-20 sm:pt-36 sm:pb-24">
@@ -204,11 +192,7 @@ export default function BecomeDistributorPendingPage() {
               transition={{ duration: 0.45, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] }}
               className="relative flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-950/50"
             >
-              {isQr ? (
-                <ShieldCheck size={26} className="text-amber-600 dark:text-amber-400" />
-              ) : (
-                <PhoneCall size={26} className="text-amber-600 dark:text-amber-400" />
-              )}
+              <ShieldCheck size={26} className="text-amber-600 dark:text-amber-400" />
             </motion.span>
           </div>
 
@@ -216,9 +200,7 @@ export default function BecomeDistributorPendingPage() {
             {booking ? `Almost there, ${titleCase(booking.name)}!` : "Almost there!"}
           </h1>
           <p className="mx-auto mt-2 max-w-md text-[14px] leading-relaxed text-ink/55">
-            {isQr
-              ? "Your payment reference is in — we're verifying it now. Nothing else to do on your side."
-              : "Your reservation request is in. Our team will call you shortly to complete it."}
+            Your payment reference is in — we&apos;re verifying it now. Nothing else to do on your side.
           </p>
         </motion.div>
 
@@ -253,7 +235,7 @@ export default function BecomeDistributorPendingPage() {
 
             <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5 text-[11px] font-semibold tracking-wide text-amber-800 dark:bg-amber-950/50 dark:text-amber-300">
               <Clock size={11} />
-              {isQr ? "VERIFYING PAYMENT" : "AWAITING OUR CALL"}
+              VERIFYING PAYMENT
             </span>
           </div>
 
@@ -301,11 +283,9 @@ export default function BecomeDistributorPendingPage() {
           <div className="mt-7 flex items-start gap-2.5 rounded-lg border border-border bg-surface/60 px-4 py-3.5">
             <MailCheck size={14} className="mt-0.5 shrink-0 text-ink/35" />
             <p className="text-[12px] leading-relaxed text-ink/55">
-              {isQr
-                ? "Keep your payment screenshot handy in case our team needs it. "
-                : "The call will come from our official Cashlo team. "}
-              A separate registration fee applies later, during onboarding — we&apos;ll share the
-              details then.
+              Keep your payment screenshot handy in case our team needs it.
+              {plan === "booking" &&
+                ` The remaining ${formatRupees(DEFAULT_PLANS.booking.finalAmount!)} is paid later, during onboarding — we'll share the details then.`}
             </p>
           </div>
         </motion.div>
