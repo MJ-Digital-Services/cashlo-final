@@ -15,8 +15,9 @@ import {
   ArrowLeft,
   ShieldCheck,
   QrCode,
+  TrendingUp,
+  Layers,
   CheckCircle2,
-  FileText,
   ChevronDown,
   LifeBuoy,
   User,
@@ -378,6 +379,19 @@ export default function ReserveCheckout() {
     await runPincodeCheck(pincode);
   }
 
+  // sendOtp reuses the same lead while it's pre-verification, so the id only
+  // changes when this is genuinely a different lead (new email/pincode, or
+  // the old one was cancelled/refunded). A plan or Aadhaar images picked for
+  // the old lead don't apply to the new one — the images live on the old
+  // lead server-side — so drop them instead of restoring stale choices.
+  function adoptBookingId(newBookingId: string) {
+    if (newBookingId !== bookingId) {
+      setPlan(null);
+      setKyc(EMPTY_KYC);
+    }
+    setBookingId(newBookingId);
+  }
+
   function resetToPincodeStep() {
     setPincodeResult(null);
     setPincodeInput("");
@@ -405,7 +419,7 @@ export default function ReserveCheckout() {
         pincode: pincodeResult.pincode,
         consents,
       });
-      setBookingId(newBookingId);
+      adoptBookingId(newBookingId);
       setOtpInput("");
       setStep("otp");
       setResendCooldown(45);
@@ -425,7 +439,7 @@ export default function ReserveCheckout() {
         pincode: pincodeResult!.pincode,
         consents,
       });
-      setBookingId(newBookingId);
+      adoptBookingId(newBookingId);
       setResendCooldown(45);
     } catch (err) {
       setOtpError(err instanceof ApiError ? err.message : "Failed to resend OTP.");
@@ -504,7 +518,11 @@ export default function ReserveCheckout() {
   const detailsLocked = step === "plan" || step === "kyc" || step === "qr";
   // Sidebar + QR show the selected plan; before a choice, the booking plan
   // (the smaller "due today") is what's displayed.
-  const activePlan = plans[plan ?? "booking"];
+  // Only after OTP does the customer actually pick a plan; before that (incl.
+  // going back to edit details) the sidebar shows both options instead of a
+  // plan remembered from an earlier pass.
+  const planChosen = plan !== null && (step === "plan" || step === "kyc" || step === "qr");
+  const activePlan = plans[planChosen ? plan : "booking"];
   const fullSavings = plans.booking.total - plans.full.total;
 
   return (
@@ -562,7 +580,7 @@ export default function ReserveCheckout() {
                   {summaryOpen ? "Hide" : "Show"} order summary
                 </span>
                 <span className="inline-flex items-center gap-2 text-[14px] font-semibold text-ink">
-                  {formatRupees(activePlan.totalAmount, true)}
+                  {planChosen ? formatRupees(activePlan.totalAmount, true) : `From ${formatRupees(plans.booking.totalAmount)}`}
                   <ChevronDown
                     size={15}
                     className={`text-ink/40 transition-transform duration-300 ${summaryOpen ? "rotate-180" : ""}`}
@@ -607,47 +625,99 @@ export default function ReserveCheckout() {
                     )}
                   </AnimatePresence>
 
-                  {/* Price breakdown */}
-                  <div className="mt-5 border-t border-border pt-4 text-[13px]">
-                    <div className="flex items-center justify-between py-1 text-ink/60">
-                      <span>{plan === "full" ? "Distributor fee (full payment)" : "PIN code booking fee"}</span>
-                      <span className="font-mono">{formatRupees(activePlan.baseAmount, true)}</span>
+                  {planChosen ? (
+                    <>
+                      {/* Chosen plan: price breakdown */}
+                      <div className="mt-5 border-t border-border pt-4 text-[13px]">
+                        <div className="flex items-center justify-between py-1 text-ink/60">
+                          <span>{plan === "full" ? "Distributor fee (full payment)" : "PIN code booking fee"}</span>
+                          <span className="font-mono">{formatRupees(activePlan.baseAmount, true)}</span>
+                        </div>
+                        <div className="flex items-center justify-between py-1 text-ink/60">
+                          <span>GST (18%)</span>
+                          <span className="font-mono">{formatRupees(activePlan.gstAmount, true)}</span>
+                        </div>
+                        <div className="mt-2 flex items-center justify-between border-t border-border pt-3">
+                          <span className="text-[14px] font-semibold text-ink">Total due today</span>
+                          <span className="font-mono text-[15px] font-semibold text-ink">
+                            {formatRupees(activePlan.totalAmount, true)}
+                          </span>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-[11.5px] leading-relaxed text-ink/40">
+                        {plan === "full"
+                          ? "One payment — nothing more to pay later."
+                          : `The remaining ${formatRupees(
+                              plans.booking.finalAmount ?? plans.booking.total - plans.booking.totalAmount
+                            )} is paid later, during onboarding (${formatRupees(plans.booking.total)} in total).`}
+                      </p>
+                    </>
+                  ) : (
+                    /* No plan yet: compare the two ways to pay */
+                    <div className="mt-5 border-t border-border pt-4">
+                      <p className="text-[10.5px] font-medium uppercase tracking-wider text-ink/35">
+                        Two ways to pay
+                      </p>
+                      <div className="mt-3 space-y-2.5">
+                        <div className="rounded-lg border border-emerald-200 bg-emerald-50/60 px-3.5 py-3 dark:border-emerald-900/60 dark:bg-emerald-950/20">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="text-[13.5px] font-semibold text-ink">Pay in full</span>
+                            <span className="font-mono text-[14px] font-semibold text-ink">
+                              {formatRupees(plans.full.total)}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-[12px] leading-relaxed text-ink/55">
+                            One payment, activated on approval.{" "}
+                            <span className="font-medium text-emerald-700 dark:text-emerald-400">
+                              Save {formatRupees(fullSavings)}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="rounded-lg border border-border px-3.5 py-3">
+                          <div className="flex flex-wrap items-center justify-between gap-2">
+                            <span className="text-[13.5px] font-semibold text-ink">Reserve now</span>
+                            <span className="font-mono text-[14px] font-semibold text-ink">
+                              {formatRupees(plans.booking.totalAmount)}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-[12px] leading-relaxed text-ink/55">
+                            {formatRupees(
+                              plans.booking.finalAmount ?? plans.booking.total - plans.booking.totalAmount
+                            )}{" "}
+                            later during onboarding · {formatRupees(plans.booking.total)} total
+                          </p>
+                        </div>
+                      </div>
+                      <p className="mt-3 text-[11.5px] leading-relaxed text-ink/40">
+                        You&apos;ll choose after verifying your email. All prices include 18% GST.
+                      </p>
                     </div>
-                    <div className="flex items-center justify-between py-1 text-ink/60">
-                      <span>GST (18%)</span>
-                      <span className="font-mono">{formatRupees(activePlan.gstAmount, true)}</span>
-                    </div>
-                    <div className="mt-2 flex items-center justify-between border-t border-border pt-3">
-                      <span className="text-[14px] font-semibold text-ink">Total due today</span>
-                      <span className="font-mono text-[15px] font-semibold text-ink">
-                        {formatRupees(activePlan.totalAmount, true)}
-                      </span>
-                    </div>
-                  </div>
+                  )}
 
-                  {/* Trust bullets */}
-                  <ul className="mt-5 space-y-2.5 border-t border-border pt-4">
+                  {/* What the distributor gets — claims mirror the /become-distributor
+                      page (DistributorAbout / DistributorHero); no specific commission
+                      rate is published anywhere, so none is stated here. */}
+                  <p className="mt-5 border-t border-border pt-4 text-[10.5px] font-medium uppercase tracking-wider text-ink/35">
+                    What you get
+                  </p>
+                  <ul className="mt-3 space-y-2.5">
                     <li className="flex items-start gap-2.5 text-[12.5px] text-ink/55">
                       <Lock size={14} className="mt-0.5 shrink-0 text-ink/35" />
-                      One distributor per PIN code — reserved exclusively for you
+                      An exclusive territory — one distributor per PIN code
+                    </li>
+                    <li className="flex items-start gap-2.5 text-[12.5px] text-ink/55">
+                      <TrendingUp size={14} className="mt-0.5 shrink-0 text-ink/35" />
+                      Recurring commission on every transaction your merchants make
+                    </li>
+                    <li className="flex items-start gap-2.5 text-[12.5px] text-ink/55">
+                      <Layers size={14} className="mt-0.5 shrink-0 text-ink/35" />
+                      More income as you onboard more merchants across Cashlo services
                     </li>
                     <li className="flex items-start gap-2.5 text-[12.5px] text-ink/55">
                       <ShieldCheck size={14} className="mt-0.5 shrink-0 text-ink/35" />
-                      Pay with any UPI app — verified by our team
-                    </li>
-                    <li className="flex items-start gap-2.5 text-[12.5px] text-ink/55">
-                      <FileText size={14} className="mt-0.5 shrink-0 text-ink/35" />
-                      GST invoice issued with every booking
+                      Pay with any UPI app · GST invoice with every payment
                     </li>
                   </ul>
-
-                  <p className="mt-4 text-[11.5px] leading-relaxed text-ink/40">
-                    {plan === "full"
-                      ? "One payment — nothing more to pay later."
-                      : `The booking fee is non-refundable. The remaining ${formatRupees(
-                          plans.booking.finalAmount ?? plans.booking.total - plans.booking.totalAmount
-                        )} is paid later, during onboarding — or pay ${formatRupees(plans.full.total)} once and save ${formatRupees(fullSavings)}.`}
-                  </p>
                 </div>
               </div>
             </aside>
