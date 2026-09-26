@@ -32,6 +32,16 @@ reservation flow. The actual reserve → pay → activate flow is under
   backend. In-progress state (step, plan, plans, KYC incl. uploaded Aadhaar
   URLs) is cached in `sessionStorage` under `cashlo_reserve_progress`;
   unknown/removed steps (e.g. an old `"payment"`) are ignored on restore.
+  A restored `plan` only counts as "chosen" on the `plan`/`kyc`/`qr` steps
+  (`planChosen`) — earlier steps show the two-plan comparison in the
+  sidebar instead. When `sendOtp` returns a **different** `bookingId` (a new
+  lead), `adoptBookingId` clears `plan` + `kyc`: Aadhaar URLs were uploaded
+  onto the old lead server-side, so carrying them over would make the full
+  plan's `submitUtr` fail with "please upload both Aadhaar images".
+  The sidebar's "What you get" list reuses the benefit claims already on
+  `/become-distributor` (no commission % is published anywhere — don't
+  invent one). `DistributorHowItWorks` step 04 also reads its amounts from
+  `DEFAULT_PLANS`, so a price change there updates the marketing page too.
 - `src/app/become-distributor/choose` (`DistributorChooseFlow`) — "book
   new" vs "complete pending payment."
 - `src/app/become-distributor/complete-payment` (`CompletePaymentFlow`) —

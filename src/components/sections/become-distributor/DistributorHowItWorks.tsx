@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, type CSSProperties, type ComponentType } from "react";
+import { DEFAULT_PLANS, formatRupees } from "@/lib/api/distributor";
 import {
   Search,
   MapPin,
@@ -271,9 +272,9 @@ function IlloPayment() {
       <div className="hiw-phone">
         <div className="hiw-phone-notch" />
         <div className="hiw-phone-body">
-          <p className="hiw-pay-k">PIN reservation fee</p>
-          <p className="hiw-pay-amt">₹1,180</p>
-          <p className="hiw-pay-sub">One-time · UPI</p>
+          <p className="hiw-pay-k">Reserve your PIN from</p>
+          <p className="hiw-pay-amt">{formatRupees(DEFAULT_PLANS.booking.totalAmount)}</p>
+          <p className="hiw-pay-sub">or {formatRupees(DEFAULT_PLANS.full.total)} in full · UPI</p>
           <div className="hiw-pay-state">
             <span className="hiw-spinner" />
             <span className="hiw-pay-done">
@@ -461,9 +462,13 @@ const STEPS: Step[] = [
   },
   {
     num: "04",
-    title: "Pay ₹1,180 PIN reservation fee",
-    rail: "Pay ₹1,180 reservation fee",
-    caption: "A one-time UPI payment holds the area in your name.",
+    title: `Pay ${formatRupees(DEFAULT_PLANS.booking.totalAmount)} — or ${formatRupees(DEFAULT_PLANS.full.total)} in full`,
+    rail: "Pay to reserve your PIN",
+    caption: `Reserve with ${formatRupees(DEFAULT_PLANS.booking.totalAmount)} and pay ${formatRupees(
+      DEFAULT_PLANS.booking.finalAmount!
+    )} during onboarding, or pay ${formatRupees(DEFAULT_PLANS.full.total)} once and save ${formatRupees(
+      DEFAULT_PLANS.booking.total - DEFAULT_PLANS.full.total
+    )}. Either way, by UPI.`,
     Illo: IlloPayment,
   },
   {
