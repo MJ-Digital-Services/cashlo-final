@@ -8,7 +8,6 @@ import { navItems } from "./navData";
 import NavDropdown from "./NavDropdown";
 import ServicesDropdown from "./ServicesDropdown";
 import MobileMenu from "./MobileMenu";
-import ThemeToggle from "@/components/ui/ThemeToggle";
 import { useTheme } from "@/components/theme/ThemeProvider";
 
 export default function Navbar() {
@@ -93,7 +92,6 @@ export default function Navbar() {
           >
             Become Merchant
           </Link>
-          <ThemeToggle onHero={onHero} />
           <MobileMenu key={pathname} />
         </div>
       </nav>
