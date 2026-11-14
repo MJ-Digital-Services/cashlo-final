@@ -42,7 +42,7 @@ export default function ContactHero() {
 
       {/* Soft wave hugging the bottom of the section */}
       <svg
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-[#f9fafb]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-surface"
         viewBox="0 0 1440 200"
         fill="none"
         preserveAspectRatio="none"

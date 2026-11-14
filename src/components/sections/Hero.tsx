@@ -32,13 +32,13 @@ const avatars: {
 
 export default function Hero() {
   return (
-    <section className="relative flex min-h-screen items-center overflow-hidden bg-[#F9F4F4]">
+    <section className="relative flex min-h-screen items-center overflow-hidden bg-tint-warm">
       <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 items-center gap-6 px-6 py-20 lg:grid-cols-[1fr_1.05fr] lg:gap-4 lg:px-8">
         {/* Left column */}
         <div className="relative z-10">
           <div className="mb-10 inline-flex items-center gap-2 rounded-full bg-brand/10 px-4 py-2">
             <span className="h-1.5 w-1.5 rounded-full bg-brand" />
-            <span className="text-xs font-semibold tracking-wider text-brand-dark">
+            <span className="text-xs font-semibold tracking-wider text-brand-dark dark:text-brand">
               INDIA&apos;S TRUSTED SHOP INCOME PLATFORM
             </span>
           </div>
@@ -96,7 +96,7 @@ export default function Hero() {
                 avatar.image ? (
                   <div
                     key={avatar.id}
-                    className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-[#F9F4F4] bg-slate-200"
+                    className="relative h-9 w-9 overflow-hidden rounded-full border-2 border-tint-warm bg-slate-200"
                   >
                     <Image
                       src={avatar.image}
@@ -109,7 +109,7 @@ export default function Hero() {
                 ) : (
                   <div
                     key={avatar.id}
-                    className={`flex h-9 w-9 items-center justify-center rounded-full border-2 border-[#F9F4F4] text-[11px] font-bold text-white ${avatar.className}`}
+                    className={`flex h-9 w-9 items-center justify-center rounded-full border-2 border-tint-warm text-[11px] font-bold text-white ${avatar.className}`}
                   >
                     {avatar.label}
                   </div>

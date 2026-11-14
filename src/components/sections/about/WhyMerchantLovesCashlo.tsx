@@ -45,7 +45,7 @@ const values = [
 
 export default function WhyMerchantLovesCashlo() {
   return (
-    <section className="bg-[#F5F7FF] py-20 sm:py-28">
+    <section className="bg-tint-blue py-20 sm:py-28">
       <Container>
         <div className="mb-14 max-w-xl sm:mb-16">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand">
@@ -60,7 +60,7 @@ export default function WhyMerchantLovesCashlo() {
           {values.map((v) => (
             <div
               key={v.title}
-              className="group relative rounded-3xl border border-ink/5 bg-white/70 p-8 shadow-sm backdrop-blur-sm transition-shadow duration-300 hover:shadow-lg"
+              className="group relative rounded-3xl border border-ink/5 bg-card/70 p-8 shadow-sm backdrop-blur-sm transition-shadow duration-300 hover:shadow-lg"
             >
               <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl bg-brand shadow-[0_10px_22px_rgba(68,94,241,0.3)]">
                 <v.icon className="h-5 w-5 text-white" strokeWidth={1.75} />

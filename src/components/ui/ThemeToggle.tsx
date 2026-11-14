@@ -12,7 +12,7 @@ export default function ThemeToggle({ onHero = false }: { onHero?: boolean }) {
       aria-label={isDark ? "Switch to light mode" : "Switch to dark mode"}
       className={`grid h-10 w-10 place-items-center rounded-full border transition-colors ${
         onHero
-          ? "border-[#070b1e]/15 text-[#070b1e] hover:bg-black/5"
+          ? "border-[#070b1e]/15 text-[#070b1e] hover:bg-black/5 dark:border-white/15 dark:text-ink dark:hover:bg-white/5"
           : "border-border text-ink hover:bg-surface"
       }`}
     >

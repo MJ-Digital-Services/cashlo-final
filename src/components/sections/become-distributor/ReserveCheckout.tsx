@@ -50,7 +50,7 @@ const STORAGE_KEY = "cashlo_reserve_progress";
 const inputClass =
   "mt-1.5 w-full rounded-lg border border-border bg-bg px-3.5 py-2.5 text-[15px] text-ink outline-none transition-all duration-200 placeholder:text-ink/35 focus:border-brand focus:ring-[3px] focus:ring-brand/15";
 const primaryBtnClass =
-  "group inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-ink px-6 py-3 text-sm font-medium text-white transition-all duration-200 hover:bg-ink/85 disabled:opacity-50 disabled:hover:bg-ink";
+  "group inline-flex w-full items-center justify-center gap-1.5 rounded-lg bg-ink px-6 py-3 text-sm font-medium text-bg transition-all duration-200 hover:bg-ink/85 disabled:opacity-50 disabled:hover:bg-ink";
 const secondaryBtnClass =
   "inline-flex w-full items-center justify-center gap-1.5 rounded-lg border border-border px-6 py-3 text-sm font-medium text-ink transition-all duration-200 hover:border-ink/25 hover:bg-surface";
 const cardBaseClass =
@@ -790,7 +790,7 @@ export default function ReserveCheckout() {
                         <button
                           type="submit"
                           disabled={pincodeLoading}
-                          className="shrink-0 rounded-lg bg-ink px-5 text-sm font-medium text-white transition-all duration-200 hover:bg-ink/85 disabled:opacity-50"
+                          className="shrink-0 rounded-lg bg-ink px-5 text-sm font-medium text-bg transition-all duration-200 hover:bg-ink/85 disabled:opacity-50"
                         >
                           Find
                         </button>

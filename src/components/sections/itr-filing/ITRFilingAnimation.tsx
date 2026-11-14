@@ -735,6 +735,7 @@ const CSS = `
 .cl-rail-item.on .cl-rail-dot{background:${BLUE};transform:scale(1.25);box-shadow:0 0 0 4px rgba(59,91,255,.14)}
 .cl-rail-label{font-size:9.5px;font-weight:600;letter-spacing:.01em;color:#B4BAC9;transition:color .45s ease}
 .cl-rail-item.on .cl-rail-label{color:#0B0F1F}
+.dark .cl-rail-item.on .cl-rail-label{color:#F3F4F6}
 .cl-rail-line{position:absolute;top:3.5px;left:calc(50% + 10px);right:calc(-50% + 10px);height:1.5px;border-radius:99px;background:#E4E8F2}
 .cl-rail-line.on{background:${BLUE};opacity:.55}
 

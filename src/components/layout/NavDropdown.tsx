@@ -24,7 +24,7 @@ export default function NavDropdown({
   };
 
   const label = onHero
-    ? "text-[#070b1e]/75 hover:text-[#070b1e]"
+    ? "text-[#070b1e]/75 hover:text-[#070b1e] dark:text-ink/80 dark:hover:text-ink"
     : "text-ink/80 hover:text-ink";
 
   if (!item.children) {

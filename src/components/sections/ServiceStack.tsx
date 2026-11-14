@@ -96,7 +96,7 @@ function ChapterBadges({ badges }: { badges: Badge[] }) {
       {badges.map(({ icon: Icon, label, color }) => (
         <div
           key={label.join(" ")}
-          className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+          className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
@@ -104,7 +104,7 @@ function ChapterBadges({ badges }: { badges: Badge[] }) {
           >
             <Icon className="h-[18px] w-[18px]" style={{ color }} strokeWidth={1.9} />
           </span>
-          <span className="whitespace-nowrap text-[15px] font-medium leading-[1.25] text-slate-800">
+          <span className="whitespace-nowrap text-[15px] font-medium leading-[1.25] text-ink">
             {label.length === 2 ? (
               <>
                 {label[0]}
@@ -167,28 +167,28 @@ function ChapterGrid({ c }: { c: Chapter }) {
     <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_0.9fr] xl:grid-cols-[1.15fr_0.85fr] lg:gap-16">
       {/* Left column */}
       <div className="max-w-2xl xl:-ml-8 2xl:-ml-16">
-        <p className="text-base font-semibold uppercase tracking-wider text-[#0B7A56]">
+        <p className="text-base font-semibold uppercase tracking-wider text-[#0B7A56] dark:text-emerald-400">
           {c.eyebrow}
         </p>
-        <h2 className="mt-3 text-[40px] leading-[1.12] font-bold tracking-tight text-slate-900 lg:text-[44px] xl:text-[48px] 2xl:text-[52px]">
+        <h2 className="mt-3 text-[40px] leading-[1.12] font-bold tracking-tight text-ink lg:text-[44px] xl:text-[48px] 2xl:text-[52px]">
           {c.title[0]}
           <br />
           {c.title[1]}
         </h2>
-        <p className="mt-4 max-w-md text-[19px] leading-relaxed text-slate-600">
+        <p className="mt-4 max-w-md text-[19px] leading-relaxed text-ink/65">
           {c.desc}
         </p>
 
         <ChapterBadges badges={c.badges} />
 
         {c.trustPrefix && (
-          <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-slate-100 bg-white/70 px-5 py-3.5">
+          <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-border bg-card/70 px-5 py-3.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0EA371]/10">
-              <ShieldCheck className="h-4.5 w-4.5 text-[#0B7A56]" strokeWidth={2} />
+              <ShieldCheck className="h-4.5 w-4.5 text-[#0B7A56] dark:text-emerald-400" strokeWidth={2} />
             </span>
-            <p className="text-sm text-slate-600">
+            <p className="text-sm text-ink/65">
               {c.trustPrefix}
-              <span className="font-semibold text-[#0B7A56]">{c.trustHighlight}</span>
+              <span className="font-semibold text-[#0B7A56] dark:text-emerald-400">{c.trustHighlight}</span>
               {c.trustSuffix}
             </p>
           </div>
@@ -285,7 +285,7 @@ export default function ServiceStack() {
   }, []);
 
   return (
-    <section className="relative bg-[#F3F7FC]">
+    <section className="relative bg-tint-cool">
       {/* Desktop: pinned, chapters slide up and cover one another */}
       <div
         ref={containerRef}
@@ -299,7 +299,7 @@ export default function ServiceStack() {
               ref={(el) => {
                 chapterRefs.current[i] = el;
               }}
-              className="absolute inset-0 flex items-center bg-[#F3F7FC]"
+              className="absolute inset-0 flex items-center bg-tint-cool"
               style={{ zIndex: i + 1 }}
             >
               <Container>
@@ -318,28 +318,28 @@ export default function ServiceStack() {
             <ChapterImage c={c} />
 
             <div className="mt-8">
-              <p className="text-sm font-semibold uppercase tracking-wider text-[#0B7A56]">
+              <p className="text-sm font-semibold uppercase tracking-wider text-[#0B7A56] dark:text-emerald-400">
                 {c.eyebrow}
               </p>
-              <h2 className="mt-3 text-[32px] font-bold leading-[1.15] tracking-tight text-slate-900">
+              <h2 className="mt-3 text-[32px] font-bold leading-[1.15] tracking-tight text-ink">
                 {c.title[0]}
                 <br />
                 {c.title[1]}
               </h2>
-              <p className="mt-3 text-base leading-relaxed text-slate-600">
+              <p className="mt-3 text-base leading-relaxed text-ink/65">
                 {c.desc}
               </p>
 
               <ChapterBadges badges={c.badges} />
 
               {c.trustPrefix && (
-                <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-slate-100 bg-white/70 px-4 py-3">
+                <div className="mt-6 inline-flex items-center gap-3 rounded-2xl border border-border bg-card/70 px-4 py-3">
                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0EA371]/10">
-                    <ShieldCheck className="h-4 w-4 text-[#0B7A56]" strokeWidth={2} />
+                    <ShieldCheck className="h-4 w-4 text-[#0B7A56] dark:text-emerald-400" strokeWidth={2} />
                   </span>
-                  <p className="text-sm text-slate-600">
+                  <p className="text-sm text-ink/65">
                     {c.trustPrefix}
-                    <span className="font-semibold text-[#0B7A56]">{c.trustHighlight}</span>
+                    <span className="font-semibold text-[#0B7A56] dark:text-emerald-400">{c.trustHighlight}</span>
                     {c.trustSuffix}
                   </p>
                 </div>

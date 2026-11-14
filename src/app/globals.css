@@ -14,6 +14,10 @@
   --border: rgb(0 0 0 / 0.07);
   --brand: #445df0;
   --brand-dark: #2f44c9;
+  /* tinted section backgrounds (homepage warm/cool, about blue) */
+  --tint-warm: #f9f4f4;
+  --tint-cool: #f3f7fc;
+  --tint-blue: #f5f7ff;
 }
 .dark {
   color-scheme: dark;
@@ -24,6 +28,9 @@
   --border: rgb(255 255 255 / 0.10);
   --brand: #5b72f5;     /* lifted so it pops on dark */
   --brand-dark: #4258e0;
+  --tint-warm: #121119;
+  --tint-cool: #0f1320;
+  --tint-blue: #0f1424;
 }
 
 /* inline => utilities reference the swappable var directly, so they flip */
@@ -35,6 +42,9 @@
   --color-border: var(--border);
   --color-brand: var(--brand);
   --color-brand-dark: var(--brand-dark);
+  --color-tint-warm: var(--tint-warm);
+  --color-tint-cool: var(--tint-cool);
+  --color-tint-blue: var(--tint-blue);
 
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
