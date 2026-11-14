@@ -1,54 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
-import { createPortal } from "react-dom";
+import { useState } from "react";
+import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/Sheet";
 import { navItems } from "./navData";
 
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => setMounted(true), []);
 
   const close = () => {
     setOpen(false);
     setExpanded(null);
   };
 
+  // Base UI drawer (sheet): locks page scroll (incl. Lenis), traps focus,
+  // closes on Escape / backdrop tap / swipe right, and returns focus to the
+  // hamburger button.
   const drawer = (
-    <>
-      {/* Backdrop */}
-      <div
-        onClick={close}
-        className={`fixed inset-0 z-50 bg-black/40 transition-opacity duration-300 ${
-          open ? "opacity-100" : "pointer-events-none opacity-0"
-        }`}
-      />
-
-      {/* Drawer */}
-      <div
-        className={`fixed inset-y-0 right-0 z-50 flex w-[82%] max-w-sm flex-col bg-card shadow-2xl transition-transform duration-300 ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
+    <SheetContent className="flex flex-col">
         {/* Drawer header */}
         <div className="flex items-center justify-between border-b border-border px-6 py-5">
-          <span className="text-lg font-bold text-ink">Menu</span>
-          <button
-            onClick={close}
+          <SheetTitle className="text-lg font-bold text-ink">Menu</SheetTitle>
+          <SheetClose
             aria-label="Close menu"
             className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-ink"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-          </button>
+          </SheetClose>
         </div>
 
         {/* Links */}
-        <nav className="flex-1 overflow-y-auto px-4 py-4">
+        <nav className="flex-1 overflow-y-auto overscroll-contain px-4 py-4">
           {navItems.map((item) => {
             if (!item.children) {
               return (
@@ -119,8 +104,7 @@ export default function MobileMenu() {
             Become Merchant
           </Link>
         </div>
-      </div>
-    </>
+    </SheetContent>
   );
 
   return (
@@ -136,7 +120,9 @@ export default function MobileMenu() {
         </svg>
       </button>
 
-      {mounted && createPortal(drawer, document.body)}
+      <Sheet open={open} onOpenChange={(next) => (next ? setOpen(true) : close())}>
+        {drawer}
+      </Sheet>
     </div>
   );
 }

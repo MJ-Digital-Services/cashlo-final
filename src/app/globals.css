@@ -12,6 +12,18 @@
    height windows, e.g. 1700x840) */
 @custom-variant tall (@media (min-width: 1280px) and (min-height: 960px));
 
+/* Pointer cursor on buttons (shadcn's `init --pointer`, April 2026).
+   Tailwind v4's preflight resets buttons to the default arrow cursor, so
+   every clickable <button> looked inert on hover unless it remembered to add
+   `cursor-pointer` itself. In @layer base so a utility (e.g.
+   `cursor-not-allowed`) still wins. */
+@layer base {
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
 /* ---- Theme tokens: raw values swap under .dark ---- */
 :root {
   color-scheme: light;

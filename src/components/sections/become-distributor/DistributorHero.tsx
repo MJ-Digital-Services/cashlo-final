@@ -1,8 +1,12 @@
 "use client";
 
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { Users, Percent, Headphones, ArrowRight, Phone } from "lucide-react";
 import { useScrollReveal } from "@/hooks/useScrollReveal";
+import LeadModal from "@/components/sections/become-merchant/LeadModal";
+import { ToastProvider } from "@/components/sections/become-merchant/shared/Toast";
+import { LeadSuccessProvider } from "@/components/sections/become-merchant/shared/LeadSuccess";
 
 const perks = [
   {
@@ -24,6 +28,17 @@ const perks = [
 
 export default function DistributorHero() {
   const scope = useScrollReveal();
+  const [talkOpen, setTalkOpen] = useState(false);
+
+  // /become-distributor#talk-to-team (the old link target) opens the dialog
+  useEffect(() => {
+    const fromHash = () => {
+      if (window.location.hash === "#talk-to-team") setTalkOpen(true);
+    };
+    fromHash();
+    window.addEventListener("hashchange", fromHash);
+    return () => window.removeEventListener("hashchange", fromHash);
+  }, []);
 
   return (
     <section
@@ -98,13 +113,17 @@ export default function DistributorHero() {
               Become a Distributor
               <ArrowRight className="h-5 w-5" />
             </a>
-            <a
-              href="#talk-to-team"
+            {/* Was <a href="#talk-to-team"> to an id that doesn't exist on
+                the page (did nothing). Opens the same callback dialog as
+                /become-merchant's "Request a call". */}
+            <button
+              type="button"
+              onClick={() => setTalkOpen(true)}
               className="inline-flex items-center gap-2 rounded-lg border border-brand px-7 py-3.5 text-base font-semibold text-brand transition-colors hover:bg-brand/5"
             >
               Talk to Our Team
               <Phone className="h-5 w-5" />
-            </a>
+            </button>
           </div>
 
           {/* Perk cards */}
@@ -140,6 +159,11 @@ export default function DistributorHero() {
           />
         </div>
       </div>
+      <ToastProvider>
+        <LeadSuccessProvider>
+          <LeadModal open={talkOpen} kind="sales" onClose={() => setTalkOpen(false)} />
+        </LeadSuccessProvider>
+      </ToastProvider>
     </section>
   );
 }
