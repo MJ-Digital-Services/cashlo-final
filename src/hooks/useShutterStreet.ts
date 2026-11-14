@@ -8,7 +8,7 @@ import { gsap } from "gsap";
  * useShutterStreet — a street of mini storefronts with rolling metal shutters.
  *
  * Interaction per shop:
- *  - Hover (fine pointers) or tap (touch) → shutter rolls up into its housing
+ *  - Hover (fine pointers), tap (touch) or keyboard focus → shutter rolls up into its housing
  *    with a small mechanical rattle, interior "lights on": icon + Cashlo QR
  *    sticker pop in.
  *  - Leave / tap again → timeline reverses, shutter rolls back down.
@@ -116,20 +116,37 @@ export function useShutterStreet() {
         };
         const toggle = () => (s.open && !s.ambient ? close(s) : open(s));
 
+        // A tap focuses the (tabIndex=0) shop *before* its click fires, so
+        // the focus handler would open it and the click would immediately
+        // toggle it shut again. Only let focus open shops for keyboard users.
+        let pointerFocus = false;
+        const markPointer = () => {
+          pointerFocus = true;
+        };
+        const focus = () => {
+          if (pointerFocus) {
+            pointerFocus = false;
+            return;
+          }
+          enter();
+        };
+
         if (canHover) {
           s.shop.addEventListener("mouseenter", enter);
           s.shop.addEventListener("mouseleave", leave);
         } else {
           s.shop.addEventListener("click", toggle);
         }
-        s.shop.addEventListener("focus", enter);
+        s.shop.addEventListener("pointerdown", markPointer);
+        s.shop.addEventListener("focus", focus);
         s.shop.addEventListener("blur", leave);
 
         return () => {
           s.shop.removeEventListener("mouseenter", enter);
           s.shop.removeEventListener("mouseleave", leave);
           s.shop.removeEventListener("click", toggle);
-          s.shop.removeEventListener("focus", enter);
+          s.shop.removeEventListener("pointerdown", markPointer);
+          s.shop.removeEventListener("focus", focus);
           s.shop.removeEventListener("blur", leave);
         };
       });

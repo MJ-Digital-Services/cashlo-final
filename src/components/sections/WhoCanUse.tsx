@@ -48,8 +48,15 @@ export default function WhoCanUse() {
             Every Shutter on the Street
           </h2>
           <p className="mt-4 text-lg leading-relaxed text-ink/60">
-            If your shop has a shutter, Cashlo fits behind it. Hover a shop to
-            peek inside.
+            If your shop has a shutter, Cashlo fits behind it.{" "}
+            {/* same media query useShutterStreet uses to pick hover vs tap */}
+            <span className="hidden [@media(hover:hover)_and_(pointer:fine)]:inline">
+              Hover over
+            </span>
+            <span className="[@media(hover:hover)_and_(pointer:fine)]:hidden">
+              Tap
+            </span>{" "}
+            a shop to peek inside.
           </p>
         </div>
 
