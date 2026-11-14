@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { ToastProvider } from '@/components/sections/become-merchant/shared/Toast';
+import { LeadSuccessProvider } from '@/components/sections/become-merchant/shared/LeadSuccess';
 import Hero from '@/components/sections/become-merchant/Hero';
 import QuickActions from '@/components/sections/become-merchant/QuickActions';
 import LeadSection from '@/components/sections/become-merchant/LeadSection';
@@ -28,10 +29,22 @@ export default function BecomeMerchantClient() {
   const openSales = React.useCallback(() => setModal('sales'), []);
   const openDistributor = React.useCallback(() => setModal('distributor'), []);
 
+  // /become-merchant#talk-to-team (the old "Talk to Our Team" link, which may
+  // already be shared) opens the callback dialog directly.
+  React.useEffect(() => {
+    const fromHash = () => {
+      if (window.location.hash === '#talk-to-team') setModal('sales');
+    };
+    fromHash();
+    window.addEventListener('hashchange', fromHash);
+    return () => window.removeEventListener('hashchange', fromHash);
+  }, []);
+
   return (
     <ToastProvider>
+      <LeadSuccessProvider>
       <main className="relative bg-white pb-24 lg:pb-0 dark:bg-[#0B1020]">
-        <Hero onBecomeMerchant={scrollToRegister} />
+        <Hero onBecomeMerchant={scrollToRegister} onTalkToTeam={openSales} />
         <QuickActions onContactSales={openSales} onContactDistributor={openDistributor} />
         <LeadSection />
         <WhyJoin onBecomeMerchant={scrollToRegister} />
@@ -49,6 +62,7 @@ export default function BecomeMerchantClient() {
         <StickyMobileCta onBecomeMerchant={scrollToRegister} />
         <LeadModal open={modal !== null} kind={modal ?? 'sales'} onClose={() => setModal(null)} />
       </main>
+      </LeadSuccessProvider>
     </ToastProvider>
   );
 }

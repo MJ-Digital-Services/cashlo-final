@@ -6,7 +6,7 @@ import { cn } from './shared/tokens';
 import { Field } from './shared/Field';
 import { Dropdown } from './shared/Dropdown';
 import { Button } from './shared/Button';
-import { SuccessState } from './shared/SuccessState';
+import { useLeadSuccess, type LeadSuccess } from './shared/LeadSuccess';
 import { useToast } from './shared/Toast';
 import { validators, type FormErrors } from './shared/validators';
 import { INDIAN_STATES } from './shared/data';
@@ -16,37 +16,57 @@ export type FormKind = 'sales' | 'distributor';
 
 const FORM_CONFIG = {
   sales: {
-    formType: 'contact-sales',
+    formType: 'Contact sales',
     submitLabel: 'Request callback',
-    successTitle: 'Callback requested',
-    successMessage:
-      'A Cashlo sales executive will call you on the number you shared, usually within 30 minutes during business hours.',
-    toastBody: 'We will call you within 30 minutes.',
+    errorBody: 'Please try again in a moment.',
+    success: (mobile: string): LeadSuccess => ({
+      title: 'Callback requested',
+      message: `A Cashlo sales executive will call you on ${mobile}, usually within 30 minutes during business hours.`,
+      steps: [
+        { title: 'We call you back', body: 'A sales executive calls you on the number you shared.' },
+        { title: 'Pick your services', body: 'They walk you through the services that suit your shop.' },
+        { title: 'Get set up', body: 'We help you finish registration and KYC.' },
+      ],
+    }),
   },
   distributor: {
-    formType: 'contact-distributor',
+    formType: 'Find a distributor',
     submitLabel: 'Connect now',
-    successTitle: 'Distributor matched',
-    successMessage:
-      'We are locating the nearest Cashlo distributor for your PIN code. You will get their details on WhatsApp shortly.',
-    toastBody: 'Distributor details are on the way.',
+    errorBody: 'Please try again in a moment.',
+    success: (mobile: string): LeadSuccess => ({
+      title: 'Request received',
+      message: `We are finding the nearest Cashlo distributor for your PIN code. Their details will reach you on WhatsApp at ${mobile} shortly.`,
+      steps: [
+        { title: 'We match your PIN code', body: 'We find the Cashlo distributor closest to your shop.' },
+        { title: 'Details on WhatsApp', body: 'You get the distributor’s name and number.' },
+        { title: 'Get onboarded', body: 'Your distributor helps you set up and start earning.' },
+      ],
+    }),
   },
 } as const;
 
-export default function LeadForm({ kind, compact = false }: { kind: FormKind; compact?: boolean }) {
+const EMPTY = { fullName: '', mobile: '', email: '', shopName: '', city: '', state: '', pincode: '' };
+
+/** 9876543210 → "+91 98765 43210", with non-breaking spaces so it never wraps mid-number */
+const formatMobile = (m: string) => `+91 ${m.slice(0, 5)} ${m.slice(5)}`;
+
+export default function LeadForm({
+  kind,
+  compact = false,
+  onSuccess,
+}: {
+  kind: FormKind;
+  compact?: boolean;
+  /** Runs once the lead is sent, before the confirmation dialog opens (LeadModal closes itself here). */
+  onSuccess?: () => void;
+}) {
   const config = FORM_CONFIG[kind];
-  const [values, setValues] = React.useState<Record<string, string>>({
-    fullName: '',
-    mobile: '',
-    email: '',
-    shopName: '',
-    city: '',
-    state: '',
-    pincode: '',
-  });
+  const [values, setValues] = React.useState<Record<string, string>>(EMPTY);
   const [errors, setErrors] = React.useState<FormErrors>({});
-  const [status, setStatus] = React.useState<'idle' | 'sending' | 'done' | 'error'>('idle');
+  const [status, setStatus] = React.useState<'idle' | 'sending' | 'error'>('idle');
+  const honeyRef = React.useRef<HTMLInputElement>(null);
   const notify = useToast();
+  const showSuccess = useLeadSuccess();
 
   const set = (key: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setValues((v) => ({ ...v, [key]: e.target.value }));
@@ -73,38 +93,38 @@ export default function LeadForm({ kind, compact = false }: { kind: FormKind; co
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validate()) return;
+    if (status === 'sending' || !validate()) return;
     setStatus('sending');
     try {
-      await submitLead({ ...values, formType: config.formType });
-      setStatus('done');
-      notify({ tone: 'success', title: config.successTitle, body: config.toastBody });
+      const v = Object.fromEntries(Object.entries(values).map(([k, val]) => [k, val.trim()]));
+      await submitLead({
+        subject: `New Cashlo lead: ${config.formType} (${v.fullName})`,
+        fields: {
+          'Form': config.formType,
+          'Name': v.fullName,
+          'Mobile': v.mobile,
+          'Email': v.email,
+          'Shop name': v.shopName,
+          ...(kind === 'sales' ? { 'City': v.city, 'State': v.state } : { 'PIN code': v.pincode }),
+        },
+        replyTo: v.email,
+        honey: honeyRef.current?.value,
+      });
+      setValues(EMPTY);
+      setErrors({});
+      setStatus('idle');
+      onSuccess?.();
+      showSuccess(config.success(formatMobile(v.mobile)));
     } catch {
       setStatus('error');
-      notify({ tone: 'error', title: 'Could not send your request', body: 'Please try again in a moment.' });
+      notify({ tone: 'error', title: 'Could not send your request', body: config.errorBody });
     }
   };
 
-  const reset = () => {
-    setValues({
-      fullName: '', mobile: '', email: '', shopName: '', city: '', state: '', pincode: '',
-    });
-    setErrors({});
-    setStatus('idle');
-  };
-
-  if (status === 'done') {
-    return (
-      <SuccessState
-        title={config.successTitle}
-        message={config.successMessage}
-        onReset={reset}
-      />
-    );
-  }
-
   return (
     <form onSubmit={handleSubmit} noValidate className="space-y-4">
+      {/* honeypot: hidden from people, filled in by bots (FormSubmit drops those leads) */}
+      <input ref={honeyRef} type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
       <div className={cn('grid gap-4', !compact && 'sm:grid-cols-2')}>
         <Field
           id={`${kind}-name`}

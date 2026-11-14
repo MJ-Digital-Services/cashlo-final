@@ -61,8 +61,10 @@ const sideStats = [
 
 export default function Hero({
   onBecomeMerchant,
+  onTalkToTeam,
 }: {
   onBecomeMerchant: () => void;
+  onTalkToTeam: () => void;
 }) {
   const scope = useScrollReveal();
 
@@ -140,13 +142,17 @@ export default function Hero({
               Become a Merchant
               <ArrowRight className="h-5 w-5" />
             </button>
-            <a
-              href="#talk-to-team"
+            {/* Opens the same callback dialog as "Request a call". This was
+                an <a href="#talk-to-team"> pointing at an id that doesn't
+                exist on the page, so clicking it did nothing. */}
+            <button
+              type="button"
+              onClick={onTalkToTeam}
               className="inline-flex items-center gap-2 rounded-lg border border-brand px-7 py-3.5 text-base font-semibold text-brand transition-colors hover:bg-brand/5"
             >
               Talk to Our Team
               <Phone className="h-5 w-5" />
-            </a>
+            </button>
           </div>
 
           {/* Quick feature cards */}

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Upload, X } from "lucide-react";
+import { Dialog, DialogClose, DialogContent, DialogTitle } from "@/components/ui/Dialog";
 import { distributorApi, ApiError } from "@/lib/api/distributor";
 
 // Shared KYC form: PAN, Aadhaar address, shop details, Aadhaar front/back
@@ -71,6 +72,9 @@ export function DistributorKycFields({
   const [uploading, setUploading] = useState<{ front: boolean; back: boolean }>({ front: false, back: false });
   const [uploadError, setUploadError] = useState("");
   const [previewImageUrl, setPreviewImageUrl] = useState<string | null>(null);
+  // separate from the URL so the image stays on screen while the preview
+  // dialog animates closed
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   const set = (key: keyof KycValues, value: string) => onChange({ ...values, [key]: value });
 
@@ -150,7 +154,10 @@ export function DistributorKycFields({
               {url ? (
                 <button
                   type="button"
-                  onClick={() => setPreviewImageUrl(url)}
+                  onClick={() => {
+                    setPreviewImageUrl(url);
+                    setPreviewOpen(true);
+                  }}
                   className="group relative block aspect-[16/10] w-full overflow-hidden rounded-lg border border-border"
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -214,40 +221,31 @@ export function DistributorKycFields({
         </>
       )}
 
-      <AnimatePresence>
-        {previewImageUrl && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
-            onClick={() => setPreviewImageUrl(null)}
+      {/* Base UI dialog: locks page scroll (incl. Lenis), traps focus and
+          closes on Escape / backdrop click */}
+      <Dialog open={previewOpen} onOpenChange={setPreviewOpen}>
+        <DialogContent
+          backdropClassName="fixed inset-0 z-50 bg-black/80 transition-opacity duration-200 data-[ending-style]:opacity-0 data-[starting-style]:opacity-0"
+          viewportClassName="fixed inset-0 z-50 flex items-center justify-center p-4"
+          className="relative max-h-[85vh] max-w-3xl outline-none transition-[opacity,scale] duration-200 data-[ending-style]:scale-95 data-[ending-style]:opacity-0 data-[starting-style]:scale-95 data-[starting-style]:opacity-0"
+        >
+          <DialogTitle className="sr-only">Aadhaar image preview</DialogTitle>
+          <DialogClose
+            className="absolute -top-10 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
+            aria-label="Close preview"
           >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="relative max-h-[85vh] max-w-3xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                type="button"
-                onClick={() => setPreviewImageUrl(null)}
-                className="absolute -top-10 right-0 flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white hover:bg-white/20"
-                aria-label="Close preview"
-              >
-                <X size={18} />
-              </button>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={previewImageUrl}
-                alt="Aadhaar preview"
-                className="max-h-[85vh] max-w-full rounded-lg object-contain shadow-2xl"
-              />
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <X size={18} />
+          </DialogClose>
+          {previewImageUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={previewImageUrl}
+              alt="Aadhaar preview"
+              className="max-h-[85vh] max-w-full rounded-lg object-contain shadow-2xl"
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

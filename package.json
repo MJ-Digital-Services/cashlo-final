@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@base-ui/react": "^1.9.0",
     "@gsap/react": "^2.1.2",
     "framer-motion": "^12.42.2",
     "gsap": "^3.15.0",

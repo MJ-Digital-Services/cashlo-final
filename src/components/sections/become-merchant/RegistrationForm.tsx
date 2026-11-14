@@ -58,6 +58,7 @@ export default function RegistrationForm() {
   const notify = useToast();
   const reduce = useReducedMotion();
   const router = useRouter();
+  const honeyRef = React.useRef<HTMLInputElement>(null);
   // Belt and braces against a double submit: the button is disabled while
   // sending, and this ref blocks a second call even if one slips past it.
   const inFlight = React.useRef(false);
@@ -103,22 +104,24 @@ export default function RegistrationForm() {
     inFlight.current = true;
     setStatus('sending');
 
-    // Exactly the shape the backend expects for a merchant lead.
-    const lead = {
-      name: values.fullName.trim(),
-      mobile: values.mobile.trim(),
-      email: values.email.trim(),
-      shopName: values.shopName.trim(),
-      businessType: values.businessType,
-      city: values.city.trim(),
-      state: values.state,
-      pinCode: values.pincode.trim(),
-      selectedServices: services,
-      source: 'Become Merchant Page',
-    };
-
     try {
-      await submitLead(lead);
+      await submitLead({
+        subject: `New Cashlo lead: Shop registration (${values.fullName.trim()})`,
+        fields: {
+          'Form': 'Shop registration',
+          'Name': values.fullName,
+          'Mobile': values.mobile,
+          'Email': values.email,
+          'Shop name': values.shopName,
+          'Business type': values.businessType,
+          'City': values.city,
+          'State': values.state,
+          'PIN code': values.pincode,
+          'Services wanted': services,
+        },
+        replyTo: values.email,
+        honey: honeyRef.current?.value,
+      });
       setStatus('done');
       notify({
         tone: 'success',
@@ -157,6 +160,8 @@ export default function RegistrationForm() {
                 </p>
 
                 <form onSubmit={handleSubmit} noValidate className="mt-8 space-y-4">
+                  {/* honeypot: hidden from people, filled in by bots (FormSubmit drops those leads) */}
+                  <input ref={honeyRef} type="text" name="_honey" tabIndex={-1} autoComplete="off" aria-hidden className="hidden" />
                   <div className="grid gap-4 sm:grid-cols-2">
                     <Field id="reg-fullName" label="Full name" autoComplete="name" value={values.fullName} onChange={set('fullName')} onBlur={blur('fullName')} error={shown('fullName')} />
                     <Field id="reg-mobile" label="Mobile number" type="tel" inputMode="numeric" maxLength={10} autoComplete="tel-national" value={values.mobile} onChange={set('mobile')} onBlur={blur('mobile')} error={shown('mobile')} />

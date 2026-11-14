@@ -143,6 +143,39 @@ scrolling to get stuck (mostly noticeable on pinned/scrub sections like
   one with it). This also re-fits scroll animations after resize/rotation
   once layout settles.
 
+- **Every overlay/modal must use `src/components/ui/Dialog.tsx`** (Base UI
+  Dialog + Lenis handling) **or `src/components/ui/Sheet.tsx`** (Base UI
+  Drawer: side panel with swipe-to-dismiss, same Lenis handling via
+  `usePauseSmoothScroll`), never a hand-rolled `fixed inset-0` div with
+  `body { overflow: hidden }`. Lenis scrolls the page with
+  `window.scrollTo`, which `overflow: hidden` doesn't block. Hand-rolled
+  modals therefore scrolled the page behind them, and wheeling over the
+  modal's own content scrolled the page instead of the modal. The wrapper
+  stops Lenis while open and marks the popup `data-lenis-prevent` so its
+  own content scrolls natively. `LeadModal` and the Aadhaar preview in
+  `DistributorKycFields` use `Dialog`; `MobileMenu` uses `Sheet`
+  (2026-11-14).
+
+## Merchant/distributor leads → email via FormSubmit (2026-11-14)
+
+`become-merchant/shared/submitLead.ts` posts every lead form (`LeadForm`:
+"Talk to a sales executive" / "Find your nearest distributor", used inline
+in `LeadSection` and in `LeadModal` on both `/become-merchant` and
+`/become-distributor`; plus `RegistrationForm`) to FormSubmit's AJAX
+endpoint, which emails it to harender@cashlo.app as a table. There is no
+`/api/leads` route (every submission used to fail against it). FormSubmit
+needs a one-time activation: the first submission sends a confirmation email
+to that inbox, and nothing is delivered until it's clicked. After that, put
+FormSubmit's random-string alias URL in `NEXT_PUBLIC_LEADS_ENDPOINT` to keep
+the address out of the page source. FormSubmit can answer HTTP 200 with
+`success: "false"`, so `submitLead` checks the body too. Both forms carry a
+hidden `_honey` honeypot input. On success, `LeadForm` closes `LeadModal`
+(`onSuccess`) and opens the confirmation dialog from `shared/LeadSuccess.tsx`.
+That dialog lives in a provider (`LeadSuccessProvider`, wrapped around both
+pages), because the form unmounts when the modal closes. `RegistrationForm`
+still redirects to `/become-merchant/success`. `usePauseSmoothScroll` is
+ref-counted so one dialog closing while another opens doesn't restart Lenis.
+
 ## SEO & schema.org infrastructure (2026-09-22)
 
 `src/lib/schema.ts` is the single source of truth for JSON-LD builders
