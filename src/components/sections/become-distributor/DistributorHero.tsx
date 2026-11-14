@@ -108,18 +108,20 @@ export default function DistributorHero() {
           {/* Perk cards */}
           <ul
             data-reveal
-            className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3"
+            className="mt-10 grid grid-cols-1 gap-3 lg:grid-cols-3"
           >
             {perks.map(({ icon: Icon, title, desc }) => (
               <li
                 key={title}
-                className="rounded-xl border border-border bg-card p-4"
+                className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 lg:block"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand/10">
                   <Icon className="h-4.5 w-4.5 text-brand" strokeWidth={1.9} />
                 </span>
-                <p className="mt-3 text-sm font-semibold text-ink">{title}</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink/55">{desc}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-ink lg:mt-3">{title}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-ink/55">{desc}</p>
+                </div>
               </li>
             ))}
           </ul>

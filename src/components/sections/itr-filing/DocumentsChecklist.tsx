@@ -153,14 +153,14 @@ export default function DocumentsChecklist() {
                     {c.items.map((item) => (
                       <li
                         key={item.name}
-                        className="flex items-center justify-between rounded-xl border border-border/50 bg-bg/50 px-3.5 py-2.5 text-sm font-medium text-ink/80 transition-colors group-hover:border-border"
+                        className="flex items-center justify-between gap-2 rounded-xl border border-border/50 bg-bg/50 px-3.5 py-2.5 text-sm font-medium text-ink/80 transition-colors group-hover:border-border"
                       >
                         <div className="flex items-center gap-3 min-w-0">
                           <CheckCircle2
                             className="h-4 w-4 shrink-0 text-brand"
                             strokeWidth={2}
                           />
-                          <span className="truncate text-ink/90">{item.name}</span>
+                          <span className="leading-snug text-ink/90">{item.name}</span>
                         </div>
                         {item.tag && (
                           <span className="ml-2 shrink-0 rounded-md bg-card px-2 py-0.5 text-[11px] font-medium text-ink/50 border border-border/60">

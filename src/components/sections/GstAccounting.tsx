@@ -69,7 +69,27 @@ export default function GstAccounting() {
         <div className="grid items-start gap-16 lg:grid-cols-2">
           {/* Hanging documents — strings pinned to the very top of the section,
               i.e. the seam with the previous section */}
-          <div ref={scope} className="hang-stage relative h-[480px] sm:h-[520px]">
+          {/* Phones: too narrow for five hanging 11.5rem cards (they pile
+              on top of each other), so show a plain card grid instead */}
+          <ul className="grid grid-cols-2 gap-3 pt-16 sm:hidden">
+            {services.map((s) => (
+              <li
+                key={s.label}
+                className="rounded-2xl border border-border bg-card p-4"
+              >
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-brand/10 text-brand">
+                  <s.icon className="h-5 w-5" strokeWidth={1.75} />
+                </span>
+                <h3 className="mt-3 text-sm font-semibold text-ink">{s.label}</h3>
+                <p className="mt-1 text-xs leading-snug text-ink/55">{s.desc}</p>
+              </li>
+            ))}
+          </ul>
+
+          <div
+            ref={scope}
+            className="hang-stage relative hidden h-[480px] sm:block sm:h-[520px]"
+          >
             {services.map((s, i) => (
               <div
                 key={s.label}
@@ -107,7 +127,7 @@ export default function GstAccounting() {
           </div>
 
           {/* Copy */}
-          <div className="pt-24">
+          <div className="sm:pt-24">
             <p className="text-sm font-semibold uppercase tracking-wider text-brand">
               Complete Business Compliance
             </p>
