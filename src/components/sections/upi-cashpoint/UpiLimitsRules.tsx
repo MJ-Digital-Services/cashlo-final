@@ -59,9 +59,9 @@ export default function UpiLimitsRules() {
                 <div
                   key={l.label}
                   data-reveal
-                  className="rounded-2xl bg-brand p-8 text-white"
+                  className="rounded-2xl bg-brand p-5 text-white sm:p-8 lg:p-6 xl:p-8"
                 >
-                  <div className="text-4xl font-bold sm:text-5xl">
+                  <div className="text-2xl font-bold sm:text-5xl lg:text-4xl xl:text-5xl">
                     {l.value}
                   </div>
                   <div className="mt-2 text-sm text-white/80">{l.label}</div>
@@ -76,14 +76,18 @@ export default function UpiLimitsRules() {
             </p>
           </div>
 
-          <Image
+          <div
             data-reveal
-            src="/illustrations/upi-cashpoint/withdrawal-limit.png"
-            alt="Tracking savings and transaction limits"
-            width={480}
-            height={400}
-            className="mx-auto h-auto w-full max-w-sm lg:max-w-none"
-          />
+            className="art-tile mx-auto w-full max-w-sm overflow-hidden rounded-3xl lg:max-w-none"
+          >
+            <Image
+              src="/illustrations/upi-cashpoint/withdrawal-limit.png"
+              alt="Tracking savings and transaction limits"
+              width={480}
+              height={400}
+              className="h-auto w-full"
+            />
+          </div>
         </div>
 
         {/* Rules */}
@@ -108,7 +112,7 @@ export default function UpiLimitsRules() {
                 data-reveal
                 className="rounded-2xl border border-border p-6 transition-colors hover:border-brand/20"
               >
-                <div className="flex h-44 items-center justify-center">
+                <div className="art-tile flex h-44 items-center justify-center overflow-hidden rounded-xl">
                   <Image
                     src={r.img}
                     alt={r.title}

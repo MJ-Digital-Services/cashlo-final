@@ -597,11 +597,22 @@ const CSS = `
   --blue:#3B5BFF; --blue-soft:#EEF1FF; --blue-line:#D8DFFF;
   --green:#12B76A; --green-soft:#E7F8EF;
   --ink:#0B1020; --muted:#6B7280; --line:#EAECF3; --bg:#FFFFFF;
+  --card:#fff; --illo-bg:#FAFBFF; --illo-line:#F0F2F9; --glass:rgba(255,255,255,.82);
+  --faint:#9AA1B2; --hover:#F7F8FC; --green-ink:#067647;
   background:var(--bg); color:var(--ink);
   padding:72px 24px 88px;
   font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Poppins,system-ui,sans-serif;
   -webkit-font-smoothing:antialiased;
 }
+.dark .hiw{
+  --blue:#6F86FF; --blue-soft:rgba(111,134,255,.14); --blue-line:rgba(111,134,255,.3);
+  --green:#22C47E; --green-soft:rgba(34,196,126,.14);
+  --ink:#F3F4F6; --muted:#9AA3B5; --line:rgba(255,255,255,.10); --bg:#0b0d12;
+  --card:#161922; --illo-bg:#11141c; --illo-line:rgba(255,255,255,.06); --glass:rgba(22,25,34,.82);
+  --faint:#6B7385; --hover:rgba(255,255,255,.04); --green-ink:#4ADE9B;
+  background:var(--bg);
+}
+.dark .hiw-mapart{opacity:.12;}
 .hiw *{box-sizing:border-box;}
 
 /* ---- header ---- */
@@ -644,8 +655,17 @@ const CSS = `
 
 /* ---- rail ---- */
 .hiw-rail{position:relative;display:flex;flex-direction:column;gap:6px;padding-left:6px;}
+/* Desktop: sit the rail at the vertical centre of the card's standard
+   height (~508px; the rail is 7x44 + 6x6 = 344px -> (508-344)/2). Not
+   align-self:center — a step whose title wraps makes its card taller, and
+   a centred rail would then jump on every step change. */
+@media (min-width:921px){ .hiw-rail{margin-top:82px;} }
+/* Runs through the dots' centres: rail padding 6 + node padding 10 + half
+   the 28px dot = 30px, minus half the 2px line. top/bottom = the first/last
+   dot's vertical centre (node padding 8 + 14), so the fill's % height lands
+   exactly on the active dot. */
 .hiw-rail-line{
-  position:absolute;left:20px;top:26px;bottom:26px;width:2px;
+  position:absolute;left:29px;top:22px;bottom:22px;width:2px;
   background:var(--line);border-radius:2px;overflow:hidden;
 }
 .hiw-rail-fill{
@@ -665,12 +685,12 @@ const CSS = `
   cursor:pointer;text-align:left;font:inherit;color:var(--muted);
   transition:background .3s ease,color .3s ease;
 }
-.hiw-node:hover{background:#F7F8FC;}
+.hiw-node:hover{background:var(--hover);}
 .hiw-node:focus-visible{outline:2px solid var(--blue);outline-offset:2px;}
 .hiw-dot{
   flex:0 0 auto;width:28px;height:28px;border-radius:50%;
   display:grid;place-items:center;font-size:13px;font-weight:700;
-  background:#fff;border:2px solid var(--line);color:#9AA1B2;
+  background:var(--card);border:2px solid var(--line);color:var(--faint);
   transition:all .38s cubic-bezier(.4,0,.2,1);
 }
 .hiw-node-label{font-size:14.5px;font-weight:550;line-height:1.35;transition:color .3s ease;}
@@ -682,12 +702,12 @@ const CSS = `
 }
 .hiw-node.is-active .hiw-node-label{color:var(--ink);font-weight:680;}
 .hiw-node.is-done .hiw-dot{background:var(--green);border-color:var(--green);color:#fff;}
-.hiw-node.is-done .hiw-node-label{color:#4A5162;}
+.hiw-node.is-done .hiw-node-label{color:var(--muted);}
 
 /* ---- stage card ---- */
 .hiw-stage{position:relative;min-height:470px;}
 .hiw-card{
-  background:#fff;border:1px solid var(--line);border-radius:26px;
+  background:var(--card);border:1px solid var(--line);border-radius:26px;
   padding:30px 32px 26px;
   box-shadow:0 1px 2px rgba(11,16,32,.04),0 18px 44px -22px rgba(11,16,32,.22);
   will-change:transform,opacity;
@@ -703,7 +723,8 @@ const CSS = `
   to{opacity:0;transform:translate3d(-46px,0,0) scale(.985);}
 }
 
-.hiw-card-head{display:flex;gap:20px;align-items:flex-start;}
+/* baseline: the big step number sits on the title's first line */
+.hiw-card-head{display:flex;gap:20px;align-items:baseline;}
 .hiw-num{
   font-size:clamp(38px,6vw,54px);font-weight:800;line-height:.9;
   letter-spacing:-.05em;color:var(--blue);opacity:.18;
@@ -717,13 +738,16 @@ const CSS = `
 }
 .hiw-card-caption{
   margin:0;font-size:15px;line-height:1.55;color:var(--muted);max-width:46ch;
+  /* always reserve 2 lines so every step's card is the same height —
+     otherwise the card (and the rail centred beside it) jumps per step */
+  min-height:3.1em;
   animation:hiwUp .6s cubic-bezier(.22,1,.36,1) both .2s;
 }
 @keyframes hiwUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
 
 .hiw-illo{
-  margin-top:24px;height:320px;border-radius:20px;background:#FAFBFF;
-  border:1px solid #F0F2F9;position:relative;overflow:hidden;
+  margin-top:24px;height:320px;border-radius:20px;background:var(--illo-bg);
+  border:1px solid var(--illo-line);position:relative;overflow:hidden;
   animation:hiwUp .65s cubic-bezier(.22,1,.36,1) both .26s;
 }
 @media (max-width:600px){ .hiw-illo{height:290px;} .hiw-card{padding:22px 18px;} }
@@ -731,9 +755,9 @@ const CSS = `
 
 /* ---- shared bits ---- */
 .hiw-glass{
-  background:rgba(255,255,255,.82);backdrop-filter:blur(14px);
+  background:var(--glass);backdrop-filter:blur(14px);
   -webkit-backdrop-filter:blur(14px);
-  border:1px solid rgba(11,16,32,.07);border-radius:16px;
+  border:1px solid var(--line);border-radius:16px;
   box-shadow:0 12px 30px -14px rgba(11,16,32,.28);
   padding:12px 16px;
 }
@@ -744,7 +768,7 @@ const CSS = `
   font-size:12.5px;font-weight:700;white-space:nowrap;
   animation:hiwPop .5s cubic-bezier(.34,1.56,.64,1) both;
 }
-.hiw-chip-green{background:var(--green-soft);color:#067647;}
+.hiw-chip-green{background:var(--green-soft);color:var(--green-ink);}
 .hiw-chip-blue{background:var(--blue-soft);color:var(--blue);}
 @keyframes hiwPop{0%{opacity:0;transform:scale(.5);}60%{transform:scale(1.08);}100%{opacity:1;transform:scale(1);}}
 
@@ -764,7 +788,7 @@ const CSS = `
 @keyframes hiwMapIn{from{transform:scale(1.08);opacity:.4;}to{transform:scale(1);opacity:1;}}
 .hiw-search{
   position:absolute;left:24px;top:22px;display:flex;align-items:center;gap:9px;
-  background:#fff;border:1px solid var(--line);border-radius:12px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
   padding:10px 16px;min-width:190px;color:var(--muted);
   box-shadow:0 8px 22px -12px rgba(11,16,32,.3);
   animation:hiwUp .5s cubic-bezier(.22,1,.36,1) both .05s;
@@ -802,7 +826,7 @@ const CSS = `
 .hiw-form{display:flex;flex-direction:column;justify-content:center;gap:11px;padding:0 clamp(18px,5%,54px);}
 .hiw-field{
   position:relative;display:flex;align-items:center;gap:12px;
-  background:#fff;border:1px solid var(--line);border-radius:14px;padding:11px 14px;
+  background:var(--card);border:1px solid var(--line);border-radius:14px;padding:11px 14px;
   box-shadow:0 4px 14px -10px rgba(11,16,32,.3);
   animation:hiwFieldIn .55s cubic-bezier(.22,1,.36,1) both;
 }
@@ -813,9 +837,9 @@ const CSS = `
   animation:hiwFocus .75s ease both;
 }
 @keyframes hiwFocus{0%{opacity:0;}18%{opacity:1;}82%{opacity:1;}100%{opacity:0;}}
-.hiw-field-icon{color:#9AA1B2;flex:0 0 auto;}
+.hiw-field-icon{color:var(--faint);flex:0 0 auto;}
 .hiw-field-body{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1;}
-.hiw-field-label{font-size:10.5px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:#9AA1B2;}
+.hiw-field-label{font-size:10.5px;font-weight:650;letter-spacing:.05em;text-transform:uppercase;color:var(--faint);}
 .hiw-field-value{font-size:14.5px;font-weight:620;color:var(--ink);}
 .hiw-tick{
   flex:0 0 auto;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;
@@ -833,14 +857,14 @@ const CSS = `
 @keyframes hiwFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
 .hiw-badge-dot{
   position:absolute;top:-3px;right:-3px;width:12px;height:12px;border-radius:50%;
-  background:#F04438;border:2px solid #FAFBFF;
+  background:#F04438;border:2px solid var(--illo-bg);
   animation:hiwPop .4s cubic-bezier(.34,1.56,.64,1) both .5s;
 }
 .hiw-otp-note{margin:0;font-size:12.5px;color:var(--muted);
   animation:hiwUp .5s ease both .35s;}
 .hiw-otp-row{display:flex;gap:9px;}
 .hiw-otp-box{
-  width:42px;height:52px;border-radius:12px;background:#fff;
+  width:42px;height:52px;border-radius:12px;background:var(--card);
   border:1.5px solid var(--line);display:grid;place-items:center;
   font-size:20px;font-weight:750;color:var(--ink);
   animation:hiwOtpFill .6s ease both;
@@ -885,13 +909,13 @@ const CSS = `
   100%{opacity:0;transform:translateY(170px);}
 }
 .hiw-phone{
-  position:relative;width:172px;height:236px;border-radius:26px;background:#fff;
-  border:1px solid #E4E7F0;padding:16px 16px 0;
+  position:relative;width:172px;height:236px;border-radius:26px;background:var(--card);
+  border:1px solid var(--line);padding:16px 16px 0;
   box-shadow:0 22px 46px -24px rgba(11,16,32,.45);
   animation:hiwPhoneIn .7s cubic-bezier(.22,1,.36,1) both .18s;
 }
 @keyframes hiwPhoneIn{from{opacity:0;transform:translate3d(34px,0,0) rotate(3deg);}to{opacity:1;transform:none;}}
-.hiw-phone-notch{width:44px;height:4px;border-radius:99px;background:#E4E7F0;margin:0 auto 18px;}
+.hiw-phone-notch{width:44px;height:4px;border-radius:99px;background:var(--line);margin:0 auto 18px;}
 .hiw-phone-body{text-align:center;}
 .hiw-pay-k{margin:0;font-size:10.5px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);}
 .hiw-pay-amt{margin:6px 0 2px;font-size:31px;font-weight:800;letter-spacing:-.03em;}
@@ -906,7 +930,7 @@ const CSS = `
 @keyframes hiwSpinnerLife{0%,58%{opacity:0;}62%,88%{opacity:1;}100%{opacity:0;}}
 .hiw-pay-done{
   position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;gap:8px;
-  font-size:13px;font-weight:700;color:#067647;opacity:0;
+  font-size:13px;font-weight:700;color:var(--green-ink);opacity:0;
   animation:hiwUp .5s cubic-bezier(.22,1,.36,1) both 2.25s;
 }
 .hiw-tickbig{
@@ -938,7 +962,7 @@ const CSS = `
 }
 .hiw-shield-check{
   position:absolute;right:-6px;bottom:-6px;width:22px;height:22px;padding:4px;
-  border-radius:50%;background:var(--green);color:#fff;border:2px solid #FAFBFF;
+  border-radius:50%;background:var(--green);color:#fff;border:2px solid var(--illo-bg);
   animation:hiwPop .45s cubic-bezier(.34,1.56,.64,1) both 1.1s;
 }
 .hiw-reserve-card{text-align:center;animation:hiwUp .6s cubic-bezier(.22,1,.36,1) both 1.45s;}
@@ -957,14 +981,14 @@ const CSS = `
 .hiw-kyc{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;padding:0 18px;}
 .hiw-docs{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;}
 .hiw-doc{
-  position:relative;width:112px;padding:14px 12px 12px;border-radius:14px;background:#fff;
+  position:relative;width:112px;padding:14px 12px 12px;border-radius:14px;background:var(--card);
   border:1.5px solid var(--line);overflow:hidden;
   box-shadow:0 8px 22px -16px rgba(11,16,32,.4);
   animation:hiwFieldIn .55s cubic-bezier(.22,1,.36,1) both, hiwDocVerify .6s ease forwards var(--verify);
 }
 @keyframes hiwDocVerify{
-  from{border-color:var(--line);background:#fff;}
-  to{border-color:var(--green);background:#F6FEF9;}
+  from{border-color:var(--line);background:var(--card);}
+  to{border-color:var(--green);background:var(--green-soft);}
 }
 .hiw-doc-scan{
   position:absolute;left:0;right:0;top:0;height:26px;
@@ -980,7 +1004,7 @@ const CSS = `
 }
 .hiw-doc-icon{color:var(--blue);}
 .hiw-doc-lines{display:flex;flex-direction:column;gap:5px;margin:10px 0 12px;}
-.hiw-doc-lines i{display:block;height:5px;border-radius:99px;background:#EDEFF6;}
+.hiw-doc-lines i{display:block;height:5px;border-radius:99px;background:var(--line);}
 .hiw-doc-label{font-size:11.5px;font-weight:680;color:var(--ink);}
 .hiw-doc-tick{
   position:absolute;top:10px;right:10px;width:18px;height:18px;border-radius:50%;
@@ -1023,7 +1047,7 @@ const CSS = `
 }
 .hiw-graph{
   display:flex;align-items:flex-end;gap:7px;height:78px;padding:12px 14px;
-  background:#fff;border:1px solid var(--line);border-radius:16px;position:relative;
+  background:var(--card);border:1px solid var(--line);border-radius:16px;position:relative;
   box-shadow:0 8px 22px -18px rgba(11,16,32,.4);
   animation:hiwUp .6s cubic-bezier(.22,1,.36,1) both .45s;
 }
@@ -1040,7 +1064,7 @@ const CSS = `
 .hiw-payouts{position:absolute;right:clamp(18px,9%,66px);top:18px;}
 .hiw-payouts span{
   position:absolute;right:0;top:0;padding:6px 12px;border-radius:999px;
-  background:var(--green-soft);color:#067647;font-size:12.5px;font-weight:750;
+  background:var(--green-soft);color:var(--green-ink);font-size:12.5px;font-weight:750;
   white-space:nowrap;opacity:0;
   animation:hiwPayout 1.7s cubic-bezier(.22,1,.36,1) both;
 }

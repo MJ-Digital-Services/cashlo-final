@@ -28,7 +28,9 @@ export default function DistributorHero() {
   return (
     <section
       ref={scope}
-      className="relative flex min-h-[calc(100dvh-80px)] items-center overflow-hidden bg-bg pb-16 pt-20"
+      // Starts at the very top of the page, behind the fixed 80px navbar:
+      // pt-20 left the eyebrow flush against it. pt-32 clears it with room.
+      className="relative flex min-h-dvh items-center overflow-hidden bg-bg pb-16 pt-32 short:pt-28"
     >
       {/* Soft background blob — large rounded shape behind the illustration */}
       <svg
@@ -53,7 +55,7 @@ export default function DistributorHero() {
 
       {/* Soft wave hugging the bottom of the section */}
       <svg
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-[#f9fafb]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-surface"
         viewBox="0 0 1440 200"
         fill="none"
         preserveAspectRatio="none"
@@ -76,19 +78,19 @@ export default function DistributorHero() {
           </p>
           <h1
             data-reveal
-            className="mt-4 max-w-2xl text-5xl font-bold tracking-tight text-ink sm:text-6xl"
+            className="mt-4 max-w-2xl text-5xl font-bold tracking-tight text-ink sm:text-6xl short:text-5xl"
           >
             Grow Your Business as a{" "}
             <span className="text-brand">Cashlo</span> Distributor
           </h1>
-          <p data-reveal className="mt-6 max-w-xl text-xl text-ink/60">
+          <p data-reveal className="mt-6 max-w-xl text-xl text-ink/60 short:mt-5 short:text-lg">
             Help local merchants join the Cashlo network, expand financial
             access in your area, and earn recurring commission through
             onboarding and ongoing support.
           </p>
 
           {/* CTA buttons */}
-          <div data-reveal className="mt-10 flex flex-wrap items-center gap-4">
+          <div data-reveal className="mt-10 flex flex-wrap items-center gap-4 short:mt-8">
             <a
               href="/become-distributor/choose"
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5"
@@ -108,18 +110,20 @@ export default function DistributorHero() {
           {/* Perk cards */}
           <ul
             data-reveal
-            className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-3"
+            className="mt-10 grid grid-cols-1 gap-3 lg:grid-cols-3"
           >
             {perks.map(({ icon: Icon, title, desc }) => (
               <li
                 key={title}
-                className="rounded-xl border border-border bg-card p-4"
+                className="flex items-start gap-3 rounded-xl border border-border bg-card p-4 lg:block"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand/10">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-brand/10">
                   <Icon className="h-4.5 w-4.5 text-brand" strokeWidth={1.9} />
                 </span>
-                <p className="mt-3 text-sm font-semibold text-ink">{title}</p>
-                <p className="mt-1 text-xs leading-relaxed text-ink/55">{desc}</p>
+                <div className="min-w-0">
+                  <p className="text-sm font-semibold text-ink lg:mt-3">{title}</p>
+                  <p className="mt-1 text-xs leading-relaxed text-ink/55">{desc}</p>
+                </div>
               </li>
             ))}
           </ul>

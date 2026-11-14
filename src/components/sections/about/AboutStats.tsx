@@ -36,7 +36,7 @@ export default function AboutStats() {
           {stats.map((s) => (
             <div
               key={s.label}
-              className="rounded-3xl border border-ink/5 bg-white/70 p-6 text-center shadow-sm backdrop-blur-sm sm:p-8 sm:text-left"
+              className="rounded-3xl border border-ink/5 bg-card/70 p-6 text-center shadow-sm backdrop-blur-sm sm:p-8 sm:text-left"
             >
               <p
                 data-count={s.value}

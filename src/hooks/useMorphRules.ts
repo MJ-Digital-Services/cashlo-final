@@ -59,7 +59,7 @@ export function useMorphRules() {
 
       const mm = gsap.matchMedia();
 
-      mm.add("(min-width: 768px)", () => {
+      mm.add("(min-width: 1024px)", () => {
         const cards = gsap.utils.toArray<HTMLElement>(
           "[data-rule-card]",
           scope.current!
@@ -109,15 +109,17 @@ export function useMorphRules() {
         computeCover();
         ScrollTrigger.addEventListener("refreshInit", computeCover);
 
-        gsap.set(cards, { opacity: 0, scale: 0.4 });
+        // GSAP owns the centring (CSS `translate` fought xPercent and shoved
+        // the side cards ~130px right), so offsets are -50 ± the spread
+        gsap.set(cards, { opacity: 0, scale: 0.4, xPercent: -50, yPercent: -50 });
 
         if (reduce) {
           // static fallback: emerged cards around a brand circle, no pin
           S.r = [...SHAPES.circle];
           S.c = [...BRAND];
-          gsap.set(cards[0], { opacity: 1, scale: 1, xPercent: -118 });
-          gsap.set(cards[1], { opacity: 1, scale: 1, xPercent: 118 });
-          gsap.set(cards[2], { opacity: 1, scale: 1, yPercent: 95 });
+          gsap.set(cards[0], { opacity: 1, scale: 1, xPercent: -168 });
+          gsap.set(cards[1], { opacity: 1, scale: 1, xPercent: 68 });
+          gsap.set(cards[2], { opacity: 1, scale: 1, yPercent: 20 });
           return () => {
             gsap.ticker.remove(tick);
             ScrollTrigger.removeEventListener("refreshInit", computeCover);
@@ -145,22 +147,22 @@ export function useMorphRules() {
           // .to("[data-morph-head]", { opacity: 0, duration: 0.5 })
 
           /* STAGE 1 — rule 1 emerges LEFT */
-          .to(cards[0], { opacity: 1, scale: 1, xPercent: -118, duration: 1, ease: "back.out(1.4)" }, "+=.3")
+          .to(cards[0], { opacity: 1, scale: 1, xPercent: -168, duration: 1, ease: "back.out(1.4)" }, "+=.3")
 
           /* STAGE 2 — morph to STAR, rule 2 RIGHT */
           .to(S.r, { endArray: SHAPES.star, duration: 1.4 }, "+=.5")
           .to(S,   { rot: 0.5, duration: 1.4 }, "<")
           .to(S.c, { endArray: COLORS.mid, duration: 1.4 }, "<")
-          .to(cards[1], { opacity: 1, scale: 1, xPercent: 118, duration: 1, ease: "back.out(1.4)" }, "<+=.4")
+          .to(cards[1], { opacity: 1, scale: 1, xPercent: 68, duration: 1, ease: "back.out(1.4)" }, "<+=.4")
 
           /* STAGE 3 — morph to GEM, rule 3 BELOW */
           .to(S.r, { endArray: SHAPES.gem, duration: 1.4 }, "+=.6")
           .to(S,   { rot: 1.1, duration: 1.4 }, "<")
           .to(S.c, { endArray: COLORS.deep, duration: 1.4 }, "<")
-          .to(cards[2], { opacity: 1, scale: 1, yPercent: 95, duration: 1, ease: "back.out(1.4)" }, "<+=.4")
+          .to(cards[2], { opacity: 1, scale: 1, yPercent: 20, duration: 1, ease: "back.out(1.4)" }, "<+=.4")
 
           /* STAGE 4 — absorb cards; shape becomes a BRAND CIRCLE */
-          .to(cards, { xPercent: 0, yPercent: 0, scale: 0, opacity: 0, duration: 1, stagger: 0.12, ease: "power3.in" }, "+=.7")
+          .to(cards, { xPercent: -50, yPercent: -50, scale: 0, opacity: 0, duration: 1, stagger: 0.12, ease: "power3.in" }, "+=.7")
           .to(S.r, { endArray: SHAPES.circle, duration: 1.2 }, "<")
           .to(S.c, { endArray: BRAND, duration: 1.2 }, "<")
           .to(S, { rot: 1.6, b: 1, duration: 1.2 }, "<")
@@ -187,7 +189,7 @@ export function useMorphRules() {
       });
 
       /* Mobile: plain cards, no morph */
-      mm.add("(max-width: 767px)", () => {
+      mm.add("(max-width: 1023px)", () => {
         gsap.fromTo(
           "[data-mrule]",
           { y: 40, opacity: 0 },

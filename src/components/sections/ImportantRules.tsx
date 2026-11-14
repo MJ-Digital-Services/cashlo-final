@@ -24,7 +24,7 @@ export default function ImportantRules() {
   const { scope, wrapRef, shapeRef } = useMorphRules();
 
   return (
-    <section ref={scope} className="relative overflow-hidden bg-bg md:h-screen">
+    <section ref={scope} className="relative overflow-hidden bg-bg lg:h-screen">
       {/* Full-bleed sketch, faint watermark behind everything */}
       <div
         className="pointer-events-none absolute inset-0 bg-cover bg-center opacity-[0.12]"
@@ -33,13 +33,10 @@ export default function ImportantRules() {
       />
 
       {/* ---------- Desktop: pinned morph scene ---------- */}
-      <div className="relative hidden h-full flex-col items-center justify-center md:flex">
-        {/* Heading — sits on its own small frosted panel so it doesn't
-            collide with the sketch's own "CASHLO" wordmark behind it */}
-        <div
-          data-morph-head
-          className="absolute top-20 z-10 mx-auto max-w-2xl rounded-2xl bg-bg/80 px-8 py-5 text-center shadow-sm backdrop-blur-md"
-        >
+      {/* Heading in normal flow below the fixed navbar; the morph area takes
+          whatever height is left, so the blob never grows into the heading */}
+      <div className="relative hidden h-full flex-col items-center pt-36 pb-10 lg:flex short:pt-32 short:pb-6">
+        <div data-morph-head className="relative z-10 max-w-3xl px-6 text-center">
           <p className="text-sm font-semibold uppercase tracking-wider text-brand">
             Your Complete Business Companion
           </p>
@@ -49,6 +46,7 @@ export default function ImportantRules() {
         </div>
 
         {/* Morphing shape + rule cards */}
+        <div className="relative flex min-h-0 w-full flex-1 items-center justify-center">
         <div ref={wrapRef} className="morph-wrap z-11">
           <svg viewBox="0 0 600 600">
             <defs>
@@ -85,6 +83,7 @@ export default function ImportantRules() {
             </div>
           ))}
         </div>
+        </div>
 
         {/* Final message inside the full-screen brand circle */}
         <div
@@ -103,14 +102,14 @@ export default function ImportantRules() {
       </div>
 
       {/* ---------- Mobile: simple cards ---------- */}
-      <div className="relative px-6 py-20 md:hidden">
+      <div className="relative mx-auto max-w-5xl px-6 py-20 lg:hidden">
       <p className="text-sm font-semibold uppercase tracking-wider text-brand">
         Your Complete Business Companion
       </p>
       <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink">
         Not Just Payments. A Complete Shop OS.
       </h2>
-        <div className="mt-8 space-y-4">
+        <div className="mt-8 space-y-4 md:grid md:grid-cols-3 md:gap-4 md:space-y-0">
           {rules.map((r) => (
             <div
               key={r.num}

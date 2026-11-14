@@ -31,9 +31,6 @@ export default function Navbar() {
 
   const onHero = isHomepage && !scrolledPast;
 
-  // color logo only when the bar is solid-white (scrolled + light); else white logo
-  const useColorLogo = scrolled && theme === "light";
-
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${
@@ -47,10 +44,8 @@ export default function Navbar() {
         <Link href="/" className="flex items-center">
           <Image
             src={
-              scrolled
-                ? theme === "dark"
-                  ? "/logo/cashlo-logo-white1.png"
-                  : "/logo/cashlo-logo.png"
+              theme === "dark"
+                ? "/logo/cashlo-logo-white1.png"
                 : "/logo/cashlo-logo.png"
             }
             alt="Cashlo"
@@ -67,7 +62,7 @@ export default function Navbar() {
           className={`hidden items-center gap-1 rounded-full border px-2 py-1.5 shadow-sm backdrop-blur-md transition-colors lg:flex ${
             scrolled
               ? "border-border bg-bg/70"
-              : "border-black/10 bg-black/[0.03]"
+              : "border-black/10 bg-black/[0.03] dark:border-white/10 dark:bg-white/[0.04]"
           }`}
         >
           {navItems.map((item) =>
@@ -86,7 +81,7 @@ export default function Navbar() {
             className={`hidden rounded-full border px-5 py-2.5 text-sm font-semibold transition-colors lg:block ${
               scrolled
                 ? "border-border text-ink hover:bg-surface"
-                : "border-[#070b1e]/15 text-[#070b1e] hover:bg-black/5"
+                : "border-[#070b1e]/15 text-[#070b1e] hover:bg-black/5 dark:border-white/15 dark:text-ink dark:hover:bg-white/5"
             }`}
           >
             Become Distributor

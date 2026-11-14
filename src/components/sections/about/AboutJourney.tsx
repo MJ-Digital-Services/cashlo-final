@@ -94,7 +94,7 @@ export default function AboutJourney() {
 
                 <div
                   data-content
-                  className="relative h-52 sm:h-64"
+                  className="art-tile relative h-52 overflow-hidden rounded-2xl sm:h-64"
                 >
                   <Image
                     data-parallax-img

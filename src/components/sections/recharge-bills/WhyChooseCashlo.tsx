@@ -173,7 +173,7 @@ export default function WhyChooseCashlo() {
 
               <div className="order-1 flex flex-col justify-between md:order-2 md:col-span-7">
                 <div>
-                  <div className="inline-flex items-center gap-2 rounded-lg bg-indigo-500/10 px-3 py-1 text-xs font-bold text-indigo-600">
+                  <div className="inline-flex items-center gap-2 rounded-lg bg-indigo-500/10 px-3 py-1 text-xs font-bold text-indigo-600 dark:text-indigo-300">
                     <HeartHandshake className="h-3.5 w-3.5" />
                     Priority Merchant Support
                   </div>

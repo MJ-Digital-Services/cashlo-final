@@ -14,7 +14,7 @@ export default function QuickActions({
   onContactDistributor: () => void;
 }) {
   return (
-    <section className="relative px-5 pb-16 sm:px-8 bg-[#f9fafb]" aria-label="Quick actions">
+    <section className="relative px-5 pb-16 sm:px-8 bg-surface" aria-label="Quick actions">
       <StaggerGroup className="mx-auto grid max-w-7xl gap-5 md:grid-cols-3">
         <StaggerItem>
           <GlassCard className="group h-full p-7">
@@ -82,7 +82,7 @@ export default function QuickActions({
                 href="https://play.google.com/store/apps/details?id=in.cashlo.merchant"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#0B1020] text-[15px] font-semibold text-white transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3F5EF7] focus-visible:ring-offset-2"
+                className="mt-5 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#0B1020] text-[15px] font-semibold text-white dark:bg-white dark:text-[#0B1020] transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#3F5EF7] focus-visible:ring-offset-2"
               >
                 <Download className="h-4 w-4" aria-hidden />
                 Get it on Google Play

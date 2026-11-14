@@ -31,22 +31,40 @@ import {
 
 /* ------------------------------------------------------------------ tokens */
 
+/* Brand/status colours are fixed hex (they get alpha suffixes appended,
+   e.g. `${T.blue}55`). Surface + text colours are CSS variables so the
+   phone's screen follows the site theme — a light-mode app inside a
+   dark-mode page looked like a glaring white slab. Values live in
+   QK_THEME_CSS below. Never append alpha suffixes to the var() tokens. */
 const T = {
   blue: "#3B5BFF",
   blueDeep: "#2942D6",
-  blueSoft: "#EEF1FF",
-  blueLine: "#DCE2FF",
+  blueSoft: "var(--qk-blue-soft)",
+  blueLine: "var(--qk-blue-line)",
   green: "#12B76A",
-  greenSoft: "#E6F7EF",
+  greenSoft: "var(--qk-green-soft)",
   red: "#F04438",
   amber: "#F79009",
-  ink: "#0B1020",
-  body: "#5A6379",
-  mute: "#98A0B3",
-  line: "#EDEFF6",
-  bg: "#F6F7FB",
-  card: "#FFFFFF",
+  ink: "var(--qk-ink)",
+  body: "var(--qk-body)",
+  mute: "var(--qk-mute)",
+  line: "var(--qk-line)",
+  bg: "var(--qk-bg)",
+  card: "var(--qk-card)",
+  glass: "var(--qk-glass)", // translucent card for blurred bars/chips
+  frame: "var(--qk-frame)", // phone body + notch
 };
+
+const QK_THEME_CSS = `
+  .qk-demo{--qk-ink:#0B1020;--qk-body:#5A6379;--qk-mute:#98A0B3;--qk-line:#EDEFF6;
+    --qk-bg:#F6F7FB;--qk-card:#FFFFFF;--qk-blue-soft:#EEF1FF;--qk-blue-line:#DCE2FF;
+    --qk-green-soft:#E6F7EF;--qk-glass:rgba(255,255,255,.9);--qk-frame:#0B1020;
+    --qk-frame-ring:rgba(255,255,255,.06)}
+  .dark .qk-demo{--qk-ink:#EEF0F8;--qk-body:#A6AEC2;--qk-mute:#6E7790;--qk-line:#262C3D;
+    --qk-bg:#0E121C;--qk-card:#171C29;--qk-blue-soft:#1C2547;--qk-blue-line:#33407A;
+    --qk-green-soft:#10301F;--qk-glass:rgba(23,28,41,.88);--qk-frame:#252B3B;
+    --qk-frame-ring:rgba(255,255,255,.14)}
+`;
 
 const FRAME_W = 300;
 const FRAME_H = 624;
@@ -557,7 +575,7 @@ function BottomNav({ i }: { i: number }) {
       style={{
         height: 54,
         borderTop: `1px solid ${T.line}`,
-        background: "rgba(255,255,255,0.9)",
+        background: T.glass,
         backdropFilter: "blur(10px)",
         WebkitBackdropFilter: "blur(10px)",
         display: "flex",
@@ -605,7 +623,7 @@ function BottomNav({ i }: { i: number }) {
           height: 42,
           borderRadius: 42,
           background: `linear-gradient(145deg, ${T.blue}, ${T.blueDeep})`,
-          border: "3px solid #fff",
+          border: `3px solid ${T.card}`,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
@@ -1051,7 +1069,7 @@ function DetailView({ i, active }: { i: number; active: boolean }) {
                 gap: 5,
                 padding: "5px 10px",
                 borderRadius: 999,
-                background: "rgba(255,255,255,.82)",
+                background: T.glass,
                 backdropFilter: "blur(8px)",
                 WebkitBackdropFilter: "blur(8px)",
                 border: `1px solid ${T.line}`,
@@ -1371,7 +1389,7 @@ function QrCode({ active, scanning }: { active: boolean; scanning: boolean }) {
         }}
       >
         <svg width="100" height="100" viewBox="0 0 100 100">
-          <path d={d} fill={T.ink} />
+          <path d={d} fill="#0B1020" />
         </svg>
         {/* centre badge */}
         <div
@@ -1381,7 +1399,7 @@ function QrCode({ active, scanning }: { active: boolean; scanning: boolean }) {
             height: 28,
             borderRadius: 9,
             background: `linear-gradient(145deg, ${T.blue}, ${T.blueDeep})`,
-            border: "2.5px solid #fff",
+            border: `2.5px solid ${T.card}`,
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
@@ -1737,12 +1755,12 @@ export default function QuickKhataPhoneDemo({
   return (
     <div
       ref={wrapRef}
-      className={className}
+      className={`qk-demo ${className ?? ""}`}
       style={{ width: "100%", maxWidth: FRAME_W, margin: "0 auto", ...style }}
       role="img"
       aria-label="QuickKhata demo: add a customer, record udhaar, generate a payment QR, receive the UPI payment, and the ledger settles automatically."
     >
-      <style>{`
+      <style>{QK_THEME_CSS + `
         @keyframes qk-blink { 0%,49% {opacity:1} 50%,100% {opacity:0} }
         .qk-caret{display:inline-block;width:1.5px;height:1em;margin-left:1px;
           background:${T.blue};vertical-align:-0.12em;animation:qk-blink .9s steps(1,end) infinite}
@@ -1781,10 +1799,10 @@ export default function QuickKhataPhoneDemo({
               width: FRAME_W,
               height: FRAME_H,
               borderRadius: 46,
-              background: "#0B1020",
+              background: T.frame,
               padding: BEZEL,
               boxShadow:
-                "0 40px 80px -40px rgba(11,16,32,.55), 0 2px 0 0 rgba(255,255,255,.06) inset",
+                "0 40px 80px -40px rgba(11,16,32,.55), 0 2px 0 0 var(--qk-frame-ring) inset, 0 0 0 1px var(--qk-frame-ring)",
             }}
           >
             {/* notch */}
@@ -1796,7 +1814,7 @@ export default function QuickKhataPhoneDemo({
                 transform: "translateX(-50%)",
                 width: 104,
                 height: 22,
-                background: "#0B1020",
+                background: T.frame,
                 borderRadius: "0 0 14px 14px",
                 zIndex: 30,
               }}

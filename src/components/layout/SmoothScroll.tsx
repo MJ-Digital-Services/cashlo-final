@@ -64,6 +64,41 @@ function LenisScrollTriggerBridge() {
     };
   }, [lenis, pathname]);
 
+  useEffect(() => {
+    if (!lenis) return;
+
+    // Re-measure whenever the page's height actually changes, at any time.
+    // Lenis caps wheel/touchpad scrolling at the max scroll it last measured
+    // and relies on a ResizeObserver on <html> to notice growth — but <html>
+    // is `h-full` (always exactly the viewport tall; content overflows it),
+    // so that observer never fires. Anything that grew the page after the
+    // two route-change refreshes above (lazy `next/dynamic` sections, late
+    // images, pin spacers) left Lenis with a stale bottom: the wheel stopped
+    // dead partway down while dragging the native scrollbar still worked,
+    // and only a reload fixed it. <body> does grow with the content, so
+    // watch that instead. The same refresh also re-fits every scroll
+    // animation after a resize or rotation once the new layout has settled
+    // (ScrollTrigger's own resize refresh can run before images reflow).
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    let lastHeight = document.body.offsetHeight;
+    const ro = new ResizeObserver(() => {
+      const h = document.body.offsetHeight;
+      if (h === lastHeight) return; // width-only changes: ScrollTrigger's own resize refresh covers those
+      lastHeight = h;
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        lenis.resize();
+        ScrollTrigger.refresh();
+      }, 150);
+    });
+    ro.observe(document.body);
+
+    return () => {
+      clearTimeout(timer);
+      ro.disconnect();
+    };
+  }, [lenis]);
+
   return null;
 }
 

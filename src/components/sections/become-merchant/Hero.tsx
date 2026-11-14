@@ -69,7 +69,9 @@ export default function Hero({
   return (
     <section
       ref={scope}
-      className="relative flex min-h-[calc(100dvh-80px)] items-center overflow-hidden bg-bg pb-16 pt-20"
+      // Starts at the very top of the page, behind the fixed 80px navbar:
+      // pt-20 left the eyebrow flush against it. pt-32 clears it with room.
+      className="relative flex min-h-dvh items-center overflow-hidden bg-bg pb-16 pt-32 short:pt-28"
     >
       {/* Soft background blob — large rounded shape behind the illustration */}
       <svg
@@ -94,7 +96,7 @@ export default function Hero({
 
       {/* Soft wave hugging the bottom of the section */}
       <svg
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-[#f9fafb]"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-surface"
         viewBox="0 0 1440 200"
         fill="none"
         preserveAspectRatio="none"
@@ -118,19 +120,19 @@ export default function Hero({
           </p>
           <h1
             data-reveal
-            className="mt-4 max-w-2xl text-5xl font-bold tracking-tight text-ink sm:text-6xl"
+            className="mt-4 max-w-2xl text-5xl font-bold tracking-tight text-ink sm:text-6xl short:text-5xl"
           >
             Turn Your Shop Into a{" "}
             <span className="text-brand">Digital Service Point</span>
           </h1>
-          <p data-reveal className="mt-6 max-w-xl text-xl text-ink/60">
+          <p data-reveal className="mt-6 max-w-xl text-xl text-ink/60 short:mt-5 short:text-lg">
             Join Cashlo and unlock a world of digital payments and services.
             Accept payments, offer essential services, and grow your
             neighborhood income — every single day.
           </p>
 
           {/* CTA buttons */}
-          <div data-reveal className="mt-10 flex flex-wrap items-center gap-4">
+          <div data-reveal className="mt-10 flex flex-wrap items-center gap-4 short:mt-8">
             <button
               onClick={onBecomeMerchant}
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5"
@@ -178,7 +180,7 @@ export default function Hero({
           />
 
           {/* Floating stat cards — desktop only, room-dependent */}
-          <div className="pointer-events-none absolute -right-4 top-6 hidden w-52 flex-col gap-3 xl:-right-10 xl:flex">
+          <div className="pointer-events-none absolute right-0 top-6 hidden w-52 flex-col gap-3 xl:flex 2xl:-right-10">
             {sideStats.map(({ icon: Icon, title, desc, tone }) => (
               <div
                 key={title}

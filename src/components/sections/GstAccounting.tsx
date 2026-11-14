@@ -44,16 +44,21 @@ const services = [
   },
 ];
 
-/* horizontal position (% of the stage) and string length (px) per card —
-   varied lengths make the row feel hand-hung rather than templated */
+/* horizontal position (0–1 across the stage) and string length (px) per
+   card — varied lengths make the row feel hand-hung rather than templated */
 const layout = [
-  { left: "4%", string: 96 },
-  { left: "21%", string: 168 },
-  { left: "38%", string: 64 },
-  { left: "55%", string: 190 },
-  { left: "72%", string: 110 },
-  { left: "89%", string: 150 },
+  { x: 0, string: 96 },
+  { x: 0.2, string: 168 },
+  { x: 0.4, string: 64 },
+  { x: 0.6, string: 190 },
+  { x: 0.8, string: 110 },
+  { x: 1, string: 150 },
 ];
+
+/* each pivot is the card's top-center, so keep it half a card width
+   (.hang-card is 11.5rem) inside both stage edges — otherwise the outer
+   cards hang off the screen */
+const pivotLeft = (x: number) => `calc(5.75rem + (100% - 11.5rem) * ${x})`;
 
 export default function GstAccounting() {
   const scope = useHangingDocs();
@@ -64,13 +69,33 @@ export default function GstAccounting() {
         <div className="grid items-start gap-16 lg:grid-cols-2">
           {/* Hanging documents — strings pinned to the very top of the section,
               i.e. the seam with the previous section */}
-          <div ref={scope} className="hang-stage relative h-[480px] sm:h-[520px]">
+          {/* Phones: too narrow for five hanging 11.5rem cards (they pile
+              on top of each other), so show a plain card grid instead */}
+          <ul className="grid grid-cols-2 gap-3 pt-16 sm:hidden">
+            {services.map((s) => (
+              <li
+                key={s.label}
+                className="rounded-2xl border border-border bg-card p-4"
+              >
+                <span className="grid h-10 w-10 place-items-center rounded-full bg-brand/10 text-brand">
+                  <s.icon className="h-5 w-5" strokeWidth={1.75} />
+                </span>
+                <h3 className="mt-3 text-sm font-semibold text-ink">{s.label}</h3>
+                <p className="mt-1 text-xs leading-snug text-ink/55">{s.desc}</p>
+              </li>
+            ))}
+          </ul>
+
+          <div
+            ref={scope}
+            className="hang-stage relative hidden h-[480px] sm:block sm:h-[520px]"
+          >
             {services.map((s, i) => (
               <div
                 key={s.label}
                 data-hang-item
                 className="hang-item"
-                style={{ left: layout[i].left }}
+                style={{ left: pivotLeft(layout[i].x) }}
               >
                 <div data-hang-swing className="hang-swing">
                   <div
@@ -102,7 +127,7 @@ export default function GstAccounting() {
           </div>
 
           {/* Copy */}
-          <div className="pt-24">
+          <div className="sm:pt-24">
             <p className="text-sm font-semibold uppercase tracking-wider text-brand">
               Complete Business Compliance
             </p>

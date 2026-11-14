@@ -168,7 +168,7 @@ onHero?: boolean;
         ref={triggerRef}
         type="button"
         className={`csd-trigger${visible ? " is-open" : ""}`}
-        style={{ color: onHero ? "#070b1e" : undefined }}
+        style={{ color: onHero ? "var(--ink)" : undefined }}
         aria-expanded={visible}
         aria-haspopup="true"
         aria-controls="csd-services-panel"
