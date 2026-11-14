@@ -91,19 +91,36 @@ function InstallScreen() {
         <Search className="h-4 w-4 text-ink/40" />
         <span className="text-sm text-ink">Cashlo</span>
       </div>
-      <div className="flex items-center gap-3 rounded-2xl border border-border bg-card p-3">
-      <div className="relative h-11 w-11 shrink-0 overflow-hidden rounded-xl">
-        <Image src="/cashlo-icon.svg" alt="Cashlo" fill className="object-cover" />
-      </div>
-        <div className="flex-1">
-          <div className="text-sm font-semibold text-ink">Cashlo</div>
-          <div className="text-xs text-ink/65">
-            Finance · 4.8★ · MJ Digital Services
+      {/* store listing: icon + name, details row, full-width Install */}
+      <div className="rounded-2xl border border-border bg-card p-3">
+        <div className="flex items-center gap-3">
+          <div className="relative h-12 w-12 shrink-0 overflow-hidden rounded-xl">
+            <Image src="/cashlo-icon.svg" alt="Cashlo" fill className="object-cover" />
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-sm font-semibold text-ink">Cashlo</div>
+            <div className="truncate text-[11px] font-medium text-brand">MJ Digital Services</div>
           </div>
         </div>
-        <span className="rounded-full bg-brand px-4 py-1.5 text-xs font-semibold text-white">
-          Get
-        </span>
+        <div className="mt-3 grid grid-cols-2 divide-x divide-border text-center">
+          <div>
+            <div className="text-xs font-semibold text-ink">4.8★</div>
+            <div className="text-[10px] text-ink/55">Rating</div>
+          </div>
+          <div>
+            <div className="text-xs font-semibold text-ink">Finance</div>
+            <div className="text-[10px] text-ink/55">Category</div>
+          </div>
+        </div>
+        <div className="mt-3 rounded-full bg-brand py-2 text-center text-xs font-semibold text-white">
+          Install
+        </div>
+      </div>
+      {/* app screenshot thumbnails, as on a real store page */}
+      <div className="mt-3 flex gap-2">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="h-24 flex-1 rounded-lg border border-border bg-surface" />
+        ))}
       </div>
     </div>
   );
@@ -140,14 +157,12 @@ function RegisterScreen() {
             className="flex items-center gap-2.5 rounded-xl border border-border bg-surface px-3 py-2.5"
           >
             <f.icon className="h-4 w-4 shrink-0 text-ink/40" />
-            <div className="flex-1">
-              <div className="text-[10px] text-ink/60">{f.label}</div>
-              <div className="text-xs font-medium text-ink">{f.value}</div>
+            <div className="min-w-0 flex-1">
+              <div className="truncate text-[10px] text-ink/60">{f.label}</div>
+              <div className="truncate text-xs font-medium text-ink">{f.value}</div>
             </div>
             {f.verified && (
-              <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-semibold text-emerald-700">
-                Verified
-              </span>
+              <CheckCircle2 aria-label="Verified" className="h-4 w-4 shrink-0 text-emerald-500" />
             )}
           </div>
         ))}
@@ -184,9 +199,9 @@ function KycScreen() {
             className="flex items-center gap-2.5 rounded-xl border border-border bg-surface px-3 py-2.5"
           >
             <r.icon className="h-4 w-4 shrink-0 text-brand" />
-            <div className="flex-1">
-              <div className="text-xs font-medium text-ink">{r.label}</div>
-              <div className="text-[10px] text-ink/60">{r.sub}</div>
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium leading-tight text-ink">{r.label}</div>
+              <div className="truncate text-[10px] text-ink/60">{r.sub}</div>
             </div>
             {r.status === "In Progress" ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin text-brand" />
@@ -267,7 +282,10 @@ function ActivateScreen() {
 const SCREENS = [InstallScreen, RegisterScreen, KycScreen, ActivateScreen];
 
 function FloatingCards({ step }: { step: (typeof STEPS)[number] }) {
-  if (step.floatingCards.length === 0) return null;
+  // fixed-width slot even when a step has no cards, so the phone doesn't
+  // jump sideways between steps
+  if (step.floatingCards.length === 0)
+    return <div aria-hidden className="hidden w-[260px] shrink-0 xl:block" />;
 
   const CARD_HEIGHT = 64;
   const GAP = 56;
@@ -288,7 +306,7 @@ function FloatingCards({ step }: { step: (typeof STEPS)[number] }) {
   }));
 
   return (
-    <div className="pointer-events-none absolute -right-16 top-4 hidden flex-col gap-14 xl:flex xl:-right-28 2xl:-right-40">
+    <div className="pointer-events-none relative hidden w-[260px] shrink-0 flex-col gap-14 xl:flex">
       <svg
         className="absolute left-0 top-0 -z-10 overflow-visible"
         width={STAGGER_X + LINE_INSET + 20}
@@ -386,13 +404,13 @@ function Stepper({ activeStep }: { activeStep: number }) {
 
 function StepList({ activeStep }: { activeStep: number }) {
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 short:gap-2">
       {STEPS.map((s, i) => {
         const active = i === activeStep;
         return (
           <div
             key={s.key}
-            className={`rounded-2xl border-l-[3px] px-5 py-3 transition-all duration-300 lg:px-6 lg:py-4 xl:py-5 ${
+            className={`rounded-2xl border-l-[3px] px-5 py-3 transition-all duration-300 lg:px-6 lg:py-4 xl:py-5 short:py-3 xl:short:py-3 ${
               active
                 ? "border-brand bg-card shadow-sm"
                 : "border-transparent"
@@ -479,42 +497,50 @@ export default function HowItWorks() {
   const step = STEPS[activeStep];
 
   return (
-    <section ref={sectionRef} className="relative overflow-x-clip bg-bg pt-4 lg:pt-6 xl:pt-10">
+    <section ref={sectionRef} className="relative overflow-x-clip bg-bg">
       {/* ---------- Desktop: explicit-height scroll track, sticky-pinned content ---------- */}
       <div
         className="relative hidden lg:block"
         style={{ height: `${STEPS.length * 100}vh` }}
       >
-        <div ref={pinRef} className="sticky top-0 flex h-screen items-center">
-          <div className="mx-auto max-w-6xl px-6">
+        {/* content starts just below the fixed navbar (h-20) rather than
+            being centered, so there's no dead band above the heading */}
+        <div ref={pinRef} className="sticky top-0 h-screen pt-24 xl:pt-28 short:pt-24 xl:short:pt-24">
+          <div className="mx-auto w-full max-w-6xl px-6">
           <div className="mx-auto max-w-4xl text-center">
-            <span className="inline-block rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-brand">
+            <span className="inline-block rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-brand short:py-1">
               How Cashlo Works
             </span>
-            <h2 className="mt-3 whitespace-nowrap text-3xl font-bold tracking-tight text-ink lg:text-4xl 2xl:text-5xl">
+            <h2 className="mt-3 whitespace-nowrap text-3xl font-bold tracking-tight text-ink lg:text-4xl 2xl:text-5xl short:mt-2 short:text-3xl">
                 From download to{" "}
                 <span className="text-brand">daily earnings</span>
               </h2>
-              <p className="mt-2 text-sm text-ink/60 lg:mt-3 lg:text-base">
+              <p className="mt-2 text-sm text-ink/60 lg:mt-3 lg:text-base short:mt-1.5 short:text-sm">
                 A simple journey for every merchant — install, register,
                 verify, and start earning commission on every transaction.
               </p>
             </div>
 
-            <div className="mt-6 grid grid-cols-[1fr_1.1fr] items-center gap-10 lg:mt-10 xl:mt-16">
+            <div className="mt-8 grid grid-cols-2 items-center gap-12 xl:mt-12 short:mt-6 xl:short:mt-6">
               <div>
                 <StepList activeStep={activeStep} />
-                <Stepper activeStep={activeStep} />
+                <div className="short:hidden">
+                  <Stepper activeStep={activeStep} />
+                </div>
               </div>
 
-              <div className="relative flex justify-center">
-                <FloatingCards step={step} />
-                <div className="relative h-[clamp(420px,62vh,600px)] w-[clamp(210px,31vh,300px)] rounded-[40px] border-[6px] border-ink bg-bg shadow-2xl">
+              {/* phone + its floating cards as one centered group */}
+              <div className="flex items-center justify-center gap-6">
+                {/* fixed real-phone size so the app screens lay out like they
+                    would on a device; the whole phone (frame + content) is
+                    zoomed per viewport-height tier to fit under the heading */}
+                <div className="relative h-[520px] w-[250px] shrink-0 rounded-[40px] border-[6px] border-ink bg-bg shadow-2xl [@media(max-height:680px)]:[zoom:0.74] [@media(min-height:681px)_and_(max-height:820px)]:[zoom:0.88] [@media(min-height:961px)]:[zoom:1.12]">
                   <div className="absolute left-1/2 top-0 h-6 w-32 -translate-x-1/2 rounded-b-2xl bg-ink" />
                   <div className="h-full overflow-hidden rounded-[34px] p-2 pt-8">
                     <Screen />
                   </div>
                 </div>
+                <FloatingCards step={step} />
               </div>
             </div>
           </div>

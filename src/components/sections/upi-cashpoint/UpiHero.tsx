@@ -16,29 +16,32 @@ export default function UpiHero() {
 
   return (
     <section ref={scope} className="relative overflow-hidden bg-bg pt-5 mt-13 sm:pt-4">
-      <div className="relative aspect-[2.4/1] w-full min-h-[400px] lg:min-h-[540px]">
-        {/* Full-width background image */}
-        <Image
-          src="/images/upi-cashpoint-hero.jpg"
-          alt="Cashlo UPI Cash Point kiosk with merchant serving customers"
-          fill
-          priority
-          className="object-cover object-[68%_15%] lg:object-[62%_15%]"
-        />
+      {/* Phones: image banner, then text below it on the page background.
+          lg+: text overlaid on the empty left side of a wide image. */}
+      <div className="relative w-full lg:aspect-[2.4/1] lg:min-h-[540px]">
+        <div className="relative aspect-[4/3] w-full sm:aspect-[16/9] lg:absolute lg:inset-0 lg:aspect-auto">
+          <Image
+            src="/images/upi-cashpoint-hero.jpg"
+            alt="Cashlo UPI Cash Point kiosk with merchant serving customers"
+            fill
+            priority
+            className="object-cover object-[68%_15%] lg:object-[62%_15%]"
+          />
 
-        {/* Scrim for text legibility: light on the left, fading to clear over the kiosk */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.75) 30%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 65%)",
-          }}
-        />
+          {/* Scrim for text legibility: page-colored on the left (so it
+              works in dark mode too), fading to clear over the kiosk */}
+          <div
+            className="absolute inset-0 hidden lg:block"
+            style={{
+              background:
+                "linear-gradient(90deg, color-mix(in srgb, var(--bg) 90%, transparent) 0%, color-mix(in srgb, var(--bg) 75%, transparent) 30%, color-mix(in srgb, var(--bg) 25%, transparent) 50%, transparent 65%)",
+            }}
+          />
+        </div>
 
-        {/* Text overlaid on the empty left side of the image */}
-        <div className="absolute inset-0 flex items-center">
+        <div className="relative py-8 sm:py-10 lg:absolute lg:inset-0 lg:flex lg:items-center lg:py-0">
         <Container>
-  <div className="-translate-x-2 translate-y-4 sm:-translate-x-4 sm:translate-y-6 lg:-translate-x-8 lg:translate-y-10">
+  <div className="lg:translate-y-10 2xl:-translate-x-8">
     <div data-reveal className="max-w-md lg:max-w-lg">
       <p className="text-sm font-semibold uppercase tracking-wider text-brand">
         UPI CashPoint
@@ -53,7 +56,7 @@ export default function UpiHero() {
     </div>
 
     {/* Trust badges — own width, not constrained by the max-w-md text column above */}
-    <div className="mt-7 flex w-max max-w-none flex-nowrap items-center gap-x-6">
+    <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3 sm:w-max sm:max-w-none sm:flex-nowrap">
       {trustBadges.map(({ icon: Icon, label }) => (
         <div key={label} className="flex shrink-0 items-center gap-2.5">
           <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-brand/10">

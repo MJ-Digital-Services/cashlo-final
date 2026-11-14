@@ -92,11 +92,11 @@ const chapters: Chapter[] = [
 
 function ChapterBadges({ badges }: { badges: Badge[] }) {
   return (
-    <div className="mt-8 flex flex-wrap gap-3">
+    <div className="mt-8 flex flex-wrap gap-3 short:mt-5">
       {badges.map(({ icon: Icon, label, color }) => (
         <div
           key={label.join(" ")}
-          className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-4 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
+          className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-4 short:py-3 shadow-[0_1px_2px_rgba(15,23,42,0.04)]"
         >
           <span
             className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl"
@@ -166,23 +166,23 @@ function ChapterGrid({ c }: { c: Chapter }) {
   return (
     <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[1fr_0.9fr] xl:grid-cols-[1.15fr_0.85fr] lg:gap-16">
       {/* Left column */}
-      <div className="max-w-2xl xl:-ml-8 2xl:-ml-16">
+      <div className="relative z-10 max-w-2xl 2xl:-ml-16">
         <p className="text-base font-semibold uppercase tracking-wider text-[#0B7A56] dark:text-emerald-400">
           {c.eyebrow}
         </p>
-        <h2 className="mt-3 text-[40px] leading-[1.12] font-bold tracking-tight text-ink lg:text-[44px] xl:text-[48px] 2xl:text-[52px]">
+        <h2 className="mt-3 text-[40px] leading-[1.12] font-bold tracking-tight text-ink lg:text-[44px] xl:text-[48px] 2xl:text-[52px] short:text-[38px] xl:short:text-[40px]">
           {c.title[0]}
           <br />
           {c.title[1]}
         </h2>
-        <p className="mt-4 max-w-md text-[19px] leading-relaxed text-ink/65">
+        <p className="mt-4 max-w-md text-[19px] leading-relaxed text-ink/65 short:mt-3 short:text-base">
           {c.desc}
         </p>
 
         <ChapterBadges badges={c.badges} />
 
         {c.trustPrefix && (
-          <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-border bg-card/70 px-5 py-3.5">
+          <div className="mt-8 inline-flex items-center gap-3 rounded-2xl border border-border bg-card/70 px-5 py-3.5 short:mt-5 short:py-2.5">
             <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0EA371]/10">
               <ShieldCheck className="h-4.5 w-4.5 text-[#0B7A56] dark:text-emerald-400" strokeWidth={2} />
             </span>
@@ -196,7 +196,7 @@ function ChapterGrid({ c }: { c: Chapter }) {
       </div>
 
       {/* Right column — desktop-only, uses this chapter's tuned scale/offset values */}
-      <div className="relative hidden h-[560px] w-full overflow-visible lg:block">
+      <div className="relative hidden h-[clamp(360px,calc(100vh-8rem),560px)] w-full overflow-visible [clip-path:inset(-50%_-50%_-50%_0)] lg:block">
         {c.bgMask ? (
           <div
             className="absolute inset-0"
@@ -299,7 +299,7 @@ export default function ServiceStack() {
               ref={(el) => {
                 chapterRefs.current[i] = el;
               }}
-              className="absolute inset-0 flex items-center bg-tint-cool"
+              className="absolute inset-0 flex items-center bg-tint-cool pt-20"
               style={{ zIndex: i + 1 }}
             >
               <Container>

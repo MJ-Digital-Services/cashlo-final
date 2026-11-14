@@ -4,6 +4,10 @@
 /* lets us write dark:* utilities when a token won't cover an edge case */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* short desktop screens (e.g. 1280x630 / 1366x768 laptops): pinned
+   full-viewport sections compact themselves so they fit under the navbar */
+@custom-variant short (@media (min-width: 1024px) and (max-height: 820px));
+
 /* ---- Theme tokens: raw values swap under .dark ---- */
 :root {
   color-scheme: light;

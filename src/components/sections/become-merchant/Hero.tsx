@@ -178,7 +178,7 @@ export default function Hero({
           />
 
           {/* Floating stat cards — desktop only, room-dependent */}
-          <div className="pointer-events-none absolute -right-4 top-6 hidden w-52 flex-col gap-3 xl:-right-10 xl:flex">
+          <div className="pointer-events-none absolute right-0 top-6 hidden w-52 flex-col gap-3 xl:flex 2xl:-right-10">
             {sideStats.map(({ icon: Icon, title, desc, tone }) => (
               <div
                 key={title}

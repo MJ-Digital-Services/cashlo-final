@@ -59,9 +59,9 @@ export default function UpiLimitsRules() {
                 <div
                   key={l.label}
                   data-reveal
-                  className="rounded-2xl bg-brand p-8 text-white"
+                  className="rounded-2xl bg-brand p-5 text-white sm:p-8 lg:p-6 xl:p-8"
                 >
-                  <div className="text-4xl font-bold sm:text-5xl">
+                  <div className="text-2xl font-bold sm:text-5xl lg:text-4xl xl:text-5xl">
                     {l.value}
                   </div>
                   <div className="mt-2 text-sm text-white/80">{l.label}</div>

@@ -568,7 +568,7 @@ export default function ReserveCheckout() {
         <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6 sm:py-12">
           <div className="grid items-start gap-6 lg:grid-cols-[380px_minmax(0,1fr)] lg:gap-12">
             {/* ================= ORDER SUMMARY (left / collapsible on mobile) ================= */}
-            <aside className="lg:sticky lg:top-24">
+            <aside className="lg:top-24 lg:[@media(min-height:760px)]:sticky">
               {/* Mobile: collapsed bar */}
               <button
                 type="button"
