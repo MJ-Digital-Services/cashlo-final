@@ -17,32 +17,16 @@ export default function ContactHero() {
   return (
     <section
       ref={scope}
-      className="relative flex min-h-[calc(100dvh-80px)] items-center overflow-hidden bg-bg pb-16 pt-20"
+      // The section starts at the very top of the page, *behind* the fixed
+      // 80px navbar: pt-20 alone left the eyebrow ~8px under it. pt-32
+      // clears the navbar with real breathing room, and the larger bottom
+      // padding keeps the CTA buttons above the wave's crest (the wave is
+      // shorter on short screens so it doesn't reach up into them).
+      className="relative flex min-h-dvh items-center overflow-hidden bg-bg pb-24 pt-32 sm:pb-28"
     >
-      {/* Soft background blob — large rounded shape behind the illustration */}
-      <svg
-        className="pointer-events-none absolute z-0 h-[500px] w-[720px] text-brand/[0.07]
-        right-[-200px] top-45
-        min-[320px]:top-180
-        min-[375px]:top-170
-        min-[425px]:top-140 min-[425px]:h-[600px]
-        min-[1440px]:right-[-20px]
-        min-[2560px]:right-140
-        sm:top-1/2 sm:h-[720px] sm:-translate-y-1/2"
-        viewBox="0 0 600 600"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <path
-          fill="currentColor"
-          d="M420,120 C500,170 540,270 520,360 C500,450 420,520 320,530 C220,540 120,490 90,400 C60,310 100,200 190,140 C280,80 340,70 420,120 Z"
-        />
-      </svg>
-
       {/* Soft wave hugging the bottom of the section */}
       <svg
-        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-surface"
+        className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-40 w-full text-surface short:h-28"
         viewBox="0 0 1440 200"
         fill="none"
         preserveAspectRatio="none"
@@ -106,7 +90,23 @@ export default function ContactHero() {
           </div>
         </div>
 
-        <div data-reveal className="relative mx-auto w-full max-w-3xl xl:max-w-4xl">
+        <div data-reveal className="relative isolate mx-auto w-full max-w-3xl xl:max-w-4xl">
+          {/* Soft background blob — anchored to the illustration (not the
+              section), so it stays behind the image at every screen size.
+              Previously it was positioned against the section with a chain
+              of per-width offsets and drifted far right on wide screens. */}
+          <svg
+            className="pointer-events-none absolute left-[56%] top-1/2 -z-10 aspect-square w-[118%] -translate-x-1/2 -translate-y-1/2 text-brand/[0.07]"
+            viewBox="0 0 600 600"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+            aria-hidden="true"
+          >
+            <path
+              fill="currentColor"
+              d="M420,120 C500,170 540,270 520,360 C500,450 420,520 320,530 C220,540 120,490 90,400 C60,310 100,200 190,140 C280,80 340,70 420,120 Z"
+            />
+          </svg>
           <Image
             src="/images/contact/contact-hero.png"
             alt="Cashlo support team ready to help you grow your shop"

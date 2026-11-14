@@ -655,8 +655,17 @@ const CSS = `
 
 /* ---- rail ---- */
 .hiw-rail{position:relative;display:flex;flex-direction:column;gap:6px;padding-left:6px;}
+/* Desktop: sit the rail at the vertical centre of the card's standard
+   height (~508px; the rail is 7x44 + 6x6 = 344px -> (508-344)/2). Not
+   align-self:center — a step whose title wraps makes its card taller, and
+   a centred rail would then jump on every step change. */
+@media (min-width:921px){ .hiw-rail{margin-top:82px;} }
+/* Runs through the dots' centres: rail padding 6 + node padding 10 + half
+   the 28px dot = 30px, minus half the 2px line. top/bottom = the first/last
+   dot's vertical centre (node padding 8 + 14), so the fill's % height lands
+   exactly on the active dot. */
 .hiw-rail-line{
-  position:absolute;left:20px;top:26px;bottom:26px;width:2px;
+  position:absolute;left:29px;top:22px;bottom:22px;width:2px;
   background:var(--line);border-radius:2px;overflow:hidden;
 }
 .hiw-rail-fill{
@@ -714,7 +723,8 @@ const CSS = `
   to{opacity:0;transform:translate3d(-46px,0,0) scale(.985);}
 }
 
-.hiw-card-head{display:flex;gap:20px;align-items:flex-start;}
+/* baseline: the big step number sits on the title's first line */
+.hiw-card-head{display:flex;gap:20px;align-items:baseline;}
 .hiw-num{
   font-size:clamp(38px,6vw,54px);font-weight:800;line-height:.9;
   letter-spacing:-.05em;color:var(--blue);opacity:.18;
@@ -728,6 +738,9 @@ const CSS = `
 }
 .hiw-card-caption{
   margin:0;font-size:15px;line-height:1.55;color:var(--muted);max-width:46ch;
+  /* always reserve 2 lines so every step's card is the same height —
+     otherwise the card (and the rail centred beside it) jumps per step */
+  min-height:3.1em;
   animation:hiwUp .6s cubic-bezier(.22,1,.36,1) both .2s;
 }
 @keyframes hiwUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}

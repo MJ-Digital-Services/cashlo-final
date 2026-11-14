@@ -25,16 +25,39 @@ export default function UpiHero() {
             alt="Cashlo UPI Cash Point kiosk with merchant serving customers"
             fill
             priority
-            className="object-cover object-[68%_15%] lg:object-[62%_15%]"
+            // dark mode: tone the bright daytime photo down so it sits in
+            // the dark page instead of glaring out of it
+            className="object-cover object-[68%_15%] lg:object-[62%_15%] dark:brightness-[0.78] dark:saturate-[0.9]"
           />
 
-          {/* Scrim for text legibility: page-colored on the left (so it
-              works in dark mode too), fading to clear over the kiosk */}
+          {/* Scrim for text legibility: page-colored on the left, fading to
+              clear over the kiosk. Light mode: the photo's white sky already
+              matches the page, so a translucent scrim is enough. */}
           <div
-            className="absolute inset-0 hidden lg:block"
+            className="absolute inset-0 hidden lg:block dark:lg:hidden"
             style={{
               background:
                 "linear-gradient(90deg, color-mix(in srgb, var(--bg) 90%, transparent) 0%, color-mix(in srgb, var(--bg) 75%, transparent) 30%, color-mix(in srgb, var(--bg) 25%, transparent) 50%, transparent 65%)",
+            }}
+          />
+          {/* Dark mode: a translucent scrim over the white sky reads as a
+              muddy grey band, so go fully page-colored behind the text and
+              ease out over many stops (no visible step) before the kiosk. */}
+          <div
+            className="absolute inset-0 hidden dark:lg:block"
+            style={{
+              background:
+                "linear-gradient(90deg, var(--bg) 0%, var(--bg) 26%, color-mix(in srgb, var(--bg) 92%, transparent) 33%, color-mix(in srgb, var(--bg) 72%, transparent) 41%, color-mix(in srgb, var(--bg) 45%, transparent) 49%, color-mix(in srgb, var(--bg) 20%, transparent) 57%, transparent 66%)",
+            }}
+          />
+          {/* Dark mode: melt the photo's top/bottom edges into the page so
+              it doesn't end on a hard bright line under the navbar or above
+              the next section (phones too, where text sits below it). */}
+          <div
+            className="absolute inset-0 hidden dark:block"
+            style={{
+              background:
+                "linear-gradient(to bottom, var(--bg) 0%, transparent 14%, transparent 80%, var(--bg) 100%)",
             }}
           />
         </div>

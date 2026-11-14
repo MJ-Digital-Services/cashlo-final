@@ -128,6 +128,20 @@ scrolling to get stuck (mostly noticeable on pinned/scrub sections like
   throughout) shift layout underneath them. `LenisScrollTriggerBridge` now
   calls `lenis.resize()` + `ScrollTrigger.refresh()` keyed off
   `usePathname()` to cover this.
+- **Lenis never notices the page growing on its own here — keep the
+  `<body>` ResizeObserver.** Lenis caps wheel/touchpad scrolling at the max
+  scroll it last measured, and re-measures via a ResizeObserver on
+  `<html>`. But `<html>` is `h-full` (always exactly viewport-tall; the
+  content overflows it), so that observer never fires. Any growth after the
+  route-change refreshes above (lazy `next/dynamic` sections, late images,
+  pin spacers) left the wheel stuck at the old bottom while dragging the
+  native scrollbar still worked — intermittent, timing-dependent, on nearly
+  every page. `LenisScrollTriggerBridge` observes `<body>` (which does grow)
+  and re-runs `lenis.resize()` + `ScrollTrigger.refresh()` whenever its
+  height changes (2026-11-14; reproduced on `/about` by growing the page
+  3000px — stuck at the old bottom without the observer, reaches the new
+  one with it). This also re-fits scroll animations after resize/rotation
+  once layout settles.
 
 ## SEO & schema.org infrastructure (2026-09-22)
 

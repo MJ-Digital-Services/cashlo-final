@@ -57,7 +57,7 @@ export default function QuickKhataFeatures() {
               data-reveal
               className="rounded-2xl border border-border bg-card p-6"
             >
-              <div className="flex h-44 items-center justify-center">
+              <div className="art-tile flex h-44 items-center justify-center overflow-hidden rounded-xl">
                 <Image
                   src={f.img}
                   alt={f.title}

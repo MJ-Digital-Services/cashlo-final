@@ -69,7 +69,9 @@ export default function Hero({
   return (
     <section
       ref={scope}
-      className="relative flex min-h-[calc(100dvh-80px)] items-center overflow-hidden bg-bg pb-16 pt-20"
+      // Starts at the very top of the page, behind the fixed 80px navbar:
+      // pt-20 left the eyebrow flush against it. pt-32 clears it with room.
+      className="relative flex min-h-dvh items-center overflow-hidden bg-bg pb-16 pt-32 short:pt-28"
     >
       {/* Soft background blob — large rounded shape behind the illustration */}
       <svg
@@ -118,19 +120,19 @@ export default function Hero({
           </p>
           <h1
             data-reveal
-            className="mt-4 max-w-2xl text-5xl font-bold tracking-tight text-ink sm:text-6xl"
+            className="mt-4 max-w-2xl text-5xl font-bold tracking-tight text-ink sm:text-6xl short:text-5xl"
           >
             Turn Your Shop Into a{" "}
             <span className="text-brand">Digital Service Point</span>
           </h1>
-          <p data-reveal className="mt-6 max-w-xl text-xl text-ink/60">
+          <p data-reveal className="mt-6 max-w-xl text-xl text-ink/60 short:mt-5 short:text-lg">
             Join Cashlo and unlock a world of digital payments and services.
             Accept payments, offer essential services, and grow your
             neighborhood income — every single day.
           </p>
 
           {/* CTA buttons */}
-          <div data-reveal className="mt-10 flex flex-wrap items-center gap-4">
+          <div data-reveal className="mt-10 flex flex-wrap items-center gap-4 short:mt-8">
             <button
               onClick={onBecomeMerchant}
               className="inline-flex items-center gap-2 rounded-lg bg-brand px-7 py-3.5 text-base font-semibold text-white shadow-sm transition-transform hover:-translate-y-0.5"

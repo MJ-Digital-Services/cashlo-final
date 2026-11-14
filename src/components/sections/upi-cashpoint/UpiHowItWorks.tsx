@@ -63,7 +63,7 @@ export default function UpiHowItWorks() {
               data-reveal
               className="rounded-2xl border border-border bg-card p-6"
             >
-              <div className="flex h-44 items-center justify-center">
+              <div className="art-tile flex h-44 items-center justify-center overflow-hidden rounded-xl">
                 <Image
                   src={s.img}
                   alt={s.title}

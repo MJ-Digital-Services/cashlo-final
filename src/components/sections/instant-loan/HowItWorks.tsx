@@ -51,7 +51,7 @@ export default function HowItWorks() {
               data-reveal
               className="overflow-hidden rounded-2xl border border-border bg-card"
             >
-              <div className="relative aspect-[4/3] w-full bg-surface">
+              <div className="art-tile relative aspect-[4/3] w-full bg-surface">
                 <Image
                   src={s.image}
                   alt={s.title}

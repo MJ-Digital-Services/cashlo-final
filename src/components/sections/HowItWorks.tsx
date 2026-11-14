@@ -362,7 +362,7 @@ function FloatingCards({ step }: { step: (typeof STEPS)[number] }) {
 
 function Stepper({ activeStep }: { activeStep: number }) {
   return (
-    <div className="mt-6 flex items-center justify-between rounded-2xl border border-border bg-card px-6 py-4 lg:mt-8 lg:py-5 xl:mt-10 xl:py-6">
+    <div className="mt-6 flex items-center justify-between rounded-2xl border border-border bg-card px-6 py-4 lg:mt-8 lg:py-5 tall:mt-10 tall:py-6">
       {STEPS.map((s, i) => (
         <div key={s.key} className="flex flex-1 items-center last:flex-none">
           <div className="flex flex-col items-center gap-2">
@@ -410,7 +410,7 @@ function StepList({ activeStep }: { activeStep: number }) {
         return (
           <div
             key={s.key}
-            className={`rounded-2xl border-l-[3px] px-5 py-3 transition-all duration-300 lg:px-6 lg:py-4 xl:py-5 short:py-3 xl:short:py-3 ${
+            className={`rounded-2xl border-l-[3px] px-5 py-3 transition-all duration-300 lg:px-6 lg:py-4 tall:py-5 short:py-3 ${
               active
                 ? "border-brand bg-card shadow-sm"
                 : "border-transparent"
@@ -505,13 +505,13 @@ export default function HowItWorks() {
       >
         {/* content starts just below the fixed navbar (h-20) rather than
             being centered, so there's no dead band above the heading */}
-        <div ref={pinRef} className="sticky top-0 h-screen pt-24 xl:pt-28 short:pt-24 xl:short:pt-24">
+        <div ref={pinRef} className="sticky top-0 h-screen pt-24 tall:pt-28">
           <div className="mx-auto w-full max-w-6xl px-6">
           <div className="mx-auto max-w-4xl text-center">
             <span className="inline-block rounded-full border border-border px-4 py-1.5 text-xs font-semibold text-brand short:py-1">
               How Cashlo Works
             </span>
-            <h2 className="mt-3 whitespace-nowrap text-3xl font-bold tracking-tight text-ink lg:text-4xl 2xl:text-5xl short:mt-2 short:text-3xl">
+            <h2 className="mt-3 whitespace-nowrap text-3xl font-bold tracking-tight text-ink lg:text-4xl tall:2xl:text-5xl short:mt-2 short:text-3xl">
                 From download to{" "}
                 <span className="text-brand">daily earnings</span>
               </h2>
@@ -521,7 +521,7 @@ export default function HowItWorks() {
               </p>
             </div>
 
-            <div className="mt-8 grid grid-cols-2 items-center gap-12 xl:mt-12 short:mt-6 xl:short:mt-6">
+            <div className="mt-8 grid grid-cols-2 items-center gap-12 tall:mt-12 short:mt-6">
               <div>
                 <StepList activeStep={activeStep} />
                 <div className="short:hidden">

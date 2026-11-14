@@ -7,6 +7,10 @@
 /* short desktop screens (e.g. 1280x630 / 1366x768 laptops): pinned
    full-viewport sections compact themselves so they fit under the navbar */
 @custom-variant short (@media (min-width: 1024px) and (max-height: 820px));
+/* roomy spacing only when the window is both wide AND tall enough to hold it
+   (width-only `xl:` spacing overflowed pinned sections on wide-but-medium-
+   height windows, e.g. 1700x840) */
+@custom-variant tall (@media (min-width: 1280px) and (min-height: 960px));
 
 /* ---- Theme tokens: raw values swap under .dark ---- */
 :root {
@@ -99,7 +103,7 @@ body {
     0% -20%,
     100% -20%,
     100% var(--edge),
-    50% calc(var(--edge) - 14%),
+    50% calc(var(--edge) - 14%), /* 14% = DIP in useColorInvert.ts */
     0% var(--edge)
   );
 }
@@ -304,7 +308,8 @@ body {
 /* ---- Morphing rules scene ---- */
 .morph-wrap {
   position: relative;
-  width: min(70vmin, 560px);
+  /* fits the flex area left under the heading (see ImportantRules.tsx) */
+  width: min(calc(100vh - 19rem), 42vw, 520px);
   aspect-ratio: 1;
   will-change: transform;
 }
@@ -320,7 +325,7 @@ body {
   left: 50%;
   top: 50%;
   width: 280px;
-  translate: -50% -50%; /* centering via CSS `translate` so GSAP's transform stacks on top */
+  /* centred by GSAP (xPercent/yPercent -50) in useMorphRules */
   border-radius: 1rem;
   border: 1px solid var(--border);
   background: var(--card);
@@ -1766,4 +1771,25 @@ body {
 }
 .footer-nav-link:hover::before {
   width: 10px;
+}
+/* Illustrations whose PNG/JPG has a white background baked in (no alpha).
+   In dark mode they read as glaring white holes, so the box framing the
+   image becomes a soft light tile instead: the image is dimmed a touch so
+   it doesn't glare, and the tile is filled with exactly that dimmed white
+   (255 x 0.9 = #e5e5e5) so the image's own background melts into it with
+   no visible rectangle. (Not `mix-blend-mode: darken` — that also erased
+   the white phone screens/cards *inside* the illustrations.)
+   Put the class on the element that frames the image, not the <img>.
+   Light mode: no-op. */
+.dark .art-tile {
+  background-color: #e5e5e5;
+}
+.dark .art-tile img {
+  filter: brightness(0.9);
+  /* the baked-in backgrounds aren't perfectly flat white (soft tinted
+     glows), so feather the image's edges into the tile to hide the seam */
+  mask-image:
+    linear-gradient(to right, transparent, #000 10%, #000 90%, transparent),
+    linear-gradient(to bottom, transparent, #000 10%, #000 90%, transparent);
+  mask-composite: intersect;
 }
